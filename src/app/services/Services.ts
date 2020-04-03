@@ -9,11 +9,12 @@ export abstract class LoginService {
 
 export class ProblemItem {
   constructor(public id: number,
-              public title: string) {
+              public title: string,
+              public description: string) {
   }
 }
 
 @Injectable()
 export abstract class ProblemService {
-  abstract getProblemItems(page: number): ProblemItem[];
+  abstract getProblemItems(page: number): Observable<ProblemItem>;
 }

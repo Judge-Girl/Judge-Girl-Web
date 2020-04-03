@@ -1,1 +1,17 @@
-<p>problem-list works!</p>
+<div class="my-container">
+  <div id="problems-panel" class="card shadow">
+    <div class="card-title">
+      <header>Judge Girl (Kubernetes) Beta 1.0</header>
+    </div>
+    <hr>
+    <div class="card-body">
+      <ul class="list-group" *ngFor="let problemItem of problemItems">
+
+        <li class="problem-item list-group-item fadeIn" (click)="routeToProblem(problemItem.id)">
+          <header class="problem-item-title"> {{problemItem.title}} </header>
+          <article class="problem-item-description"> {{problemItem.description}}</article>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

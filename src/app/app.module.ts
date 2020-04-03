@@ -6,7 +6,8 @@ import {LoginComponent} from './login/login.component';
 import {AppComponent} from './app.component';
 import {ProblemListComponent} from './problem-list/problem-list.component';
 import {StubLoginService} from './services/impl/StubLoginService';
-import {LoginService} from './services/Services';
+import {LoginService, ProblemService} from './services/Services';
+import {StubProblemService} from './services/impl/StubProblemService';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,10 @@ import {LoginService} from './services/Services';
     BrowserModule,
     AppRoutingModule
   ],
-  providers: [{provide: LoginService, useClass: StubLoginService},],
+  providers: [
+    {provide: LoginService, useClass: StubLoginService},
+    {provide: ProblemService, useClass: StubProblemService},
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {

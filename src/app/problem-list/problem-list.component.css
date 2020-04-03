@@ -1,0 +1,23 @@
+
+
+#problems-panel {
+  width: 80%;
+  text-align: center;
+}
+
+.problem-item {
+  cursor: pointer;
+}
+
+.problem-item:hover {
+  background: #cccccc;
+}
+
+.problem-item-title {
+  text-align: left;
+  margin: 3px;
+}
+
+.problem-item-description {
+  text-align: left;
+}

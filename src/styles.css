@@ -1,1 +1,36 @@
-/* You can add global styles to this file, and also import other style files */
+.my-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  min-height: 100%;
+  padding: 40px;
+}
+
+.shadow {
+  -webkit-box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
+  box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
+}
+
+header {
+  text-align: center;
+  font-size: 22px;
+  font-weight: 600;
+  display:inline-block;
+  margin: 20px 8px 20px 8px;
+  color: rgba(0, 0, 0, 0.68);
+}
+
+.fadeIn {
+  opacity:0;
+  -webkit-animation:fadeIn ease-in 1;
+  -moz-animation:fadeIn ease-in 1;
+  animation:fadeIn ease-in 1;
+
+  -webkit-animation-fill-mode:forwards;
+  -moz-animation-fill-mode:forwards;
+  animation-fill-mode:forwards;
+
+  -webkit-animation-duration:1s;
+  -moz-animation-duration:1s;
+  animation-duration:1s;
+}
