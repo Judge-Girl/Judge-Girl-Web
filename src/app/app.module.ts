@@ -8,12 +8,14 @@ import {ProblemListComponent} from './problem-list/problem-list.component';
 import {StubLoginService} from './services/impl/StubLoginService';
 import {LoginService, ProblemService} from './services/Services';
 import {StubProblemService} from './services/impl/StubProblemService';
+import { ProblemSubmissionComponent } from './problem-submission/problem-submission.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     ProblemListComponent,
+    ProblemSubmissionComponent,
   ],
   imports: [
     BrowserModule,

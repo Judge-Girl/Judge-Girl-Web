@@ -1,5 +1,6 @@
-import {ProblemItem, ProblemService} from '../Services';
+import {ProblemService} from '../Services';
 import {Observable, Subject} from 'rxjs';
+import {ProblemItem} from '../../models/Problems';
 
 export class StubProblemService extends ProblemService {
   private stubs: ProblemItem[];
