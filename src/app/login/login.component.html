@@ -10,9 +10,9 @@
 
     <!-- Login Form -->
     <form>
-      <input type="text" id="login" class="fadeIn second" name="login" placeholder="login">
-      <input type="text" id="password" class="fadeIn third" name="login" placeholder="password">
-      <input type="submit" id="login-btn" class="fadeIn fourth" value="Log In">
+      <input type="text" id="login" class="fadeIn second" name="studentId" placeholder="Student Id" #studentIdInput>
+      <input type="text" id="password" class="fadeIn third" name="password" placeholder="Password" #passwordInput>
+      <input type="submit" id="login-btn" class="fadeIn fourth" (click)="login(studentIdInput.value, passwordInput.value)" value="Log In">
     </form>
 
     <!-- Remind Password -->
