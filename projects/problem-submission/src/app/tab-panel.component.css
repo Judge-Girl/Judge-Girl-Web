@@ -1,5 +1,7 @@
 
+
 #tab-panel {
+  border: #0d0d0d;
   display: flex;
   justify-content: center;
   width: 100%;

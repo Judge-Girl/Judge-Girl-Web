@@ -1,0 +1,20 @@
+.my-container {
+  font-family: "Times New Roman", serif;
+  width: 100%;
+}
+
+#problem-description-panel {
+  text-align: left;
+}
+
+.example-card .card-title {
+  padding: 5px 5px 5px 15px;
+  font-weight: bold;
+  background: rgb(246, 246, 246);
+}
+
+#title {
+  display: inline;
+  font-size: 22px;
+}
+

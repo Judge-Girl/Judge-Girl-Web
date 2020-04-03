@@ -1,0 +1,17 @@
+.my-panel{
+  padding: 30px 8px 8px 15px;
+}
+
+.text {
+  margin: 0;
+}
+
+.judge-status {
+  padding: 8px 22px 8px 22px;
+  margin-bottom: 15px;
+  font-size: 22px;
+}
+
+#submissions-table {
+  margin-top: 35px;
+}

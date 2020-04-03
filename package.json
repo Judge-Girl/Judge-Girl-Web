@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
+    "start problem-submission": "ng serve --project problem-submission",
     "start": "ng serve",
     "build": "ng build --prod --source-map --project judge-k8s-web && ng build --prod --source-map --project problem-submission --deleteOutputPath false",
     "test": "ng test",
@@ -19,7 +20,9 @@
     "@angular/platform-browser": "~9.0.6",
     "@angular/platform-browser-dynamic": "~9.0.6",
     "@angular/router": "~9.0.6",
+    "@ctrl/ngx-codemirror": "^3.0.4",
     "bootstrap": "^4.4.1",
+    "codemirror": "^5.52.2",
     "jquery": "^3.4.1",
     "rxjs": "~6.5.4",
     "tslib": "^1.10.0",

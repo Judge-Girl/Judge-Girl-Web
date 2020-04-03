@@ -1,1 +1,31 @@
-<p>submissions works!</p>
+<div class="my-panel">
+
+  <span *ngIf="bestSubmission.judge.status === AC" class="badge badge-success judge-status">AC</span>
+  <span *ngIf="bestSubmission.judge.status === RE" class="badge badge-danger judge-status">RE</span>
+  <span *ngIf="bestSubmission.judge.status === MLE" class="badge badge-warning judge-status">MLE</span>
+  <span *ngIf="bestSubmission.judge.status === TLE" class="badge badge-warning judge-status">TLE</span>
+  <span *ngIf="bestSubmission.judge.status === CE" class="badge badge-danger judge-status">CE</span>
+  <span *ngIf="bestSubmission.judge.status === WA" class="badge badge-danger judge-status">WA</span>
+
+  <p class="text">Runtime: {{bestSubmission.judge.runtime}}ms</p>
+  <p class="text">Memory Usage: {{bestSubmission.judge.memory}}MB</p>
+
+  <table *ngIf="submissions.length != 0" class="table" id="submissions-table">
+    <thead [style.fontSize]="'17px'">
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Status</th>
+      <th scope="col">Runtime</th>
+      <th scope="col">Memory</th>
+    </tr>
+    </thead>
+    <tbody  [style.fontSize]="'14px'">
+    <tr *ngFor="let submission of submissions; let i = index">
+      <th scope="row">{{i}}</th>
+      <td>{{submission.judge.status}}</td>
+      <td>{{submission.judge.runtime}}</td>
+      <td>{{submission.judge.memory}}</td>
+    </tr>
+    </tbody>
+  </table>
+</div>

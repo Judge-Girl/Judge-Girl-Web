@@ -1,1 +1,16 @@
-<p>problem-description works!</p>
+<div class="my-panel"  id="problem-description-panel">
+  <header id="title">{{problem.title}}</header>
+  <article [style.marginTop]="'8px'"><p>{{problem.description}}</p></article>
+
+  <hr>
+
+  <div class="card example-card" >
+    <div class="card-title">Example Input</div>
+    <div class="card-body">{{problem.exampleInput}}</div>
+  </div>
+
+  <div class="card example-card" >
+    <div class="card-title">Example Output</div>
+    <div class="card-body">{{problem.exampleOutput}}</div>
+  </div>
+</div>
