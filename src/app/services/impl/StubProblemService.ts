@@ -1,15 +1,17 @@
-import {ProblemItem, ProblemService} from '../Services';
+import {ProblemService} from '../Services';
 import {Observable, Subject} from 'rxjs';
-import {Problem} from '../../models';
+import {Problem, ProblemItem} from '../../models';
 
 export class StubProblemService extends ProblemService {
-  private readonly stubs: ProblemItem[];
+  private readonly PSEUDO_TEXT = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc maximus,.';
+  private readonly stubs: Problem[];
 
   constructor() {
     super();
     this.stubs = [
-      new ProblemItem(1, '8 Queens', 'Can you solve 8 queens problem?'),
-      new ProblemItem(2, 'Parallelizing Merge Sort', 'Merge sort exploits divide and conquer leading itself to be easy to be parallelized.')
+      new Problem(1, '8 Queens', 'Can you solve 8 queens problem?', this.PSEUDO_TEXT, this.PSEUDO_TEXT),
+      new Problem(2, 'Parallelizing Merge Sort', 'Merge sort exploits divide and conquer leading itself ' +
+        'to be easy to be parallelized.', this.PSEUDO_TEXT, this.PSEUDO_TEXT)
     ];
   }
 
@@ -31,7 +33,12 @@ export class StubProblemService extends ProblemService {
   }
 
   getProblem(problemId: number): Observable<Problem> {
-    return undefined;
+    const problemSubject = new Subject<Problem>();
+    setTimeout(() => {
+      problemSubject.next(this.stubs.find(p => p.id === problemId));
+      problemSubject.complete();
+    }, 700);
+    return problemSubject;
   }
 
 }

@@ -1,14 +1,14 @@
 <div class="my-panel">
 
-  <span *ngIf="bestSubmission.judge.status === AC" class="badge badge-success judge-status">AC</span>
-  <span *ngIf="bestSubmission.judge.status === RE" class="badge badge-danger judge-status">RE</span>
-  <span *ngIf="bestSubmission.judge.status === MLE" class="badge badge-warning judge-status">MLE</span>
-  <span *ngIf="bestSubmission.judge.status === TLE" class="badge badge-warning judge-status">TLE</span>
-  <span *ngIf="bestSubmission.judge.status === CE" class="badge badge-danger judge-status">CE</span>
-  <span *ngIf="bestSubmission.judge.status === WA" class="badge badge-danger judge-status">WA</span>
+  <span *ngIf="ifTheBestSubmissionStatusIs(AC)" class="badge badge-success judge-status">AC</span>
+  <span *ngIf="ifTheBestSubmissionStatusIs(RE)" class="badge badge-danger judge-status">RE</span>
+  <span *ngIf="ifTheBestSubmissionStatusIs(MLE)" class="badge badge-warning judge-status">MLE</span>
+  <span *ngIf="ifTheBestSubmissionStatusIs(TLE)" class="badge badge-warning judge-status">TLE</span>
+  <span *ngIf="ifTheBestSubmissionStatusIs(CE)" class="badge badge-danger judge-status">CE</span>
+  <span *ngIf="ifTheBestSubmissionStatusIs(WA)" class="badge badge-danger judge-status">WA</span>
 
-  <p class="text">Runtime: {{bestSubmission.judge.runtime}}ms</p>
-  <p class="text">Memory Usage: {{bestSubmission.judge.memory}}MB</p>
+  <p *ngIf="bestSubmission" class="text">Runtime: {{bestSubmission.judge.runtime}}ms</p>
+  <p *ngIf="bestSubmission" class="text">Memory Usage: {{bestSubmission.judge.memory}}MB</p>
 
   <table *ngIf="submissions.length != 0" class="table" id="submissions-table">
     <thead [style.fontSize]="'17px'">

@@ -1,7 +1,5 @@
-import {Component, ElementRef, Input, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
-import {Problem} from '../models';
-import {ProblemService} from '../services/Services';
+import {Component, ElementRef, OnInit} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
 
 export enum Tab {
   PROBLEM, SUBMISSIONS
@@ -15,17 +13,19 @@ export enum Tab {
 export class ProblemSubmissionTabPanelComponent implements OnInit {
   TAB_PROBLEM = Tab.PROBLEM;
   TAB_SUBMISSIONS = Tab.SUBMISSIONS;
-  @Input() problemId: number;
-  problem: Problem;
+
+  private problemId: number;
 
   constructor(private elementRef: ElementRef,
-              private router: Router,
-              private problemService: ProblemService) {
+              private router: Router, private route: ActivatedRoute) {
+    route.params.subscribe(params => this.problemId = +params.problemId);
   }
 
   ngOnInit(): void {
-    this.problemService.getProblem(this.problemId)
-      .subscribe((p) => this.problem = p);
+    if (window.location.pathname.endsWith('submissions')) {
+      console.log(window.location.pathname);
+      this.switchTab(Tab.SUBMISSIONS);
+    }
   }
 
 
@@ -34,11 +34,11 @@ export class ProblemSubmissionTabPanelComponent implements OnInit {
     const problemTab = document.getElementById('problem-tab');
     const submissionsTab = document.getElementById('submissions-tab');
     if (tab === Tab.PROBLEM) {
-      this.router.navigateByUrl('problem');
+      this.router.navigate([`problems/${this.problemId}`]);
       problemTab.classList.add('active');
       submissionsTab.classList.remove('active');
     } else if (tab === Tab.SUBMISSIONS) {
-      this.router.navigateByUrl('submissions');
+      this.router.navigate([`problems/${this.problemId}/submissions`]);
       problemTab.classList.remove('active');
       submissionsTab.classList.add('active');
     }

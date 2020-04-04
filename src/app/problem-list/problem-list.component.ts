@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {ProblemItem, ProblemService} from '../services/Services';
+import {ProblemService} from '../services/Services';
+import {ProblemItem} from '../models';
 
 @Component({
   selector: 'app-problem-list',
@@ -7,7 +8,7 @@ import {ProblemItem, ProblemService} from '../services/Services';
   styleUrls: ['./problem-list.component.css']
 })
 export class ProblemListComponent implements OnInit {
-  problemItems: ProblemItem[] = [];
+  problemItems: ProblemItem[] = [ ];
 
   constructor(private problemService: ProblemService) {
   }

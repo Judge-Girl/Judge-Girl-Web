@@ -4,7 +4,7 @@ import {JudgeStatus, Submission, SubmissionService} from '../services/impl/Submi
 @Component({
   selector: 'app-submissions',
   templateUrl: './submissions.component.html',
-  styleUrls: ['../../styles.css', './submissions.component.css']
+  styleUrls: ['./submissions.component.css']
 })
 export class SubmissionsComponent implements OnInit {
   AC = JudgeStatus.AC;
@@ -24,14 +24,12 @@ export class SubmissionsComponent implements OnInit {
       .subscribe(s => this.addSubmissionAndSort(s));
   }
 
-  1;
-
   private addSubmissionAndSort(submission: Submission) {
     this.submissions.push(submission);
-    this.submissions.sort(this.compareSubmissions);
+    this.submissions.sort(SubmissionsComponent.compareSubmissions);
   }
 
-  private compareSubmissions(s1: Submission, s2: Submission): number {
+  private static compareSubmissions(s1: Submission, s2: Submission): number {
     if (s1.judge.status === JudgeStatus.AC && s2.judge.status === JudgeStatus.AC) {
       if (s1.judge.runtime === s2.judge.runtime) {
         return s2.judge.memory - s1.judge.memory;
@@ -39,6 +37,11 @@ export class SubmissionsComponent implements OnInit {
     }
     return s1.judge.status === JudgeStatus.AC ? -1 :
       s2.judge.status === JudgeStatus.AC ? 1 : 0;
+  }
+
+  ifTheBestSubmissionStatusIs(status: JudgeStatus) {
+    return this.submissions.length >= 1 && this.bestSubmission.judge.status === status;
+
   }
 
   get bestSubmission(): Submission {

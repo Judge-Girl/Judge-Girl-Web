@@ -1,4 +1,4 @@
-<div class="my-panel"  id="problem-description-panel">
+<div *ngIf="problem" class="my-panel"  id="problem-description-panel">
   <header id="title">{{problem.title}}</header>
   <article [style.marginTop]="'8px'"><p>{{problem.description}}</p></article>
 
