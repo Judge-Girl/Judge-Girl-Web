@@ -1,8 +1,9 @@
 import {ProblemItem, ProblemService} from '../Services';
 import {Observable, Subject} from 'rxjs';
+import {Problem} from '../../models';
 
 export class StubProblemService extends ProblemService {
-  private stubs: ProblemItem[];
+  private readonly stubs: ProblemItem[];
 
   constructor() {
     super();
@@ -27,6 +28,10 @@ export class StubProblemService extends ProblemService {
         problemItemsSubject.complete();
       }
     }, 800);
+  }
+
+  getProblem(problemId: number): Observable<Problem> {
+    return undefined;
   }
 
 }

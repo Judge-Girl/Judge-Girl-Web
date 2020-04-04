@@ -1,10 +1,10 @@
 import {Component, OnInit} from '@angular/core';
-import {JudgeStatus, Submission, SubmissionService} from '../services/SubmissionService';
+import {JudgeStatus, Submission, SubmissionService} from '../services/impl/SubmissionService';
 
 @Component({
   selector: 'app-submissions',
   templateUrl: './submissions.component.html',
-  styleUrls: ['../style.css', './submissions.component.css']
+  styleUrls: ['../../styles.css', './submissions.component.css']
 })
 export class SubmissionsComponent implements OnInit {
   AC = JudgeStatus.AC;

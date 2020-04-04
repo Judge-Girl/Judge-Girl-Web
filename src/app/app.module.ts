@@ -8,14 +8,22 @@ import {ProblemListComponent} from './problem-list/problem-list.component';
 import {StubLoginService} from './services/impl/StubLoginService';
 import {LoginService, ProblemService} from './services/Services';
 import {StubProblemService} from './services/impl/StubProblemService';
-import { ProblemSubmissionComponent } from './problem-submission/problem-submission.component';
+import {ProblemSubmissionTabPanelComponent} from './problem-submission-tab-panel/problem-submission-tab-panel.component';
+import {ProblemDescriptionComponent} from './problem-description/problem-description.component';
+import {CodePanelComponent} from './code-panel/code-panel.component';
+import {SubmissionsComponent} from './submissions/submissions.component';
+import {SubmissionService} from './services/impl/SubmissionService';
+import {StubSubmissionService} from './services/impl/StubSubmissionService';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     ProblemListComponent,
-    ProblemSubmissionComponent,
+    ProblemSubmissionTabPanelComponent,
+    ProblemDescriptionComponent,
+    CodePanelComponent,
+    SubmissionsComponent
   ],
   imports: [
     BrowserModule,
@@ -24,6 +32,7 @@ import { ProblemSubmissionComponent } from './problem-submission/problem-submiss
   providers: [
     {provide: LoginService, useClass: StubLoginService},
     {provide: ProblemService, useClass: StubProblemService},
+    {provide: SubmissionService, useClass: StubSubmissionService}
   ],
   bootstrap: [AppComponent]
 })

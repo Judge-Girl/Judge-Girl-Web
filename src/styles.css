@@ -6,6 +6,13 @@
   padding: 40px;
 }
 
+.my-panel {
+  margin: 0;
+  padding: 5px;
+  width: 100%;
+}
+
+
 .shadow {
   -webkit-box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
   box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);

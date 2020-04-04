@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TabPanelComponent } from './tab-panel.component';
+import { ProblemSubmissionTabPanelComponent } from './problem-submission-tab-panel.component';
 
 describe('ProblemSubmissionComponent', () => {
-  let component: TabPanelComponent;
-  let fixture: ComponentFixture<TabPanelComponent>;
+  let component: ProblemSubmissionTabPanelComponent;
+  let fixture: ComponentFixture<ProblemSubmissionTabPanelComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ TabPanelComponent ]
+      declarations: [ ProblemSubmissionTabPanelComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TabPanelComponent);
+    fixture = TestBed.createComponent(ProblemSubmissionTabPanelComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

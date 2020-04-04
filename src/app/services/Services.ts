@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
+import {Problem} from '../models';
 
 @Injectable()
 export abstract class LoginService {
@@ -17,4 +18,5 @@ export class ProblemItem {
 @Injectable()
 export abstract class ProblemService {
   abstract getProblemItems(page: number): Observable<ProblemItem>;
+  abstract getProblem(problemId: number): Observable<Problem>;
 }

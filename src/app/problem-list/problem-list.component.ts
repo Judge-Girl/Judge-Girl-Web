@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {ProblemService} from '../services/Services';
-import {ProblemItem} from '../models/Problems';
+import {ProblemItem, ProblemService} from '../services/Services';
 
 @Component({
   selector: 'app-problem-list',
