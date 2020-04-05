@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {Submission, SubmissionService} from './services/impl/SubmissionService';
+import {MessageService} from 'primeng';
 
 @Component({
   selector: 'app-root',
@@ -7,9 +9,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AppComponent implements OnInit {
 
-  constructor() { }
-
-  ngOnInit(): void {
+  constructor(private submissionService: SubmissionService,
+              private messageService: MessageService) {
   }
 
+  ngOnInit(): void {
+    this.submissionService.judgeObservable.subscribe(this.onNextSubmissionJudged);
+  }
+
+  private onNextSubmissionJudged(submission: Submission) {
+    this.messageService.add({
+      severity: 'success', summary: ``, detail: ''
+    });
+  }
 }

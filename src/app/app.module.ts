@@ -15,7 +15,11 @@ import {SubmissionsComponent} from './submissions/submissions.component';
 import {SubmissionService} from './services/impl/SubmissionService';
 import {StubSubmissionService} from './services/impl/StubSubmissionService';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import { LdCircleComponent } from './items/ld-circle.component';
+import {LdCircleComponent} from './items/ld-circle.component';
+import {FileUploadModule} from 'primeng/fileupload';
+import {HttpClient, HttpClientModule, HttpHandler} from "@angular/common/http";
+import {BlockUIModule, ToastModule} from "primeng";
+
 
 @NgModule({
   declarations: [
@@ -27,14 +31,21 @@ import { LdCircleComponent } from './items/ld-circle.component';
     ProblemDescriptionComponent,
     CodePanelComponent,
     SubmissionsComponent,
+
+    /*items*/
     LdCircleComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    HttpClientModule,
+
+    /*primeNG*/
+    BlockUIModule, ToastModule, FileUploadModule
   ],
   providers: [
+    HttpClient,
     {provide: LoginService, useClass: StubLoginService},
     {provide: ProblemService, useClass: StubProblemService},
     {provide: SubmissionService, useClass: StubSubmissionService}

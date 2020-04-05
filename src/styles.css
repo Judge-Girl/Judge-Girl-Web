@@ -1,11 +1,13 @@
-
+@import '~primeicons/primeicons.css';
+@import '~primeng/resources/themes/nova-light/theme.css';
+@import '~primeng/resources/primeng.min.css';
 
 .my-container {
   display: flex;
   justify-content: center;
   margin-left: auto;
   margin-right: auto;
-  padding: 40px;
+  padding: 20px 20px 40px 20px;
 }
 
 .my-panel {

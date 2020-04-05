@@ -11,7 +11,12 @@ export class StubProblemService extends ProblemService {
     this.stubs = [
       new Problem(1, '8 Queens', 'Can you solve 8 queens problem?', this.PSEUDO_TEXT, this.PSEUDO_TEXT),
       new Problem(2, 'Parallelizing Merge Sort', 'Merge sort exploits divide and conquer leading itself ' +
-        'to be easy to be parallelized.', this.PSEUDO_TEXT, this.PSEUDO_TEXT)
+        'to be easy to be parallelized.', this.PSEUDO_TEXT, this.PSEUDO_TEXT),
+      new Problem(3, 'Add Three Numbers', 'Write a program to read three integers a, b, and c, then print their sum.',
+        this.PSEUDO_TEXT, this.PSEUDO_TEXT),
+      new Problem(4, 'Surface Area and Volume of a Box',
+        'Write a program to compute the surface area and the volume of this box.',
+        this.PSEUDO_TEXT, this.PSEUDO_TEXT),
     ];
   }
 
