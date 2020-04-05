@@ -9,7 +9,7 @@ import {Router} from "@angular/router";
   styleUrls: ['./problem-list.component.css']
 })
 export class ProblemListComponent implements OnInit {
-  problemItems: ProblemItem[] = [];
+  problemItems: ProblemItem[];
 
   constructor(private problemService: ProblemService,
               private router: Router) {
@@ -18,7 +18,12 @@ export class ProblemListComponent implements OnInit {
   ngOnInit(): void {
     this.problemService.currentProblemId = undefined;
     this.problemService.getProblemItems(0)
-      .subscribe(item => this.problemItems.push(item));
+      .subscribe(item => {
+        if (!this.problemItems) {
+          this.problemItems = [];
+        }
+        this.problemItems.push(item);
+      });
   }
 
   routeToProblem(problemId: number) {

@@ -15,6 +15,7 @@ import {SubmissionsComponent} from './submissions/submissions.component';
 import {SubmissionService} from './services/impl/SubmissionService';
 import {StubSubmissionService} from './services/impl/StubSubmissionService';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { LdCircleComponent } from './items/ld-circle.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
     ProblemSubmissionTabPanelComponent,
     ProblemDescriptionComponent,
     CodePanelComponent,
-    SubmissionsComponent
+    SubmissionsComponent,
+    LdCircleComponent
   ],
   imports: [
     BrowserModule,

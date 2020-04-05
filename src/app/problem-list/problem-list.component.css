@@ -1,4 +1,13 @@
 
+hr {
+  margin: 0;
+}
+
+#spinner {
+  margin: 80px;
+  width: 80px;
+  height: 80px;
+}
 
 #problems-panel {
   width: 80%;

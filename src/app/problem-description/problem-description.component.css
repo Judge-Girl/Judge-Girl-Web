@@ -3,6 +3,13 @@
   width: 100%;
 }
 
+#spinner {
+  margin-right: auto;
+  margin-left: auto;
+  width: 90px;
+  height: 90px;
+}
+
 #problem-description-panel {
   text-align: left;
 }

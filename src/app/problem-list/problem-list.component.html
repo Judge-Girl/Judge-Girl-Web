@@ -5,8 +5,13 @@
     </div>
     <hr>
     <div class="card-body">
-      <ul class="list-group" *ngFor="let problemItem of problemItems">
 
+      <!-- Spinner -->
+      <div *ngIf="!problemItems" id="spinner" class="spinner-border text-primary" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+
+      <ul class="list-group" *ngFor="let problemItem of problemItems">
         <li class="problem-item list-group-item fadeIn" (click)="routeToProblem(problemItem.id)" >
           <header class="problem-item-title"> {{problemItem.title}} </header>
           <article class="problem-item-description"> {{problemItem.description}}</article>

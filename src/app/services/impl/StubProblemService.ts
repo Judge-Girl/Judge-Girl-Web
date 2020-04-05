@@ -17,7 +17,7 @@ export class StubProblemService extends ProblemService {
 
   getProblemItems(page: number): Observable<ProblemItem> {
     const problemItemsSubject = new Subject<ProblemItem>();
-    this.emitNextProblemItem(0, problemItemsSubject);
+    setTimeout(() => this.emitNextProblemItem(0, problemItemsSubject), 1000);
     return problemItemsSubject;
   }
 
@@ -29,7 +29,7 @@ export class StubProblemService extends ProblemService {
       } else {
         problemItemsSubject.complete();
       }
-    }, 200);
+    }, 150);
   }
 
   getProblem(problemId: number): Observable<Problem> {
