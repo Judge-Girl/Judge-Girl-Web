@@ -10,7 +10,14 @@
     <form>
       <input type="text" id="login" class="fadeIn second" name="studentId" placeholder="Student Id" #studentIdInput>
       <input type="text" id="password" class="fadeIn third" name="password" placeholder="Password" #passwordInput>
-      <input type="submit" id="login-btn" class="fadeIn fourth" (click)="login(studentIdInput.value, passwordInput.value)" value="Log In">
+      <div class="d-flex align-items-center justify-content-center"
+           [style.padding]="'20px 0 35px 0'">
+        <input type="submit" id="login-btn" class="fadeIn fourth"
+               (click)="login(studentIdInput.value, passwordInput.value)" value="Log In">
+        <div class="spinner-border text-primary" role="status" id="spinner">
+          <span class="sr-only">Loading...</span>
+        </div>
+      </div>
     </form>
 
     <!-- Remind Password -->

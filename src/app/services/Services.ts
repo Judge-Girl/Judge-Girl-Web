@@ -11,6 +11,7 @@ export abstract class LoginService {
 
 @Injectable()
 export abstract class ProblemService {
+  currentProblemId: number;
   abstract getProblemItems(page: number): Observable<ProblemItem>;
   abstract getProblem(problemId: number): Observable<Problem>;
 }

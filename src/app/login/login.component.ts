@@ -22,9 +22,14 @@ export class LoginComponent implements OnInit {
 
   login(studentId: string, password: string): boolean {
     console.log(`Login with studentId: ${studentId}, password: ${'*'.repeat(password.length)}`);
+    const spinner = document.getElementById('spinner');
+    spinner.style.display = 'inline';
     this.loginService.login(studentId, password)
       .subscribe({
-        complete: () => this.routeToProblemListPage()
+        complete: () => {
+          spinner.style.display = 'none';
+          this.routeToProblemListPage();
+        }
       });
     return false;
   }

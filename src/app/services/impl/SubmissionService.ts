@@ -19,15 +19,15 @@ export class Submission {
               public sourceCode: string) {
   }
 
-  withJudge(status: JudgeStatus, runtime: number, member: number): Submission {
-    this.judge = new Judge(status, runtime, member);
+  withJudge(status: JudgeStatus, runtime: number, memory: number): Submission {
+    this.judge = new Judge(status, runtime, memory);
     return this;
   }
 }
 
 export abstract class SubmissionService {
 
-  abstract getSubmissions(): Observable<Submission>;
+  abstract getSubmissions(problemId: number): Observable<Submission>;
 
-  abstract submit(sourceCode: string): Observable<Submission>;
+  abstract submit(problemId: number, sourceCode: string): Observable<Submission>;
 }

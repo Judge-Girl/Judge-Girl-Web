@@ -40,5 +40,4 @@ export class StubProblemService extends ProblemService {
     }, 700);
     return problemSubject;
   }
-
 }

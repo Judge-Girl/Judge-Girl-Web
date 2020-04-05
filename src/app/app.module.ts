@@ -14,10 +14,11 @@ import {CodePanelComponent} from './code-panel/code-panel.component';
 import {SubmissionsComponent} from './submissions/submissions.component';
 import {SubmissionService} from './services/impl/SubmissionService';
 import {StubSubmissionService} from './services/impl/StubSubmissionService';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
+    /*Pages*/
     AppComponent,
     LoginComponent,
     ProblemListComponent,

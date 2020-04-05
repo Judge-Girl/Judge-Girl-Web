@@ -11,19 +11,14 @@ import {ActivatedRoute} from '@angular/router';
 export class ProblemDescriptionComponent implements OnInit {
   problem: Problem;
 
-  constructor(private problemService: ProblemService,
-              private route: ActivatedRoute) {
+  constructor(private problemService: ProblemService) {
   }
 
   ngOnInit(): void {
-    this.route.params.subscribe(params => {
-      console.log(params);
-      this.problemService.getProblem(+(params.problemId))
-        .subscribe((p) => {
-          this.problem = p;
-          console.log(`Problem found by id ${+(params.problemId)}: ${p}`);
-        });
-    });
+    this.problemService.getProblem(this.problemService.currentProblemId)
+      .subscribe((p) => {
+        this.problem = p;
+      });
   }
 
 }
