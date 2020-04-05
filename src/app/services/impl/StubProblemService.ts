@@ -29,7 +29,7 @@ export class StubProblemService extends ProblemService {
       } else {
         problemItemsSubject.complete();
       }
-    }, 800);
+    }, 200);
   }
 
   getProblem(problemId: number): Observable<Problem> {
