@@ -4,6 +4,7 @@ import {Problem, ProblemItem} from '../models';
 
 @Injectable()
 export abstract class LoginService {
+  hasLogin = false;
   abstract login(studentId: string, password: string): Observable<any>;
 }
 

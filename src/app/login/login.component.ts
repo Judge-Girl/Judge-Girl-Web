@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {LoginService} from '../services/Services';
 import {Router} from '@angular/router';
 
@@ -7,11 +7,17 @@ import {Router} from '@angular/router';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   title = 'appName';
 
   constructor(private loginService: LoginService,
               private router: Router) {
+  }
+
+  ngOnInit(): void {
+    if (this.loginService.hasLogin) {
+      this.routeToProblemListPage();
+    }
   }
 
   login(studentId: string, password: string): boolean {
@@ -27,5 +33,6 @@ export class LoginComponent {
     console.log(`Routing to the problems page.`);
     this.router.navigateByUrl(`problems`);
   }
+
 
 }

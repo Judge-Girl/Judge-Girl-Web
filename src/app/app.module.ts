@@ -14,6 +14,7 @@ import {CodePanelComponent} from './code-panel/code-panel.component';
 import {SubmissionsComponent} from './submissions/submissions.component';
 import {SubmissionService} from './services/impl/SubmissionService';
 import {StubSubmissionService} from './services/impl/StubSubmissionService';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import {StubSubmissionService} from './services/impl/StubSubmissionService';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    BrowserAnimationsModule
   ],
   providers: [
     {provide: LoginService, useClass: StubLoginService},

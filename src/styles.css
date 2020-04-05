@@ -3,8 +3,8 @@
 .my-container {
   display: flex;
   justify-content: center;
-  width: 100%;
-  min-height: 100%;
+  margin-left: auto;
+  margin-right: auto;
   padding: 40px;
 }
 
@@ -43,3 +43,6 @@ header {
   -moz-animation-duration:1s;
   animation-duration:1s;
 }
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
