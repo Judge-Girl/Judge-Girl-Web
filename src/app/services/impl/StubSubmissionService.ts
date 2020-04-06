@@ -12,13 +12,26 @@ export class StubSubmissionService extends SubmissionService {
     this.submissionMap.set(1, [
       new Submission(1, 1, 'AC').withJudge(JudgeStatus.AC, 2, 39.3),
       new Submission(2, 1, 'TLE').withJudge(JudgeStatus.TLE, 5, 27.6),
-      new Submission(3, 1, 'CE').withJudge(JudgeStatus.CE, 5, 28.4)
+      new Submission(3, 1, 'CE').withJudge(JudgeStatus.CE, undefined, undefined)
     ]);
 
     this.submissionMap.set(2, [
       new Submission(4, 2, 'TLE').withJudge(JudgeStatus.TLE, 5, 39.3),
       new Submission(5, 2, 'TLE').withJudge(JudgeStatus.TLE, 5, 27.6),
-      new Submission(6, 2, 'CE').withJudge(JudgeStatus.CE, 5, 28.4)
+      new Submission(6, 2, 'CE').withJudge(JudgeStatus.CE, undefined, undefined)
+    ]);
+
+
+    this.submissionMap.set(3, [
+      new Submission(7, 3, 'RE').withJudge(JudgeStatus.RE, 4, 43.5),
+      new Submission(8, 3, 'RE').withJudge(JudgeStatus.RE, 5, 42.7),
+      new Submission(9, 3, 'RE').withJudge(JudgeStatus.RE, 5, 44.3)
+    ]);
+
+
+    this.submissionMap.set(4, [
+      new Submission(10, 4, 'MLE').withJudge(JudgeStatus.MLE, 3, 55.3),
+      new Submission(11, 4, 'MLE').withJudge(JudgeStatus.MLE, 3, 67.6),
     ]);
   }
 

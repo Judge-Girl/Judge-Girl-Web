@@ -34,11 +34,11 @@ export class ProblemSubmissionTabPanelComponent implements OnInit {
     const problemTab = document.getElementById('problem-tab');
     const submissionsTab = document.getElementById('submissions-tab');
     if (tab === Tab.PROBLEM) {
-      this.router.navigate([`problems/${this.problemId}`]);
+      this.router.navigate([`problems/${this.problemId}`], {skipLocationChange: true});
       problemTab.classList.add('active');
       submissionsTab.classList.remove('active');
     } else if (tab === Tab.SUBMISSIONS) {
-      this.router.navigate([`problems/${this.problemId}/submissions`]);
+      this.router.navigate([`problems/${this.problemId}/submissions`], {skipLocationChange: true});
       problemTab.classList.remove('active');
       submissionsTab.classList.add('active');
     }
