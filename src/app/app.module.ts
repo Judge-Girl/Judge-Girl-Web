@@ -18,7 +18,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {LdCircleComponent} from './items/ld-circle.component';
 import {FileUploadModule} from 'primeng/fileupload';
 import {HttpClient, HttpClientModule, HttpHandler} from "@angular/common/http";
-import {BlockUIModule, ToastModule} from "primeng";
+import {BlockUIModule, MessageService, MessagesModule, ToastModule} from "primeng";
 
 
 @NgModule({
@@ -46,6 +46,7 @@ import {BlockUIModule, ToastModule} from "primeng";
   ],
   providers: [
     HttpClient,
+    MessageService,
     {provide: LoginService, useClass: StubLoginService},
     {provide: ProblemService, useClass: StubProblemService},
     {provide: SubmissionService, useClass: StubSubmissionService}

@@ -26,8 +26,8 @@ export class StubSubmissionService extends SubmissionService {
     const submissionSubject = new Subject<Submission>();
     setTimeout(() => {
       console.log(`Submissions of Problem(${problemId}): `);
-      if (this.submissionMap[problemId]) {
-        this.submissionMap[problemId].forEach(s => submissionSubject.next(s));
+      if (this.submissionMap.get(problemId)) {
+        this.submissionMap.get(problemId).forEach(s => submissionSubject.next(s));
         submissionSubject.complete();
       } else {
         submissionSubject.error(new Error(`Problem with id ${problemId} not found.`));
