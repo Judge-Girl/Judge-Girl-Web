@@ -17,8 +17,8 @@ import {StubSubmissionService} from './services/impl/StubSubmissionService';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {LdCircleComponent} from './items/ld-circle.component';
 import {FileUploadModule} from 'primeng/fileupload';
-import {HttpClient, HttpClientModule, HttpHandler} from "@angular/common/http";
-import {BlockUIModule, MessageService, MessagesModule, ToastModule} from "primeng";
+import {HttpClient, HttpClientModule} from '@angular/common/http';
+import {BlockUIModule, MessageService, MessagesModule, ToastModule} from 'primeng';
 
 
 @NgModule({
@@ -42,7 +42,7 @@ import {BlockUIModule, MessageService, MessagesModule, ToastModule} from "primen
     HttpClientModule,
 
     /*primeNG*/
-    BlockUIModule, ToastModule, FileUploadModule
+    BlockUIModule, ToastModule, FileUploadModule, MessagesModule
   ],
   providers: [
     HttpClient,

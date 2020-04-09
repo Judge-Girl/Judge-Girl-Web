@@ -27,7 +27,7 @@
     </thead>
     <tbody  [style.fontSize]="'14px'">
     <tr *ngFor="let submission of submissions; let i = index">
-      <th scope="row">{{i}}</th>
+      <th scope="row">{{submissions.length - i}}</th>
       <td>{{submission.judge.status}}</td>
       <td>{{submission.judge.runtime}}</td>
       <td>{{submission.judge.memory}}</td>

@@ -25,11 +25,20 @@ export class Submission {
   }
 }
 
+
+export class JudgeResponse {
+  constructor(public problemId: number,
+              public problemTitle: string,
+              public submission: Submission) {
+  }
+}
+
 export abstract class SubmissionService {
-  abstract get judgeObservable(): Observable<Submission>;
+  abstract get judgeObservable(): Observable<JudgeResponse>;
 
   abstract getSubmissions(problemId: number): Observable<Submission>;
 
   abstract submitFromFile(problemId: number, file: File): Observable<Submission>;
+
   abstract submitSourceCode(problemId: number, sourceCode: string): Observable<Submission>;
 }

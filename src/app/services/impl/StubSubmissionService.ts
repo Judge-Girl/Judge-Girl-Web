@@ -1,12 +1,17 @@
-import {Judge, JudgeStatus, Submission, SubmissionService} from './SubmissionService';
+import {Judge, JudgeResponse, JudgeStatus, Submission, SubmissionService} from './SubmissionService';
 import {Observable, Subject} from 'rxjs';
+import {ProblemService} from '../Services';
+import {Injectable} from '@angular/core';
 
+@Injectable(
+  {providedIn: 'root'}
+)
 export class StubSubmissionService extends SubmissionService {
 
   private readonly submissionMap = new Map<number, Array<Submission>>();
-  private schedulingSubject = new Subject<Submission>();
+  private schedulingSubject = new Subject<JudgeResponse>();
 
-  constructor() {
+  constructor(private problemService: ProblemService) {
     super();
 
     this.submissionMap.set(1, [
@@ -55,6 +60,9 @@ export class StubSubmissionService extends SubmissionService {
     setTimeout(() => {
       const id = this.submissionMap.size + 1;
       const submission = new Submission(id, problemId, sourceCode);
+      if (!this.submissionMap.get(id)) {
+        this.submissionMap.set(id, []);
+      }
       this.submissionMap.get(id).push(submission);
       this.scheduleSubmission(submission);
     }, 1200);
@@ -67,9 +75,12 @@ export class StubSubmissionService extends SubmissionService {
     setTimeout(() => {
       const id = this.submissionMap.size + 1;
       const submission = new Submission(id, problemId, 'AC');
+      if (!this.submissionMap.get(id)) {
+        this.submissionMap.set(id, []);
+      }
       this.submissionMap.get(id).push(submission);
       this.scheduleSubmission(submission);
-    }, 1200);
+    }, 200);
 
     return submitSubject;
   }
@@ -81,11 +92,15 @@ export class StubSubmissionService extends SubmissionService {
       } else {
         submission.judge = new Judge(JudgeStatus.CE, undefined, undefined);
       }
-      this.schedulingSubject.next(submission);
-    }, 8000);
+      this.problemService.getProblem(submission.problemId)
+        .subscribe(p => {
+          console.log(`The submission judged: [${submission.judge.status}] ${p.title}`);
+          this.schedulingSubject.next(new JudgeResponse(p.id, p.title, submission));
+        });
+    }, 400);
   }
 
-  get judgeObservable(): Observable<Submission> {
+  get judgeObservable(): Observable<JudgeResponse> {
     return this.schedulingSubject;
   }
 

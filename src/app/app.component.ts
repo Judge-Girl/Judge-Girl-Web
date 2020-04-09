@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {Submission, SubmissionService} from './services/impl/SubmissionService';
+import {JudgeResponse, JudgeStatus, Submission, SubmissionService} from './services/impl/SubmissionService';
 import {MessageService} from 'primeng';
 
 @Component({
@@ -8,18 +8,26 @@ import {MessageService} from 'primeng';
   styleUrls: []
 })
 export class AppComponent implements OnInit {
+  readonly KEY_SUBMISSION_TOAST = 'submission-toast-key';
 
   constructor(private submissionService: SubmissionService,
               private messageService: MessageService) {
   }
 
   ngOnInit(): void {
-    this.submissionService.judgeObservable.subscribe(this.onNextSubmissionJudged);
+    this.submissionService.judgeObservable.subscribe(
+      (judgeResponse) => this.onNextJudgeResponse(judgeResponse));
   }
 
-  private onNextSubmissionJudged(submission: Submission) {
+  private onNextJudgeResponse(judgeResponse: JudgeResponse) {
     this.messageService.add({
-      severity: 'success', summary: ``, detail: ''
+      key: this.KEY_SUBMISSION_TOAST,
+      severity: judgeResponse.submission.judge.status === JudgeStatus.AC ? 'success' : 'error',
+      data: {
+        judgeStatus: judgeResponse.submission.judge.status,
+        problemTitle: judgeResponse.problemTitle,
+        problemId: judgeResponse.problemId
+      }
     });
   }
 }
