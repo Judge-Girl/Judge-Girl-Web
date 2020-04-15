@@ -3,6 +3,7 @@ import * as CodeMirror from 'codemirror';
 import {FileUpload} from 'primeng';
 import {LoginService, ProblemService} from '../services/Services';
 import {SubmissionService} from '../services/impl/SubmissionService';
+import {Problem} from '../models';
 
 @Component({
   selector: 'app-code-panel',
@@ -12,6 +13,7 @@ import {SubmissionService} from '../services/impl/SubmissionService';
 export class CodePanelComponent implements OnInit {
   codeMirror: CodeMirror.EditorFromTextArea;
   private file: File;
+  private problem: Problem;
   private sourceCodeTextArea: HTMLTextAreaElement;
 
   constructor(private loginService: LoginService,
@@ -45,10 +47,10 @@ export class CodePanelComponent implements OnInit {
   submit(): boolean {
     if (this.file) {
       console.log(`Submitting file: ${this.file.name}`);
-      this.submissionService.submitFromFile(this.problemService.currentProblemId, this.file);
+      this.submissionService.submitFromFile(this.problemService._currentProblemId, this.file);
     } else {
       console.log(`Submitting source code... `);
-      this.submissionService.submitSourceCode(this.problemService.currentProblemId, this.sourceCodeTextArea.value);
+      this.submissionService.submitSourceCode(this.problemService._currentProblemId, this.codeMirror.getValue());
     }
 
     return false;

@@ -15,10 +15,11 @@ import {SubmissionsComponent} from './submissions/submissions.component';
 import {SubmissionService} from './services/impl/SubmissionService';
 import {StubSubmissionService} from './services/impl/StubSubmissionService';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {LdCircleComponent} from './items/ld-circle.component';
+import {LdCircleComponent} from './items/id-circle/ld-circle.component';
 import {FileUploadModule} from 'primeng/fileupload';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
 import {BlockUIModule, MessageService, MessagesModule, ToastModule} from 'primeng';
+import { ProblemTagDropDownComponent } from './items/problem-tag-drop-down/problem-tag-drop-down.component';
 
 
 @NgModule({
@@ -33,7 +34,9 @@ import {BlockUIModule, MessageService, MessagesModule, ToastModule} from 'primen
     SubmissionsComponent,
 
     /*items*/
-    LdCircleComponent
+    LdCircleComponent,
+
+    ProblemTagDropDownComponent
   ],
   imports: [
     BrowserModule,

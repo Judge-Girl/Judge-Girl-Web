@@ -3,7 +3,6 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start problem-submission": "ng serve --project problem-submission",
     "start": "ng serve",
     "build": "ng build  --outputPath ./dist",
     "test": "ng test",
@@ -28,6 +27,7 @@
     "chart.js": "^2.9.3",
     "codemirror": "^5.52.2",
     "jquery": "^3.4.1",
+    "popper.js": "^1.6.0",
     "primeicons": "^2.0.0",
     "primeng": "^9.0.5",
     "prismjs": "^1.20.0",

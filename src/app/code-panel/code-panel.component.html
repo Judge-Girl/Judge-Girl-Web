@@ -1,23 +1,38 @@
-<p-blockUI [blocked]="!hasLogin" [target]="form"></p-blockUI>
+<!--<p-blockUI [blocked]="!hasLogin" [target]="form"></p-blockUI>-->
 
-<p-blockUI [target]="form" [blocked]="!hasLogin">
-  <div class="d-flex flex-column align-items-center justify-content-center w-100 h-100"
-       style="position:absolute; top:0; left:0;">
-    <i class="pi pi-lock" style="font-size: 100px; font-weight: bold"></i>
-    <p [style.color]="'white'" style="font-size:25px; font-weight: bold">
-      Login to submit your code</p>
-  </div>
-</p-blockUI>
+<!--<p-blockUI [target]="form" [blocked]="!hasLogin">-->
+<!--  <div class="d-flex flex-column align-items-center justify-content-center w-100 h-100"-->
+<!--       style="position:absolute; top:0; left:0;">-->
+<!--    <i class="pi pi-lock" style="font-size: 100px; font-weight: bold"></i>-->
+<!--    <p [style.color]="'white'" style="font-size:25px; font-weight: bold">-->
+<!--      Login to submit your code</p>-->
+<!--  </div>-->
+<!--</p-blockUI>-->
 
 <div class="my-panel">
   <form>
     <div class="form-group" #form>
+      <div *ngFor="pro" class="row">
+        <div class="col-4">
+          <p></p>
+        </div>
+        <div class="col-3">
+
+        </div>
+        <div class="col-5">
+
+        </div>
+      </div>
       <p-fileUpload *ngIf="hasLogin" mode="basic" chooseLabel="Upload Source Code" name="file[]"
                     (change)="onFileInputChange(fileInput)"
                     [style.paddingBottom]="'40px'" #fileInput></p-fileUpload>
 
-      <textarea  class="form-control"  name="sourceCode" rows="20"
-                id="source-code-text-area" ></textarea>
+      <p-fileUpload *ngIf="hasLogin" mode="basic" chooseLabel="Upload Source Code" name="file[]"
+                    (change)="onFileInputChange(fileInput)"
+                    [style.paddingBottom]="'40px'" #fileInput></p-fileUpload>
+
+<!--      <textarea  class="form-control"  name="sourceCode" rows="20"-->
+<!--                id="source-code-text-area" ></textarea>-->
 
       <div style="width: 100%; text-align: end">
         <input class="btn btn-primary" id="submit-btn" type="submit" value="Submit"

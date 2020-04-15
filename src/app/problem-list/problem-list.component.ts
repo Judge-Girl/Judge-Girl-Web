@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ProblemService} from '../services/Services';
 import {ProblemItem} from '../models';
-import {Router} from "@angular/router";
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-problem-list',
@@ -16,18 +16,16 @@ export class ProblemListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.problemService.currentProblemId = undefined;
-    this.problemService.getProblemItems(0)
+    this.problemItems = [];
+    this.problemService._currentProblemId = undefined;
+    this.problemService.getProblemItemsInPage(0)
       .subscribe(item => {
-        if (!this.problemItems) {
-          this.problemItems = [];
-        }
         this.problemItems.push(item);
       });
   }
 
   routeToProblem(problemId: number) {
-    this.problemService.currentProblemId = problemId;
+    this.problemService._currentProblemId = problemId;
     this.router.navigateByUrl(`problems/${problemId}`);
   }
 

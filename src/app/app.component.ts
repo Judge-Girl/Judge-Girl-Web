@@ -23,6 +23,7 @@ export class AppComponent implements OnInit {
     this.messageService.add({
       key: this.KEY_SUBMISSION_TOAST,
       severity: judgeResponse.submission.judge.status === JudgeStatus.AC ? 'success' : 'error',
+      life: 8000,
       data: {
         judgeStatus: judgeResponse.submission.judge.status,
         problemTitle: judgeResponse.problemTitle,

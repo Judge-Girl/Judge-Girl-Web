@@ -15,7 +15,7 @@ export class ProblemDescriptionComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.problemService.getProblem(this.problemService.currentProblemId)
+    this.problemService.getProblem(this.problemService._currentProblemId)
       .subscribe((p) => {
         this.problem = p;
       });

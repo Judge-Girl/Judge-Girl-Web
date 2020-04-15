@@ -39,7 +39,7 @@ export class SubmissionsComponent implements OnInit {
 
   ngOnInit(): void {
     this.submissions = [];
-    this.submissionService.getSubmissions(this.problemService.currentProblemId)
+    this.submissionService.getSubmissions(this.problemService._currentProblemId)
       .subscribe(s => this.addSubmissionAndSort(s));
   }
 
