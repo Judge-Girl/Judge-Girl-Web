@@ -1,5 +1,5 @@
 import {Component, ElementRef, OnInit} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 
 export enum Tab {
   PROBLEM, SUBMISSIONS
@@ -19,13 +19,15 @@ export class ProblemSubmissionTabPanelComponent implements OnInit {
   constructor(private elementRef: ElementRef,
               private router: Router, private route: ActivatedRoute) {
     route.params.subscribe(params => this.problemId = +params.problemId);
+    this.router.events.subscribe(e => {
+      if (e instanceof NavigationEnd) {
+        this.refreshTabState();
+      }
+    });
   }
 
   ngOnInit(): void {
-    if (window.location.pathname.endsWith('submissions')) {
-      console.log(window.location.pathname);
-      this.switchTab(Tab.SUBMISSIONS);
-    }
+    this.refreshTabState();
   }
 
 
@@ -45,6 +47,12 @@ export class ProblemSubmissionTabPanelComponent implements OnInit {
     return false;  // to disable <a>'s triggering of changing page
   }
 
+  private refreshTabState() {
+    if (window.location.pathname.endsWith('submissions')) {
+      console.log(window.location.pathname);
+      this.switchTab(Tab.SUBMISSIONS);
+    }
+  }
 
 }
 

@@ -28,12 +28,17 @@
     </tr>
     </thead>
     <tbody class="submissions-table">
-    <tr *ngFor="let submission of submissions; let i = index">
-      <th [width]="'80px'" scope="row">{{submissions.length - i}}</th>
-      <td [width]="'50px'" class="{{submission.summaryStatus}}">{{submission.summaryStatus}}</td>
-      <td [width]="'50px'">{{submission.averageRuntime ? submission.averageRuntime : '--'}}</td>
-      <td [width]="'50px'">{{submission.averageMemory ? submission.averageMemory : '--'}}</td>
-      <td [width]="'50px'">{{submission.totalGrade}}</td>
+    <tr *ngFor="let submission of submissions">
+      <th [width]="'80px'" scope="row">{{submission.submissionTime}}</th>
+      <td *ngIf="!submission.isJudged()">
+        <div class="spinner-border text-primary" role="status" id="spinner">
+          <span class="sr-only">Loading...</span>
+        </div>
+      </td>
+      <td *ngIf="submission.isJudged()" [width]="'50px'" class="{{submission.summaryStatus}}">{{submission.summaryStatus}}</td>
+      <td *ngIf="submission.isJudged()" [width]="'50px'">{{submission.averageRuntime ? submission.averageRuntime : '--'}}</td>
+      <td *ngIf="submission.isJudged()" [width]="'50px'">{{submission.averageMemory ? submission.averageMemory : '--'}}</td>
+      <td *ngIf="submission.isJudged()" [width]="'50px'">{{submission.totalGrade}}</td>
       <td>
         <button type="button" class="btn btn-link see-details-btn" data-toggle="modal"
                 (click)="onSubmissionDetailsBtnClick(submission)"

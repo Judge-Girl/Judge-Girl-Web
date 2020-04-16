@@ -1,11 +1,9 @@
-import {Observable} from 'rxjs';
-
 export enum JudgeStatus {
   AC = 'AC', RE = 'RE', TLE = 'TLE', MLE = 'MLE', CE = 'CE', WA = 'WA'
 }
 
-export let JUDGE_STATUSES = [JudgeStatus.AC, JudgeStatus.RE, JudgeStatus.TLE,
-  JudgeStatus.MLE, JudgeStatus.CE, JudgeStatus.WA];
+export let JUDGE_STATUSES = [JudgeStatus.RE, JudgeStatus.TLE,
+  JudgeStatus.MLE, JudgeStatus.CE, JudgeStatus.WA, JudgeStatus.AC];
 
 export class Judge {
   constructor(public status: JudgeStatus,
@@ -69,6 +67,10 @@ export class Submission {
     }
     return this._averageMemory;
   }
+
+  isJudged(): boolean {
+    return this.judges && this.judges.length > 0;
+  }
 }
 
 
@@ -79,10 +81,3 @@ export class JudgeResponse {
   }
 }
 
-export abstract class SubmissionService {
-  abstract get judgeObservable(): Observable<JudgeResponse>;
-
-  abstract getSubmissions(problemId: number): Observable<Submission[]>;
-
-  abstract submitFromFile(problemId: number, files: File[]): Observable<Submission>;
-}

@@ -1,10 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {FileUpload, MessageService} from 'primeng';
-import {LoginService, ProblemService} from '../services/Services';
-import {SubmissionService} from '../services/impl/SubmissionService';
+import {LoginService, ProblemService, SubmissionService} from '../services/Services';
 import {Problem} from '../models';
 import {switchMap} from 'rxjs/operators';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {Observable} from 'rxjs';
 
 @Component({
@@ -23,7 +22,8 @@ export class CodePanelComponent implements OnInit {
               private problemService: ProblemService,
               private submissionService: SubmissionService,
               private route: ActivatedRoute,
-              private messageService: MessageService) {
+              private messageService: MessageService,
+              private router: Router) {
   }
 
   ngOnInit(): void {
@@ -55,11 +55,12 @@ export class CodePanelComponent implements OnInit {
         this.messageService.clear();
         this.messageService.add({
           key: this.MESSAGE_KEY_ERROR_TOAST,
-          severity: 'error', summary: 'Error', detail: `The file  is not selected.`
+          severity: 'error', summary: 'Error', detail: `The file ${this.problem.submittedCodeSpecs[i].fileName} has not been selected.`
         });
         return false;
       }
     }
+    this.router.navigateByUrl(`/problems/${this.problem.id}/submissions`);
     this.submissionService.submitFromFile(this.problem.id, this.selectedFiles);
     return false;
   }

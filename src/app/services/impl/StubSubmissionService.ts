@@ -1,7 +1,9 @@
-import {Judge, JUDGE_STATUSES, JudgeResponse, JudgeStatus, Submission, SubmissionService} from './SubmissionService';
+import {Judge, JUDGE_STATUSES, JudgeResponse, JudgeStatus, Submission} from './SubmissionService';
 import {Observable, Subject} from 'rxjs';
-import {ProblemService} from '../Services';
+import {ProblemService, SubmissionService} from '../Services';
 import {Injectable} from '@angular/core';
+import {SubmissionsComponent} from '../../submissions/submissions.component';
+import {switchMap} from 'rxjs/operators';
 
 @Injectable(
   {providedIn: 'root'}
@@ -10,6 +12,7 @@ export class StubSubmissionService extends SubmissionService {
 
   private readonly submissionMap = new Map<number, Array<Submission>>();
   private schedulingSubject = new Subject<JudgeResponse>();
+  private submissions$ = new Subject<Submission[]>();
 
   constructor(private problemService: ProblemService) {
     super();
@@ -35,33 +38,38 @@ export class StubSubmissionService extends SubmissionService {
       new Submission(9, 3).addJudge(new Judge(JudgeStatus.AC, 2, 39.3, 40)).summary(100, JudgeStatus.AC)
     ]);
 
+    // assign random dates to every submission stub
     for (const submissions of this.submissionMap.values()) {
       const now = new Date();
       for (const submission of submissions) {
         submission.submissionTime = Math.floor(Math.random() * now.getTime());
+        submission.judgeTime = submission.submissionTime + 60000;
       }
     }
   }
 
   getSubmissions(problemId: number): Observable<Submission[]> {
-    const submissionSubject = new Subject<Submission[]>();
     setTimeout(() => {
       console.log(`Submissions of Problem(${problemId}): `);
       if (this.submissionMap.get(problemId)) {
-        submissionSubject.next(this.submissionMap.get(problemId));
-        submissionSubject.complete();
+        this.submissions$.next(this.submissionMap.get(problemId));
       } else {
-        submissionSubject.error(new Error(`Problem with id ${problemId} not found.`));
+        this.submissions$.error(new Error(`Problem with id ${problemId} not found.`));
       }
     }, 400);
-    return submissionSubject;
+    return this.submissions$;
   }
 
   submitFromFile(problemId: number, files: File[]): Observable<Submission> {
     const submitSubject = new Subject<Submission>();
+    const id = this.submissionMap.size + 1;
+    const submission = new Submission(id, problemId);
+
+    // insert the submission at the head and then broadcast
+    this.submissionMap.set(problemId, [submission].concat(this.submissionMap.get(problemId)));
+    this.submissions$.next(this.submissionMap.get(problemId));
+
     setTimeout(() => {
-      const id = this.submissionMap.size + 1;
-      const submission = new Submission(id, problemId);
       submission.submissionTime = new Date().getTime();
       if (!this.submissionMap.get(id)) {
         this.submissionMap.set(id, []);
@@ -77,18 +85,18 @@ export class StubSubmissionService extends SubmissionService {
     setTimeout(async () => {
       const problem = await this.problemService.getProblem(submission.problemId).toPromise();
       const testCases = await this.problemService.getTestCases(submission.problemId).toPromise();
-      let summaryStatus = undefined;
+      let summaryStatus;
       for (const testCase of testCases) {
         const randomStatus = JUDGE_STATUSES[Math.floor(Math.random() * JUDGE_STATUSES.length)];
         if (randomStatus === JudgeStatus.AC) {
-          submission.addJudge(new Judge(JudgeStatus.AC, 500, 5, testCase.grade));
+          submission.addJudge(new Judge(JudgeStatus.AC, 3, 5, testCase.grade));
           summaryStatus = summaryStatus ? summaryStatus : JudgeStatus.AC;
         } else if (randomStatus === JudgeStatus.CE) {
           submission.addJudge(new Judge(randomStatus, undefined, undefined, 0));
-          summaryStatus = summaryStatus  && summaryStatus !== JudgeStatus.AC ? summaryStatus : JudgeStatus.CE;
+          summaryStatus = summaryStatus && summaryStatus !== JudgeStatus.AC ? summaryStatus : JudgeStatus.CE;
         } else {
           submission.addJudge(new Judge(randomStatus, 5, 5, 0));
-          summaryStatus = summaryStatus  && summaryStatus !== JudgeStatus.AC ? summaryStatus : randomStatus;
+          summaryStatus = summaryStatus && summaryStatus !== JudgeStatus.AC ? summaryStatus : randomStatus;
         }
         submission.summaryStatus = summaryStatus;
         submission.judgeTime = new Date().getTime();

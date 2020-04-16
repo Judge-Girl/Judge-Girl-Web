@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {JudgeResponse, JudgeStatus, Submission, SubmissionService} from './services/impl/SubmissionService';
+import {JudgeResponse, JudgeStatus, Submission} from './services/impl/SubmissionService';
 import {MessageService} from 'primeng';
+import {SubmissionService} from './services/Services';
 
 @Component({
   selector: 'app-root',

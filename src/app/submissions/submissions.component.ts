@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {JudgeStatus, Submission, SubmissionService} from '../services/impl/SubmissionService';
+import {JudgeStatus, Submission} from '../services/impl/SubmissionService';
 import {ActivatedRoute} from '@angular/router';
-import {ProblemService} from '../services/Services';
+import {ProblemService, SubmissionService} from '../services/Services';
 import {map, switchMap} from 'rxjs/operators';
 import {Observable} from 'rxjs';
 import {Problem, TestCase} from '../models';
@@ -20,7 +20,19 @@ export class SubmissionsComponent implements OnInit {
   }
 
   get bestSubmission(): Submission {
-    return this.submissions ? this.submissions[0] : undefined;
+    if (!this.submissions) {
+      return undefined;
+    }
+    let best: Submission;
+    for (const submission of this.submissions) {
+      if (submission.summaryStatus === JudgeStatus.AC) {
+        return submission;
+      }
+      if (!best) {
+        best = submission;
+      }
+    }
+    return best;
   }
 
   problem$: Observable<Problem>;
@@ -39,12 +51,11 @@ export class SubmissionsComponent implements OnInit {
 
 
   private static compareSubmissions(s1: Submission, s2: Submission): number {
-    return s2.judgeTime - s1.judgeTime;
+    return s2.submissionTime - s1.submissionTime;
   }
 
   private static sortSubmissions(submissions: Submission[]): Submission[] {
-    submissions.sort(SubmissionsComponent.compareSubmissions);
-    return submissions;
+    return submissions.sort(SubmissionsComponent.compareSubmissions);
   }
 
   async ngOnInit() {
@@ -63,9 +74,10 @@ export class SubmissionsComponent implements OnInit {
         .then(testCases => this.testCases = testCases);
     });
     this.submissions$.subscribe(submissions => {
-      this.submissions = submissions;
+      this.submissions = SubmissionsComponent.sortSubmissions(submissions);
       console.log(`Submissions read: ${this.submissions}`);
     });
+
   }
 
   ifTheBestSubmissionStatusIs(status: JudgeStatus) {
