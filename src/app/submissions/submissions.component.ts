@@ -2,6 +2,9 @@ import {Component, OnInit} from '@angular/core';
 import {JudgeStatus, Submission, SubmissionService} from '../services/impl/SubmissionService';
 import {ActivatedRoute} from '@angular/router';
 import {ProblemService} from '../services/Services';
+import {map, switchMap} from 'rxjs/operators';
+import {Observable} from 'rxjs';
+import {Problem, TestCase} from '../models';
 
 @Component({
   selector: 'app-submissions',
@@ -9,14 +12,23 @@ import {ProblemService} from '../services/Services';
   styleUrls: ['./submissions.component.css']
 })
 export class SubmissionsComponent implements OnInit {
+  viewingDetailsSubmission: Submission;
 
   constructor(private problemService: ProblemService,
-              private submissionService: SubmissionService) {
+              private submissionService: SubmissionService,
+              private route: ActivatedRoute) {
   }
 
   get bestSubmission(): Submission {
-    return this.submissions[0];
+    return this.submissions ? this.submissions[0] : undefined;
   }
+
+  problem$: Observable<Problem>;
+  submissions$: Observable<Submission[]>;
+
+  problem: Problem;
+  testCases: TestCase[] = [];
+  submissions: Submission[] = [];
 
   AC = JudgeStatus.AC;
   CE = JudgeStatus.CE;
@@ -25,32 +37,43 @@ export class SubmissionsComponent implements OnInit {
   WA = JudgeStatus.WA;
   RE = JudgeStatus.RE;
 
-  submissions: Submission[];
 
   private static compareSubmissions(s1: Submission, s2: Submission): number {
-    if (s1.judge.status === JudgeStatus.AC && s2.judge.status === JudgeStatus.AC) {
-      if (s1.judge.runtime === s2.judge.runtime) {
-        return s2.judge.memory - s1.judge.memory;
-      }
-    }
-    return s1.judge.status === JudgeStatus.AC ? -1 :
-      s2.judge.status === JudgeStatus.AC ? 1 : 0;
+    return s2.judgeTime - s1.judgeTime;
   }
 
-  ngOnInit(): void {
-    this.submissions = [];
-    this.submissionService.getSubmissions(this.problemService._currentProblemId)
-      .subscribe(s => this.addSubmissionAndSort(s));
+  private static sortSubmissions(submissions: Submission[]): Submission[] {
+    submissions.sort(SubmissionsComponent.compareSubmissions);
+    return submissions;
   }
 
-  private addSubmissionAndSort(submission: Submission) {
-    this.submissions.push(submission);
-    this.submissions.sort(SubmissionsComponent.compareSubmissions);
+  async ngOnInit() {
+    this.problem$ = this.route.parent.params.pipe(switchMap(params =>
+      this.problemService.getProblem(+params.problemId)
+    ));
+
+    this.submissions$ = this.route.parent.params.pipe(switchMap(params =>
+      this.submissionService.getSubmissions(+params.problemId)
+        .pipe(map(SubmissionsComponent.sortSubmissions))
+    ));
+
+    this.problem$.subscribe(p => {
+      this.problem = p;
+      this.problemService.getTestCases(this.problem.id).toPromise()
+        .then(testCases => this.testCases = testCases);
+    });
+    this.submissions$.subscribe(submissions => {
+      this.submissions = submissions;
+      console.log(`Submissions read: ${this.submissions}`);
+    });
   }
 
   ifTheBestSubmissionStatusIs(status: JudgeStatus) {
-    return this.submissions.length >= 1 && this.bestSubmission.judge.status === status;
-
+    return this.bestSubmission && this.bestSubmission.summaryStatus === status;
   }
 
+  onSubmissionDetailsBtnClick(submission: Submission): boolean {
+    this.viewingDetailsSubmission = submission;
+    return true;  // propagate the click event to the bootstrap's modal
+  }
 }

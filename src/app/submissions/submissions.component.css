@@ -1,5 +1,11 @@
-.my-panel{
+.my-panel {
   padding: 30px 8px 8px 15px;
+}
+
+#best-record-label {
+  font-size: 12px;
+  color: #808080;
+  margin: 0 0 4px 0;
 }
 
 .text {
@@ -14,4 +20,33 @@
 
 #submissions-table {
   margin-top: 35px;
+}
+
+
+.submissions-table td, .submissions-table th {
+  font-size: 15px;
+  vertical-align: middle;
+}
+
+.submissions-table .see-details-btn {
+  font-size: 15px;
+}
+
+#submission-table-header {
+  font-size: 13px;
+}
+
+.AC {
+  font-weight: bold;
+  color: green;
+}
+
+.WA, .RE {
+  font-weight: bold;
+  color: Red;
+}
+
+.CE, .TLE, .MLE, .OLE {
+  font-weight: bold;
+  color: #ff8b26;
 }

@@ -6,6 +6,7 @@
 
 <div class="my-panel">
 
+  <p *ngIf="bestSubmission" id="best-record-label">Best Record</p>
   <span *ngIf="ifTheBestSubmissionStatusIs(AC)" class="badge badge-success judge-status">AC</span>
   <span *ngIf="ifTheBestSubmissionStatusIs(RE)" class="badge badge-danger judge-status">RE</span>
   <span *ngIf="ifTheBestSubmissionStatusIs(MLE)" class="badge badge-warning judge-status">MLE</span>
@@ -13,25 +14,72 @@
   <span *ngIf="ifTheBestSubmissionStatusIs(CE)" class="badge badge-danger judge-status">CE</span>
   <span *ngIf="ifTheBestSubmissionStatusIs(WA)" class="badge badge-danger judge-status">WA</span>
 
-  <p *ngIf="bestSubmission" class="text">Runtime: {{bestSubmission.judge.runtime}}ms</p>
-  <p *ngIf="bestSubmission" class="text">Memory Usage: {{bestSubmission.judge.memory}}MB</p>
+  <p *ngIf="bestSubmission" class="text">Total Grade: {{bestSubmission.totalGrade}}&nbsp;pt</p>
 
   <table *ngIf="submissions.length != 0" class="table" id="submissions-table">
-    <thead [style.fontSize]="'17px'">
+    <thead id="submission-table-header" [style.fontSize]="'14px'">
     <tr>
-      <th scope="col">#</th>
+      <th scope="col">Time</th>
       <th scope="col">Status</th>
-      <th scope="col">Runtime</th>
-      <th scope="col">Memory</th>
+      <th scope="col">Avg Runtime</th>
+      <th scope="col">Avg Memory</th>
+      <th scope="col">Total Grade</th>
+      <th scope="col"></th>
     </tr>
     </thead>
-    <tbody  [style.fontSize]="'14px'">
+    <tbody class="submissions-table">
     <tr *ngFor="let submission of submissions; let i = index">
-      <th scope="row">{{submissions.length - i}}</th>
-      <td>{{submission.judge.status}}</td>
-      <td>{{submission.judge.runtime}}</td>
-      <td>{{submission.judge.memory}}</td>
+      <th [width]="'80px'" scope="row">{{submissions.length - i}}</th>
+      <td [width]="'50px'" class="{{submission.summaryStatus}}">{{submission.summaryStatus}}</td>
+      <td [width]="'50px'">{{submission.averageRuntime ? submission.averageRuntime : '--'}}</td>
+      <td [width]="'50px'">{{submission.averageMemory ? submission.averageMemory : '--'}}</td>
+      <td [width]="'50px'">{{submission.totalGrade}}</td>
+      <td>
+        <button type="button" class="btn btn-link see-details-btn" data-toggle="modal"
+                (click)="onSubmissionDetailsBtnClick(submission)"
+                data-target="#submission-details-modal">
+          See Details
+        </button>
+      </td>
     </tr>
     </tbody>
   </table>
+</div>
+
+<!-- Modal -->
+<div *ngIf="viewingDetailsSubmission"
+  class="modal fade" id="submission-details-modal" tabindex="-1" role="dialog" aria-labelledby="submission-details-modal-title" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="submission-details-modal-title">Submission Details</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <table class="table" id="submission-judges-table">
+          <thead class="modal-title" id="submission-judges-table-header" [style.fontSize]="'14px'">
+          <tr>
+            <th scope="col">Test Case</th>
+            <th scope="col" >Status</th>
+            <th scope="col">Runtime</th>
+            <th scope="col">Memory</th>
+            <th scope="col">Grade</th>
+            <th scope="col"></th>
+          </tr>
+          </thead>
+          <tbody class="submissions-table">
+          <tr *ngFor="let judge of viewingDetailsSubmission.judges; let i = index">
+            <th [width]="'80px'" scope="row">{{testCases[i].name}}</th>
+            <td [width]="'50px'" class="{{judge.status}}">{{judge.status}}</td>
+            <td [width]="'50px'">{{judge.status === CE ? '--' : judge.runtime}}</td>
+            <td [width]="'50px'">{{judge.status === CE ? '--' : judge.memory}}</td>
+            <td [width]="'50px'">{{judge.grade}}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </div>

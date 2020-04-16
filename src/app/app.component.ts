@@ -8,7 +8,7 @@ import {MessageService} from 'primeng';
   styleUrls: []
 })
 export class AppComponent implements OnInit {
-  readonly KEY_SUBMISSION_TOAST = 'submission-toast-key';
+  readonly MESSAGE_KEY_SUBMISSION_TOAST = 'submission-toast-key';
 
   constructor(private submissionService: SubmissionService,
               private messageService: MessageService) {
@@ -21,11 +21,11 @@ export class AppComponent implements OnInit {
 
   private onNextJudgeResponse(judgeResponse: JudgeResponse) {
     this.messageService.add({
-      key: this.KEY_SUBMISSION_TOAST,
-      severity: judgeResponse.submission.judge.status === JudgeStatus.AC ? 'success' : 'error',
+      key: this.MESSAGE_KEY_SUBMISSION_TOAST,
+      severity: judgeResponse.submission.summaryStatus === JudgeStatus.AC ? 'success' : 'error',
       life: 8000,
       data: {
-        judgeStatus: judgeResponse.submission.judge.status,
+        judgeStatus: judgeResponse.submission.summaryStatus,
         problemTitle: judgeResponse.problemTitle,
         problemId: judgeResponse.problemId
       }

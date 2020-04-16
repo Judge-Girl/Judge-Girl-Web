@@ -36,7 +36,7 @@ export class LoginComponent implements OnInit {
 
   private routeToProblemListPage() {
     console.log(`Routing to the problems page.`);
-    this.router.navigateByUrl(`problems`);
+    this.router.navigateByUrl('problems');
   }
 
 

@@ -1,3 +1,13 @@
+export class TestCase {
+  constructor(public name: string,
+              public timeLimit: number,
+              public memoryLimit: number,
+              public outputLimit: number,
+              public threadNumberLimit: number,
+              public grade: number) {
+  }
+}
+
 export class ProblemItem {
   constructor(public id: number,
               public title: string) {
@@ -12,7 +22,7 @@ export class JudgeSpec {
   }
 }
 
-export class SubmittedCodeMeta {
+export class SubmittedCodeSpec {
   constructor(public language: string, public fileName: string) {
   }
 }
@@ -27,7 +37,7 @@ export class Problem extends ProblemItem {
   constructor(id: number, title: string,
               public markdownDescription: string,
               public problemTags: string[],
-              public submittedCodeMetas: SubmittedCodeMeta[],
+              public submittedCodeSpecs: SubmittedCodeSpec[],
               public zippedProvidedCodesFileId: string,
               public compilation: Compilation) {
     super(id, title);

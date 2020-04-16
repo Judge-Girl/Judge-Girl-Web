@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {ProblemService} from '../../services/Services';
 
 @Component({
@@ -8,7 +8,8 @@ import {ProblemService} from '../../services/Services';
   styleUrls: []
 })
 export class ProblemTagDropDownComponent implements OnInit {
-  private readonly DUMMY_TAG = 'All';
+  @Output() tagSelect = new EventEmitter<string>();
+  public readonly DUMMY_TAG = 'All';
   currentSelectedTag = this.DUMMY_TAG;
   problemTags: string[];
 
@@ -20,13 +21,12 @@ export class ProblemTagDropDownComponent implements OnInit {
     this.problemService.getProblemTags()
       .subscribe(tag => {
         this.problemTags.push(tag);
-        console.log(this.problemTags);
       });
   }
 
   selectProblemTag(problemTag: string): boolean {
     this.currentSelectedTag = problemTag;
-
-    return false;  // consume the click event
+    this.tagSelect.emit(problemTag);
+    return false;  // consume the click event to prevent link navigating
   }
 }

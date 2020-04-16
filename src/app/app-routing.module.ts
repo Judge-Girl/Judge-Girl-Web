@@ -6,6 +6,7 @@ import {ProblemListComponent} from './problem-list/problem-list.component';
 import {ProblemSubmissionTabPanelComponent} from './problem-submission-tab-panel/problem-submission-tab-panel.component';
 import {SubmissionsComponent} from './submissions/submissions.component';
 import {ProblemDescriptionComponent} from './problem-description/problem-description.component';
+import {CodePanelComponent} from './code-panel/code-panel.component';
 
 const routes: Routes = [
   {path: '', component: LoginComponent},
@@ -13,7 +14,7 @@ const routes: Routes = [
   {
     path: 'problems/:problemId', component: ProblemSubmissionTabPanelComponent,
     children: [
-      {path: '', component: ProblemDescriptionComponent},
+      {path: '', redirectTo: 'description', pathMatch: 'full'},
       {path: 'description', component: ProblemDescriptionComponent},
       {path: 'submissions', component: SubmissionsComponent}]
   }];
