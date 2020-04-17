@@ -45,7 +45,9 @@
               "node_modules/chart.js/dist/Chart.js",
               "node_modules/@fullcalendar/core/main.min.js",
               "node_modules/quill/dist/quill.js",
-              "node_modules/prismjs/prism.js"
+              "node_modules/prismjs/prism.js",
+
+              "node_modules/moment/min/moment.min.js"
             ]
           },
           "configurations": {

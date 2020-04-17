@@ -18,7 +18,7 @@ export class StubSubmissionService extends SubmissionService {
     super();
 
     this.submissionMap.set(1, [
-      new Submission(1, 1).addJudge(new Judge(JudgeStatus.RE, 4, 22.3, 0)).summary(100, JudgeStatus.RE),
+      new Submission(1, 1).addJudge(new Judge(JudgeStatus.RE, 4, 22.3, 0)).summary(0, JudgeStatus.RE),
       new Submission(2, 1).addJudge(new Judge(JudgeStatus.AC, 8, 39.7, 40))
         .addJudge(new Judge(JudgeStatus.TLE, 8, 39.7, 0)).summary(40, JudgeStatus.TLE)
     ]);
@@ -99,8 +99,11 @@ export class StubSubmissionService extends SubmissionService {
           summaryStatus = summaryStatus && summaryStatus !== JudgeStatus.AC ? summaryStatus : randomStatus;
         }
         submission.summaryStatus = summaryStatus;
-        submission.judgeTime = new Date().getTime();
       }
+      for (const judge of submission.judges) {
+        submission.totalGrade += judge.grade;
+      }
+      submission.judgeTime = new Date().getTime();
       this.schedulingSubject.next(new JudgeResponse(problem.id, problem.title, submission));
     }, 400);
   }

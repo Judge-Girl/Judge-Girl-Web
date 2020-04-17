@@ -5,6 +5,7 @@ import {ProblemService, SubmissionService} from '../services/Services';
 import {map, switchMap} from 'rxjs/operators';
 import {Observable} from 'rxjs';
 import {Problem, TestCase} from '../models';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-submissions',
@@ -23,12 +24,11 @@ export class SubmissionsComponent implements OnInit {
     if (!this.submissions) {
       return undefined;
     }
+    let bestGrade = -1;
     let best: Submission;
     for (const submission of this.submissions) {
-      if (submission.summaryStatus === JudgeStatus.AC) {
-        return submission;
-      }
-      if (!best) {
+      if (submission.totalGrade > bestGrade) {
+        bestGrade = submission.totalGrade;
         best = submission;
       }
     }
@@ -87,5 +87,9 @@ export class SubmissionsComponent implements OnInit {
   onSubmissionDetailsBtnClick(submission: Submission): boolean {
     this.viewingDetailsSubmission = submission;
     return true;  // propagate the click event to the bootstrap's modal
+  }
+
+  describeTime(time: number): string {
+    return moment(time).fromNow();
   }
 }

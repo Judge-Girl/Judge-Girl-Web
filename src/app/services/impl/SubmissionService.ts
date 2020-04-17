@@ -16,7 +16,7 @@ export class Judge {
 export class Submission {
   judges: Judge[] = [];
   summaryStatus: JudgeStatus;
-  totalGrade: number;
+  totalGrade = 0;
   submissionTime: number;
   judgeTime: number;
 

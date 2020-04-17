@@ -29,7 +29,7 @@
     </thead>
     <tbody class="submissions-table">
     <tr *ngFor="let submission of submissions">
-      <th [width]="'80px'" scope="row">{{submission.submissionTime}}</th>
+      <th [width]="'80px'" scope="row">{{describeTime(submission.submissionTime)}}</th>
       <td *ngIf="!submission.isJudged()">
         <div class="spinner-border text-primary" role="status" id="spinner">
           <span class="sr-only">Loading...</span>
