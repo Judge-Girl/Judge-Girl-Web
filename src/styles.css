@@ -2,6 +2,10 @@
 @import '~primeng/resources/themes/nova-light/theme.css';
 @import '~primeng/resources/primeng.min.css';
 
+.hidden {
+  display: none;
+}
+
 .my-container {
   display: flex;
   justify-content: center;

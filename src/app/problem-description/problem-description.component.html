@@ -4,9 +4,12 @@
   <ld-circle></ld-circle>
 </div>
 
-<div *ngIf="problem" class="my-panel" id="problem-description-panel">
-  <header id="title">{{problem.title}}</header>
+<div class="my-panel hidden" id="problem-description-panel" #problemDescriptionPanel>
+  <header id="title"><h1>{{problem && problem.title}}</h1></header>
+  <div class="markdown-panel" #markdownPanel>
 
-  <!-- TODO markdown description -->
+  </div>
+  <div class="markdown-panel" #compilationScriptPanel>
+  </div>
   <hr>
 </div>

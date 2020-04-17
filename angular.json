@@ -32,7 +32,9 @@
               "node_modules/primeng/resources/themes/nova-light/theme.css",
               "node_modules/primeng/resources/primeng.min.css",
 
-              "node_modules/codemirror/lib/codemirror.css"
+              "node_modules/codemirror/lib/codemirror.css",
+
+              "node_modules/markdown-it-katex/node_modules/katex/dist/katex.min.css"
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.slim.min.js",
@@ -47,7 +49,10 @@
               "node_modules/quill/dist/quill.js",
               "node_modules/prismjs/prism.js",
 
-              "node_modules/moment/min/moment.min.js"
+              "node_modules/moment/min/moment.min.js",
+              "node_modules/markdown-it/dist/markdown-it.min.js",
+              "node_modules/highlight.js/lib/highlight.js",
+              "node_modules/markdown-it-katex/index.js"
             ]
           },
           "configurations": {
