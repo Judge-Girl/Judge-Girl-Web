@@ -12,14 +12,14 @@
 <p-toast position="top-right" key="{{MESSAGE_KEY_ERROR_TOAST}}"></p-toast>
 
 
-<div *ngIf="!studentService.isAuthenticated()">
+<div *ngIf="!studentService.hasLogin()">
   <h4>Wanna submit?</h4>
   <span>You must login to view your submissions.</span>
   <button class="btn btn-link" [routerLink]="'/'" [style.fontSize]="'17px'">Log in</button>
   <hr>
 </div>
 
-<div *ngIf="studentService.isAuthenticated()" class="my-panel">
+<div *ngIf="studentService.hasLogin()" class="my-panel">
   <h3>Submissions</h3>
   <hr>
   <form>

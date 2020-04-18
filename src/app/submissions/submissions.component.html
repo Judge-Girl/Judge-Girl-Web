@@ -6,7 +6,7 @@
 
 
 
-<div *ngIf="studentService.isAuthenticated()" class="my-panel">
+<div *ngIf="studentService.hasLogin()" class="my-panel">
   <p *ngIf="!bestSubmission">You have not submitted to this problem yet.</p>
 
   <p *ngIf="bestSubmission" id="best-record-label">Best Record</p>

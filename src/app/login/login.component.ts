@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {AccountNotFoundError, IncorrectPasswordFoundError, StudentService} from '../services/Services';
 import {Router} from '@angular/router';
+import {CookieService} from 'ngx-cookie';
 
 @Component({
   selector: 'app-login',
@@ -12,13 +13,27 @@ export class LoginComponent implements OnInit {
 
   errorMessage = '';
 
-  constructor(private loginService: StudentService,
-              private router: Router) {
+  constructor(private studentService: StudentService,
+              private router: Router,
+              private cookieService: CookieService) {
   }
 
   ngOnInit(): void {
-    if (this.loginService.isAuthenticated()) {
+    if (this.studentService.hasLogin()) {
       this.routeToProblemListPage();
+    }
+    this.authenticateFromCookieAndLoginIfValid();
+  }
+
+  private authenticateFromCookieAndLoginIfValid() {
+    const token = this.cookieService.get(StudentService.KEY_TOKEN);
+    if (token) {
+      this.studentService.auth(token).toPromise()
+        .then(s => {
+          this.routeToProblemListPage();
+        })
+        .catch(err => {
+        });
     }
   }
 
@@ -26,7 +41,7 @@ export class LoginComponent implements OnInit {
     console.log(`Login with studentId: ${studentId}, password: ${'*'.repeat(password.length)}`);
     const spinner = document.getElementById('spinner');
     spinner.style.display = 'inline';
-    this.loginService.login(studentId, password)
+    this.studentService.login(studentId, password)
       .subscribe({
         complete: () => {
           spinner.style.display = 'none';

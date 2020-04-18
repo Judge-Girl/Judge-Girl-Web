@@ -14,7 +14,7 @@ export class AuthenticatedDirective {
               private router: Router,
               private location: Location,
               private elementRef: ElementRef) {
-    if (!studentService.isAuthenticated()) {
+    if (!studentService.hasLogin()) {
       elementRef.nativeElement.style.display = 'none';
     }
   }

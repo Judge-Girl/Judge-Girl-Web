@@ -23,6 +23,8 @@ import {HttpProblemService} from './services/impl/HttpProblemService';
 import {HttpStudentService} from './services/impl/HttpStudentService';
 import {HttpSubmissionService} from './services/impl/HttpSubmissionService';
 import {AuthenticatedDirective} from './directives/AuthenticatedDirective';
+import {CookieModule, CookieService} from 'ngx-cookie';
+
 
 
 @NgModule({
@@ -45,17 +47,19 @@ import {AuthenticatedDirective} from './directives/AuthenticatedDirective';
     AuthenticatedDirective
   ],
   imports: [
+    CookieModule.forRoot(),  /*IDK why, but remove `forRoot` cause an error*/
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,
 
     /*primeNG*/
-    BlockUIModule, ToastModule, FileUploadModule, MessagesModule
+    BlockUIModule, ToastModule, FileUploadModule, MessagesModule,
   ],
   providers: [
     HttpClient,
     MessageService,
+    CookieService,
     {provide: StudentService, useClass: HttpStudentService},
     {provide: ProblemService, useClass: HttpProblemService},
     {provide: SubmissionService, useClass: HttpSubmissionService},

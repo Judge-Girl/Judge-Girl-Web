@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {JudgeResponse, Problem, ProblemItem, Student, Submission, TestCase} from '../models';
 import {Router} from '@angular/router';
+import {CookieService} from 'ngx-cookie';
 
 
 export class UnauthenticatedError extends Error {
@@ -21,24 +22,42 @@ export class IncorrectPasswordFoundError extends Error {
   providedIn: 'root'
 })
 export abstract class StudentService {
-  currentStudent: Student;
+  public static readonly KEY_TOKEN = 'token';
 
-  constructor(protected router: Router) {
+  _currentStudent: Student;
+
+  protected constructor(protected router: Router, protected cookieService: CookieService) {
   }
 
   authenticate() {
-    if (!this.isAuthenticated()) {
-      this.router.navigateByUrl('/');
+    if (!this.hasLogin()) {
+      this.redirectToLoginPage();
       throw new UnauthenticatedError();
     }
   }
 
-  isAuthenticated(): boolean {
+  hasLogin(): boolean {
     return this.currentStudent !== undefined &&
       new Date().getTime() < this.currentStudent.expiryTime;
   }
 
+  abstract auth(token: string): Observable<Student>;
+
   abstract login(account: string, password: string): Observable<Student>;
+
+  get currentStudent(): Student {
+    return this._currentStudent;
+  }
+
+  set currentStudent(student: Student) {
+    this._currentStudent = student;
+    this.cookieService.put(StudentService.KEY_TOKEN, student.token);
+  }
+
+  public redirectToLoginPage() {
+    this.router.navigateByUrl('/');
+    this.cookieService.remove(StudentService.KEY_TOKEN);
+  }
 }
 
 @Injectable({
@@ -67,3 +86,4 @@ export abstract class SubmissionService {
 
   abstract submitFromFile(problemId: number, files: File[]): Observable<Submission>;
 }
+

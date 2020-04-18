@@ -57,7 +57,7 @@ export class SubmissionsComponent implements OnInit {
         .then(testCases => this.testCases = testCases);
     });
 
-    if (this.studentService.isAuthenticated()) {
+    if (this.studentService.hasLogin()) {
       this.loadingSubmissions = true;
       this.submissions$ = this.route.parent.params.pipe(switchMap(params =>
         this.submissionService.getSubmissions(+params.problemId)

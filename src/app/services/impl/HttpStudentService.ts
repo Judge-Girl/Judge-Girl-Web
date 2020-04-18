@@ -5,6 +5,7 @@ import {Observable} from 'rxjs';
 import {Student} from '../../models';
 import {catchError, map} from 'rxjs/operators';
 import {Router} from '@angular/router';
+import {CookieService} from 'ngx-cookie';
 
 @Injectable({
   providedIn: 'root'
@@ -15,8 +16,8 @@ export class HttpStudentService extends StudentService {
   constructor(private http: HttpClient,
               @Inject('BASE_URL') baseUrl: string,
               @Inject('PORT_STUDENT_SERVICE') port: number,
-              router: Router) {
-    super(router);
+              router: Router, cookieService: CookieService) {
+    super(router, cookieService);
     this.host = `${baseUrl}:${port}`;
   }
 
@@ -36,6 +37,17 @@ export class HttpStudentService extends StudentService {
         }
         throw new Error(`Catch unknown error from the server: ${err.status}`);
       }));
+  }
+
+  auth(token: string): Observable<Student> {
+    return this.http.post<Student>(`${this.host}/api/students/auth`, null, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }).pipe(map(student => {
+      this.currentStudent = student;
+      return student;
+    }));
   }
 
 }
