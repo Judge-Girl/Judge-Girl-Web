@@ -29,16 +29,16 @@
     </thead>
     <tbody class="submissions-table">
     <tr *ngFor="let submission of submissions">
-      <th [width]="'80px'" scope="row">{{describeTime(submission.submissionTime)}}</th>
+      <th [width]="'170px'" scope="row">{{describeTime(submission.submissionTime)}}</th>
       <td *ngIf="!submission.isJudged()">
         <div class="spinner-border text-primary" role="status" id="spinner">
           <span class="sr-only">Loading...</span>
         </div>
       </td>
-      <td *ngIf="submission.isJudged()" [width]="'50px'" class="{{submission.summaryStatus}}">{{submission.summaryStatus}}</td>
-      <td *ngIf="submission.isJudged()" [width]="'50px'">{{submission.averageRuntime ? submission.averageRuntime : '--'}}</td>
-      <td *ngIf="submission.isJudged()" [width]="'50px'">{{submission.averageMemory ? submission.averageMemory : '--'}}</td>
-      <td *ngIf="submission.isJudged()" [width]="'50px'">{{submission.totalGrade}}</td>
+      <td *ngIf="submission.isJudged()" [width]="'60px'" class="{{submission.summaryStatus}}">{{submission.summaryStatus}}</td>
+      <td *ngIf="submission.isJudged()" [width]="'60px'">{{submission.averageRuntime ? submission.averageRuntime : '--'}}</td>
+      <td *ngIf="submission.isJudged()" [width]="'60px'">{{submission.averageMemory ? submission.averageMemory : '--'}}</td>
+      <td *ngIf="submission.isJudged()" [width]="'60px'">{{submission.totalGrade}}</td>
       <td>
         <button type="button" class="btn btn-link see-details-btn" data-toggle="modal"
                 (click)="onSubmissionDetailsBtnClick(submission)"
