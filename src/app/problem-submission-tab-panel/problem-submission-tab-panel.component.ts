@@ -1,5 +1,7 @@
 import {Component, ElementRef, OnInit} from '@angular/core';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
+import {Student} from '../models';
+import {StudentService} from '../services/Services';
 
 export enum Tab {
   PROBLEM, SUBMISSIONS
@@ -16,7 +18,7 @@ export class ProblemSubmissionTabPanelComponent implements OnInit {
 
   private problemId: number;
 
-  constructor(private elementRef: ElementRef,
+  constructor(private elementRef: ElementRef, public studentService: StudentService,
               private router: Router, private route: ActivatedRoute) {
     route.params.subscribe(params => this.problemId = +params.problemId);
     this.router.events.subscribe(e => {

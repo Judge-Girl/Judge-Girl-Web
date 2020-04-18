@@ -1,10 +1,9 @@
 import {Component, OnInit} from '@angular/core';
-import {JudgeStatus, Submission} from '../services/impl/SubmissionService';
 import {ActivatedRoute} from '@angular/router';
-import {ProblemService, SubmissionService} from '../services/Services';
+import {ProblemService, StudentService, SubmissionService} from '../services/Services';
 import {map, switchMap} from 'rxjs/operators';
 import {Observable} from 'rxjs';
-import {Problem, TestCase} from '../models';
+import {getAverageMemory, getAverageRuntime, isJudged, JudgeStatus, Problem, Submission, TestCase} from '../models';
 import * as moment from 'moment';
 
 @Component({
@@ -14,26 +13,14 @@ import * as moment from 'moment';
 })
 export class SubmissionsComponent implements OnInit {
   viewingDetailsSubmission: Submission;
+  loadingSubmissions = false;
 
-  constructor(private problemService: ProblemService,
+  constructor(public studentService: StudentService,
+              private problemService: ProblemService,
               private submissionService: SubmissionService,
               private route: ActivatedRoute) {
   }
 
-  get bestSubmission(): Submission {
-    if (!this.submissions) {
-      return undefined;
-    }
-    let bestGrade = -1;
-    let best: Submission;
-    for (const submission of this.submissions) {
-      if (submission.totalGrade > bestGrade) {
-        bestGrade = submission.totalGrade;
-        best = submission;
-      }
-    }
-    return best;
-  }
 
   problem$: Observable<Problem>;
   submissions$: Observable<Submission[]>;
@@ -63,21 +50,42 @@ export class SubmissionsComponent implements OnInit {
       this.problemService.getProblem(+params.problemId)
     ));
 
-    this.submissions$ = this.route.parent.params.pipe(switchMap(params =>
-      this.submissionService.getSubmissions(+params.problemId)
-        .pipe(map(SubmissionsComponent.sortSubmissions))
-    ));
 
     this.problem$.subscribe(p => {
       this.problem = p;
       this.problemService.getTestCases(this.problem.id).toPromise()
         .then(testCases => this.testCases = testCases);
     });
-    this.submissions$.subscribe(submissions => {
-      this.submissions = SubmissionsComponent.sortSubmissions(submissions);
-      console.log(`Submissions read: ${this.submissions}`);
-    });
 
+    if (this.studentService.isAuthenticated()) {
+      this.loadingSubmissions = true;
+      this.submissions$ = this.route.parent.params.pipe(switchMap(params =>
+        this.submissionService.getSubmissions(+params.problemId)
+          .pipe(map(SubmissionsComponent.sortSubmissions))
+      ));
+
+      this.submissions$.subscribe(submissions => {
+        this.submissions = SubmissionsComponent.sortSubmissions(submissions);
+        this.loadingSubmissions = false;
+      });
+    } else {
+
+    }
+  }
+
+  get bestSubmission(): Submission {
+    if (!this.submissions) {
+      return undefined;
+    }
+    let bestGrade = -1;
+    let best: Submission;
+    for (const submission of this.submissions) {
+      if (submission.totalGrade > bestGrade) {
+        bestGrade = submission.totalGrade;
+        best = submission;
+      }
+    }
+    return best;
   }
 
   ifTheBestSubmissionStatusIs(status: JudgeStatus) {
@@ -91,5 +99,17 @@ export class SubmissionsComponent implements OnInit {
 
   describeTime(time: number): string {
     return moment(time).fromNow();
+  }
+
+  isJudged(submission: Submission) {
+    return isJudged(submission);
+  }
+
+  avgMemory(submission: Submission) {
+    return getAverageMemory(submission);
+  }
+
+  avgRuntime(submission: Submission) {
+    return getAverageRuntime(submission);
   }
 }

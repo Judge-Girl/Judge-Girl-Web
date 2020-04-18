@@ -1,9 +1,10 @@
-import {Judge, JUDGE_STATUSES, JudgeResponse, JudgeStatus, Submission} from './SubmissionService';
+
 import {Observable, Subject} from 'rxjs';
 import {ProblemService, SubmissionService} from '../Services';
 import {Injectable} from '@angular/core';
 import {SubmissionsComponent} from '../../submissions/submissions.component';
 import {switchMap} from 'rxjs/operators';
+import {Judge, JUDGE_STATUSES, JudgeResponse, JudgeStatus, Submission} from '../../models';
 
 @Injectable(
   {providedIn: 'root'}

@@ -5,8 +5,8 @@ import {AppRoutingModule} from './app-routing.module';
 import {LoginComponent} from './login/login.component';
 import {AppComponent} from './app.component';
 import {ProblemListComponent} from './problem-list/problem-list.component';
-import {StubLoginService} from './services/impl/StubLoginService';
-import {LoginService, ProblemService, SubmissionService} from './services/Services';
+import {StubStudentService} from './services/impl/StubStudentService';
+import {StudentService, ProblemService, SubmissionService} from './services/Services';
 import {StubProblemService} from './services/impl/StubProblemService';
 import {ProblemSubmissionTabPanelComponent} from './problem-submission-tab-panel/problem-submission-tab-panel.component';
 import {ProblemDescriptionComponent} from './problem-description/problem-description.component';
@@ -19,6 +19,10 @@ import {FileUploadModule} from 'primeng/fileupload';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
 import {BlockUIModule, MessageService, MessagesModule, ToastModule} from 'primeng';
 import { ProblemTagDropDownComponent } from './items/problem-tag-drop-down/problem-tag-drop-down.component';
+import {HttpProblemService} from './services/impl/HttpProblemService';
+import {HttpStudentService} from './services/impl/HttpStudentService';
+import {HttpSubmissionService} from './services/impl/HttpSubmissionService';
+import {AuthenticatedDirective} from './directives/AuthenticatedDirective';
 
 
 @NgModule({
@@ -35,7 +39,10 @@ import { ProblemTagDropDownComponent } from './items/problem-tag-drop-down/probl
     /*items*/
     LdCircleComponent,
 
-    ProblemTagDropDownComponent
+    ProblemTagDropDownComponent,
+
+    /*directives*/
+    AuthenticatedDirective
   ],
   imports: [
     BrowserModule,
@@ -49,9 +56,13 @@ import { ProblemTagDropDownComponent } from './items/problem-tag-drop-down/probl
   providers: [
     HttpClient,
     MessageService,
-    {provide: LoginService, useClass: StubLoginService},
-    {provide: ProblemService, useClass: StubProblemService},
-    {provide: SubmissionService, useClass: StubSubmissionService}
+    {provide: StudentService, useClass: HttpStudentService},
+    {provide: ProblemService, useClass: HttpProblemService},
+    {provide: SubmissionService, useClass: HttpSubmissionService},
+    {provide: 'BASE_URL', useValue: 'http://127.0.0.1'},
+    {provide: 'PORT_STUDENT_SERVICE', useValue: 33001},
+    {provide: 'PORT_PROBLEM_SERVICE', useValue: 33002},
+    {provide: 'PORT_SUBMISSION_SERVICE', useValue: 33003}
   ],
   bootstrap: [AppComponent]
 })

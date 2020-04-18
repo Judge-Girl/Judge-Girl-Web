@@ -10,8 +10,9 @@
     <form>
       <input type="text" id="login" class="input-field fadeIn second" name="studentId" placeholder="Student Id" #studentIdInput>
       <input type="password" id="password" class=" input-field fadeIn third" name="password" placeholder="Password" #passwordInput>
+      <p id="error-message">{{errorMessage}}</p>
       <div class="d-flex align-items-center justify-content-center"
-           [style.padding]="'20px 0 35px 0'">
+           [style.padding]="'13px 0 35px 0'">
         <input type="submit" id="login-btn" class="fadeIn fourth"
                (click)="login(studentIdInput.value, passwordInput.value)" value="Log In">
         <div class="spinner-border text-primary" role="status" id="spinner">

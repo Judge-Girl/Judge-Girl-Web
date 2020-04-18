@@ -40,22 +40,15 @@ export class StubProblemService extends ProblemService {
   }
 
 
-  getProblemItemsInPage(page: number): Observable<ProblemItem> {
-    const problemItems$ = new Subject<ProblemItem>();
-    setTimeout(() => this.emitNextProblemItem(0, problemItems$), 1000);
+  getProblemItemsInPage(page: number): Observable<ProblemItem[]> {
+    const problemItems$ = new Subject<ProblemItem[]>();
+    setTimeout(() => {
+      problemItems$.next(this.problems);
+      problemItems$.complete();
+    }, 400);
     return problemItems$;
   }
 
-  private emitNextProblemItem(idx: number, problemItems$: Subject<ProblemItem>) {
-    setTimeout(() => {
-      if (idx < this.problems.length) {
-        problemItems$.next(this.problems[idx]);
-        this.emitNextProblemItem(idx + 1, problemItems$);
-      } else {
-        problemItems$.complete();
-      }
-    }, 150);
-  }
 
   getProblem(problemId: number): Observable<Problem> {
     const problem$ = new Subject<Problem>();
@@ -70,27 +63,19 @@ export class StubProblemService extends ProblemService {
     return problem$;
   }
 
-  getProblemItemsByTag(problemTag: string): Observable<ProblemItem> {
-    const problem$ = new Subject<Problem>();
+  getProblemItemsByTag(problemTag: string): Observable<ProblemItem[]> {
+    const problem$ = new Subject<Problem[]>();
     setTimeout(() => {
-      for (const problem of this.problems) {
-        if (problem.problemTags.includes(problemTag)) {
-          problem$.next(problem);
-        }
-      }
-      // problem$.next(this.problems.find(p =>
-      //   p.problemTags.find(tag => tag === problemTag)));
+      problem$.next(this.problems.filter(p => p.problemTags.includes(problemTag)));
       problem$.complete();
     }, 700);
     return problem$;
   }
 
-  getProblemTags(): Observable<string> {
-    const problemTag$ = new Subject<string>();
+  getProblemTags(): Observable<string[]> {
+    const problemTag$ = new Subject<string[]>();
     setTimeout(() => {
-      for (const problemTag of this.problemTags) {
-        problemTag$.next(problemTag);
-      }
+      problemTag$.next(this.problemTags);
       problemTag$.complete();
     }, 700);
     return problemTag$;

@@ -1,15 +1,44 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
-import {Problem, ProblemItem, TestCase} from '../models';
-import {JudgeResponse, Submission} from './impl/SubmissionService';
+import {JudgeResponse, Problem, ProblemItem, Student, Submission, TestCase} from '../models';
+import {Router} from '@angular/router';
+
+
+export class UnauthenticatedError extends Error {
+  constructor() {
+    super('The student has not authenticated.');
+  }
+}
+
+
+export class AccountNotFoundError extends Error {
+}
+
+export class IncorrectPasswordFoundError extends Error {
+}
 
 @Injectable({
   providedIn: 'root'
 })
-export abstract class LoginService {
-  hasLogin = false;
+export abstract class StudentService {
+  currentStudent: Student;
 
-  abstract login(studentId: string, password: string): Observable<any>;
+  constructor(protected router: Router) {
+  }
+
+  authenticate() {
+    if (!this.isAuthenticated()) {
+      this.router.navigateByUrl('/');
+      throw new UnauthenticatedError();
+    }
+  }
+
+  isAuthenticated(): boolean {
+    return this.currentStudent !== undefined &&
+      new Date().getTime() < this.currentStudent.expiryTime;
+  }
+
+  abstract login(account: string, password: string): Observable<Student>;
 }
 
 @Injectable({
@@ -17,11 +46,11 @@ export abstract class LoginService {
 })
 export abstract class ProblemService {
 
-  abstract getProblemTags(): Observable<string>;
+  abstract getProblemTags(): Observable<string[]>;
 
-  abstract getProblemItemsByTag(problemTag: string): Observable<ProblemItem>;
+  abstract getProblemItemsByTag(problemTag: string): Observable<ProblemItem[]>;
 
-  abstract getProblemItemsInPage(page: number): Observable<ProblemItem>;
+  abstract getProblemItemsInPage(page: number): Observable<ProblemItem[]>;
 
   abstract getProblem(problemId: number): Observable<Problem>;
 

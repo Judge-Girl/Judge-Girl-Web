@@ -5,7 +5,7 @@
         <a class="nav-link active" id="problem-tab" href="#" (click)="switchTab(TAB_PROBLEM)" >Problem</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" id="submissions-tab" href="#" (click)="switchTab(TAB_SUBMISSIONS)">Submissions</a>
+        <a *ngIf="studentService.isAuthenticated()" class="nav-link" id="submissions-tab" href="#" (click)="switchTab(TAB_SUBMISSIONS)">Submissions</a>
       </li>
     </ul>
     <div  class="my-panel justify-content-start">

@@ -6,7 +6,7 @@ import {Router} from '@angular/router';
 @Component({
   selector: 'app-problem-list',
   templateUrl: './problem-list.component.html',
-  styleUrls: ['./problem-list.component.css']
+  styleUrls: ['../../animations.css', './problem-list.component.css']
 })
 export class ProblemListComponent implements OnInit {
   problemItems: ProblemItem[];
@@ -20,9 +20,9 @@ export class ProblemListComponent implements OnInit {
     this.problemItems = [];
     this.loadingProblems = true;
     this.problemService.getProblemItemsInPage(0)
-      .subscribe(item => {
+      .subscribe(items => {
         this.loadingProblems = false;
-        this.problemItems.push(item);
+        this.problemItems = items;
       });
   }
 
@@ -34,9 +34,9 @@ export class ProblemListComponent implements OnInit {
     this.problemItems = [];
     this.loadingProblems = true;
     this.problemService.getProblemItemsByTag(problemTag)
-      .subscribe(item => {
+      .subscribe(items => {
         this.loadingProblems = false;
-        this.problemItems.push(item);
+        this.problemItems = items;
       });
   }
 }

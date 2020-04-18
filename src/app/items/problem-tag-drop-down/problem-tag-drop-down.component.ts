@@ -19,8 +19,8 @@ export class ProblemTagDropDownComponent implements OnInit {
   ngOnInit(): void {
     this.problemTags = [this.DUMMY_TAG];
     this.problemService.getProblemTags()
-      .subscribe(tag => {
-        this.problemTags.push(tag);
+      .subscribe(tags => {
+        this.problemTags = tags;
       });
   }
 

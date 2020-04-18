@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {FileUpload, MessageService} from 'primeng';
-import {LoginService, ProblemService, SubmissionService} from '../services/Services';
+import {StudentService, ProblemService, SubmissionService} from '../services/Services';
 import {Problem} from '../models';
 import {switchMap} from 'rxjs/operators';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -18,7 +18,7 @@ export class CodePanelComponent implements OnInit {
   problem: Problem;
 
 
-  constructor(private loginService: LoginService,
+  constructor(public studentService: StudentService,
               private problemService: ProblemService,
               private submissionService: SubmissionService,
               private route: ActivatedRoute,
@@ -45,11 +45,15 @@ export class CodePanelComponent implements OnInit {
     console.log(`File selected: ${this.selectedFiles[index].name}`);
   }
 
-  get hasLogin() {
-    return this.loginService.hasLogin;
+  submit(): boolean {
+    if (this.validateAllSpecifiedFileSelected()) {
+      this.router.navigateByUrl(`/problems/${this.problem.id}/submissions`);
+      this.submissionService.submitFromFile(this.problem.id, this.selectedFiles);
+    }
+    return false;
   }
 
-  submit(): boolean {
+  private validateAllSpecifiedFileSelected(): boolean {
     for (let i = 0; i < this.problem.submittedCodeSpecs.length; i++) {
       if (!this.selectedFiles[i]) {
         this.messageService.clear();
@@ -60,9 +64,7 @@ export class CodePanelComponent implements OnInit {
         return false;
       }
     }
-    this.router.navigateByUrl(`/problems/${this.problem.id}/submissions`);
-    this.submissionService.submitFromFile(this.problem.id, this.selectedFiles);
-    return false;
+    return true;
   }
 
   onFileSelectedCanceled(i: number, fileUpload: FileUpload) {
