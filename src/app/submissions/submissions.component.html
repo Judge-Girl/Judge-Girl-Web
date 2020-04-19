@@ -43,7 +43,7 @@
       <td *ngIf="isJudged(submission)" [width]="'60px'">{{avgMemory(submission) ? avgMemory(submission) : '--'}}</td>
       <td *ngIf="isJudged(submission)" [width]="'60px'">{{submission.totalGrade}}</td>
       <td>
-        <button type="button" class="btn btn-link see-details-btn" data-toggle="modal"
+        <button *ngIf="isJudged(submission)" type="button" class="btn btn-link see-details-btn" data-toggle="modal"
                 (click)="onSubmissionDetailsBtnClick(submission)"
                 data-target="#submission-details-modal">
           See Details

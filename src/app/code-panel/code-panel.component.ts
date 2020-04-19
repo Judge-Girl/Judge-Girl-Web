@@ -48,7 +48,10 @@ export class CodePanelComponent implements OnInit {
   submit(): boolean {
     if (this.validateAllSpecifiedFileSelected()) {
       this.router.navigateByUrl(`/problems/${this.problem.id}/submissions`);
-      this.submissionService.submitFromFile(this.problem.id, this.selectedFiles);
+      this.submissionService.submitFromFile(this.problem.id, this.selectedFiles)
+        .toPromise().then(submission => {
+        console.log(`Submit successfully, ${submission}`);
+      });
     }
     return false;
   }

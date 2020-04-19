@@ -68,8 +68,6 @@ export class SubmissionsComponent implements OnInit {
         this.submissions = SubmissionsComponent.sortSubmissions(submissions);
         this.loadingSubmissions = false;
       });
-    } else {
-
     }
   }
 
