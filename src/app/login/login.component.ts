@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {AccountNotFoundError, IncorrectPasswordFoundError, StudentService} from '../services/Services';
 import {Router} from '@angular/router';
-import {CookieService} from 'ngx-cookie';
+import {CookieService} from '../services/cookie/cookie.service';
 
 @Component({
   selector: 'app-login',
@@ -33,6 +33,7 @@ export class LoginComponent implements OnInit {
           this.routeToProblemListPage();
         })
         .catch(err => {
+          console.error(err);
         });
     }
   }

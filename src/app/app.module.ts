@@ -23,7 +23,8 @@ import {HttpProblemService} from './services/impl/HttpProblemService';
 import {HttpStudentService} from './services/impl/HttpStudentService';
 import {HttpSubmissionService} from './services/impl/HttpSubmissionService';
 import {AuthenticatedDirective} from './directives/AuthenticatedDirective';
-import {CookieModule, CookieService} from 'ngx-cookie';
+import {CookieModule} from "./services/cookie/cookie.module";
+import {CookieService} from "./services/cookie/cookie.service";
 
 
 
@@ -47,7 +48,7 @@ import {CookieModule, CookieService} from 'ngx-cookie';
     AuthenticatedDirective
   ],
   imports: [
-    CookieModule.forRoot(),  /*IDK why, but remove `forRoot` cause an error*/
+    CookieModule.forRoot(),
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
@@ -60,9 +61,9 @@ import {CookieModule, CookieService} from 'ngx-cookie';
     HttpClient,
     MessageService,
     CookieService,
-    {provide: StudentService, useClass: HttpStudentService},
-    {provide: ProblemService, useClass: HttpProblemService},
-    {provide: SubmissionService, useClass: HttpSubmissionService},
+    {provide: StudentService, useClass: StubStudentService},
+    {provide: ProblemService, useClass: StubProblemService},
+    {provide: SubmissionService, useClass: StubSubmissionService},
     {provide: 'BASE_URL', useValue: 'http://127.0.0.1'},
     {provide: 'PORT_STUDENT_SERVICE', useValue: 33001},
     {provide: 'PORT_PROBLEM_SERVICE', useValue: 33002},

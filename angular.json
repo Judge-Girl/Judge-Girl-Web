@@ -37,8 +37,6 @@
               "node_modules/markdown-it-katex/node_modules/katex/dist/katex.min.css"
             ],
             "scripts": [
-              "node_modules/ngx-cookie/bundles/ngx-cookie.umd.min.js",
-
               "node_modules/jquery/dist/jquery.slim.min.js",
               "node_modules/popper.js/dist/popper.min.js",
               "node_modules/bootstrap/dist/js/bootstrap.min.js",

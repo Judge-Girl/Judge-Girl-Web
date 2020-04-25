@@ -2,8 +2,14 @@ import {StudentService} from '../Services';
 import {Observable, Subject} from 'rxjs';
 import {Student} from '../../models';
 import {Router} from '@angular/router';
-import {CookieService} from 'ngx-cookie';
+import {Injectable} from '@angular/core';
+import {CookieService} from '../cookie/cookie.service';
 
+@Injectable(
+  {
+    providedIn: 'root'
+  }
+)
 export class StubStudentService extends StudentService {
 
   constructor(router: Router, cookieService: CookieService) {
@@ -23,7 +29,7 @@ export class StubStudentService extends StudentService {
   auth(token: string): Observable<Student> {
     const student$ = new Subject<Student>();
     setTimeout(() => {
-      student$.next(new Student(1, 'account', new Date().getTime() + 144000, 'token'));
+      student$.next(this.currentStudent = new Student(1, 'account', new Date().getTime() + 144000, 'token'));
       student$.complete();
     });
     return student$;

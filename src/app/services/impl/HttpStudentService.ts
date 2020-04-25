@@ -5,7 +5,7 @@ import {Observable} from 'rxjs';
 import {Student} from '../../models';
 import {catchError, map} from 'rxjs/operators';
 import {Router} from '@angular/router';
-import {CookieService} from 'ngx-cookie';
+import {CookieService} from '../cookie/cookie.service';
 
 @Injectable({
   providedIn: 'root'

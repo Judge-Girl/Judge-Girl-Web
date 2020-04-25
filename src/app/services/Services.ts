@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {JudgeResponse, Problem, ProblemItem, Student, Submission, TestCase} from '../models';
 import {Router} from '@angular/router';
-import {CookieService} from 'ngx-cookie';
+import {CookieService} from './cookie/cookie.service';
 
 
 export class UnauthenticatedError extends Error {
