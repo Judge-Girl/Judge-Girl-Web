@@ -3,8 +3,9 @@ import {ActivatedRoute} from '@angular/router';
 import {ProblemService, StudentService, SubmissionService} from '../services/Services';
 import {map, switchMap} from 'rxjs/operators';
 import {Observable} from 'rxjs';
-import {getAverageMemory, getAverageRuntime, isJudged, JudgeStatus, Problem, Submission, TestCase} from '../models';
+import {getAverageMemory, getAverageRuntime, isJudged, JudgeStatus, Problem, Submission, SubmittedCode, TestCase} from '../models';
 import * as moment from 'moment';
+import * as CodeMirror from 'codemirror';
 
 @Component({
   selector: 'app-submissions',
@@ -12,7 +13,11 @@ import * as moment from 'moment';
   styleUrls: ['./submissions.component.css']
 })
 export class SubmissionsComponent implements OnInit {
-  viewingDetailsSubmission: Submission;
+  viewingJudgesSubmission: Submission;
+  loadingCodes = false;
+  viewingCodes: SubmittedCode[];
+  viewingCodesSubmissionCodes: Submission;
+
   loadingSubmissions = false;
 
   constructor(public studentService: StudentService,
@@ -90,8 +95,29 @@ export class SubmissionsComponent implements OnInit {
     return this.bestSubmission && this.bestSubmission.summaryStatus === status;
   }
 
-  onSubmissionDetailsBtnClick(submission: Submission): boolean {
-    this.viewingDetailsSubmission = submission;
+  onSubmissionJudgesBtnClick(submission: Submission): boolean {
+    this.viewingJudgesSubmission = submission;
+    return true;  // propagate the click event to the bootstrap's modal
+  }
+
+  onSubmissionCodesBtnClick(submission: Submission): boolean {
+    this.viewingCodesSubmissionCodes = submission;
+    this.loadingCodes = true;
+
+    this.submissionService.getSubmittedCodes(this.problem.id, submission.id).toPromise()
+      .then(submittedCodes => {
+        this.loadingCodes = false;
+        this.viewingCodes = submittedCodes;
+        for (const submittedCode of submittedCodes) {
+          const submittedCodeTextArea = document.getElementById(this.getSubmittedCodeElementId(submittedCode)) as HTMLTextAreaElement;
+          CodeMirror.fromTextArea(submittedCodeTextArea, {
+            lineNumbers: true,
+            mode: 'text/x-csrc'
+          });
+        }
+        console.log(`Submitted codes downloaded.`);
+      });
+
     return true;  // propagate the click event to the bootstrap's modal
   }
 
@@ -109,5 +135,9 @@ export class SubmissionsComponent implements OnInit {
 
   avgRuntime(submission: Submission) {
     return getAverageRuntime(submission);
+  }
+
+  getSubmittedCodeElementId(code: SubmittedCode): string {
+    return `submittedCode-${code.index}`;
   }
 }

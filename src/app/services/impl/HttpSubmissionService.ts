@@ -2,8 +2,9 @@ import {ProblemService, StudentService, SubmissionService} from '../Services';
 import {Observable, Subject} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {Inject, Injectable} from '@angular/core';
-import {JudgeResponse, Submission} from '../../models';
+import {JudgeResponse, Submission, SubmittedCode} from '../../models';
 import {map, switchMap} from 'rxjs/operators';
+import {unzip} from 'unzipit';
 
 @Injectable({
   providedIn: 'root'
@@ -62,5 +63,36 @@ export class HttpSubmissionService extends SubmissionService {
         return newSubmission;
       }));
   }
+
+  getSubmittedCodes(problemId: number, submissionId: number): Observable<SubmittedCode[]> {
+    return this.problemService.getProblem(problemId)
+      .pipe(switchMap(p => {
+        return this.http.get(`${this.host}/api/problems/${p.id}/students/${this.studentService.currentStudent.id}
+        /submissions/${submissionId}/zippedSubmittedCodes`, {
+          headers: {
+            'Content-Type': 'application/zip',
+            Authorization: `Bearer ${this.studentService.currentStudent.token}`
+          },
+          responseType: 'arraybuffer'
+        });
+      }))
+      .pipe(switchMap(async (arrayBuffer, index) => {
+        const zipInfo = await unzip(arrayBuffer);
+        const submittedCodes: SubmittedCode[] = [];
+        let codeIndex = 0;
+        for (const [fileName, entry] of Object.entries(zipInfo.entries)) {
+          const reader = new FileReader();
+          reader.addEventListener('loadend', (e) => {
+            const codeContent = e.target.result as string;
+            console.log(`${fileName}: ${codeContent}`);
+            submittedCodes.push(new SubmittedCode(codeIndex++, fileName, codeContent));
+          });
+          const codeBlob = await entry.blob();
+          reader.readAsText(codeBlob);
+        }
+        return submittedCodes;
+      }));
+  }
+
 
 }

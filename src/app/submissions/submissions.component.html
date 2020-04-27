@@ -25,7 +25,7 @@
       <th scope="col">Avg Runtime</th>
       <th scope="col">Avg Memory</th>
       <th scope="col">Total Grade</th>
-      <th scope="col"><!-- View Details --></th>
+      <th scope="col"><!-- View Judges --></th>
       <th scope="col"><!-- View Codes --></th>
     </tr>
     </thead>
@@ -44,13 +44,14 @@
       <td *ngIf="isJudged(submission)" [width]="'60px'">{{submission.totalGrade}}</td>
       <td>
         <button *ngIf="isJudged(submission)" type="button" class="btn btn-link see-details-btn" data-toggle="modal"
-                (click)="onSubmissionDetailsBtnClick(submission)"
-                data-target="#submission-details-modal">
-          View Details
+                (click)="onSubmissionJudgesBtnClick(submission)"
+                data-target="#submission-judges-modal">
+          View Judges
         </button>
       </td>
       <td>
         <button *ngIf="isJudged(submission)" type="button" class="btn btn-link see-details-btn" data-toggle="modal"
+                (click)="onSubmissionCodesBtnClick(submission)"
                 data-target="#submission-codes-modal">
           View Codes
         </button>
@@ -60,14 +61,14 @@
   </table>
 </div>
 
-<!-- View Details Modal -->
-<div *ngIf="viewingDetailsSubmission"
-     class="modal fade" id="submission-details-modal" tabindex="-1" role="dialog"
-     aria-labelledby="submission-details-modal-title" aria-hidden="true">
+<!-- View Judges Modal -->
+<div *ngIf="viewingJudgesSubmission"
+     class="modal fade" id="submission-judges-modal" tabindex="-1" role="dialog"
+     aria-labelledby="submission-judges-modal-title" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="submission-details-modal-title">Submission Details</h5>
+        <h5 class="modal-title" id="submission-judges-modal-title">Submission Judges</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -85,7 +86,7 @@
           </tr>
           </thead>
           <tbody class="submissions-table">
-          <tr *ngFor="let judge of viewingDetailsSubmission.judges; let i = index">
+          <tr *ngFor="let judge of viewingJudgesSubmission.judges; let i = index">
             <th [width]="'80px'" scope="row">{{testCases[i].name}}</th>
             <td [width]="'50px'" class="{{judge.status}}">{{judge.status}}</td>
             <td [width]="'50px'">{{judge.status === CE ? '--' : judge.runtime}}</td>
@@ -100,18 +101,30 @@
 </div>
 
 
-<div
+<div *ngIf="viewingCodesSubmissionCodes"
      class="modal fade" id="submission-codes-modal" tabindex="-1" role="dialog"
-     aria-labelledby="submission-details-modal-title" aria-hidden="true">
-  <div class="modal-dialog" role="document">
+     aria-labelledby="submission-judges-modal-title" aria-hidden="true">
+  <div class="modal-dialog modal-xl" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="submission-codes-modal-title">Submission Details</h5>
+        <h5 class="modal-title" id="submission-codes-modal-title">Submission Codes</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
+        <!-- Spinner -->
+        <div *ngIf="loadingCodes" class="row w-100 h-100 align-items-center justify-content-center">
+          <ld-circle></ld-circle>
+        </div>
+        <div *ngIf="!loadingCodes">
+          <div *ngFor="let code of viewingCodes" class="card">
+            <div class="card-body">
+              <h5 class="card-title">{{code.fileName}}</h5>
+              <textarea class="card-text" id="{{getSubmittedCodeElementId(code)}}">{{code.content}}</textarea>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

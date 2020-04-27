@@ -1,10 +1,7 @@
-
 import {Observable, Subject} from 'rxjs';
 import {ProblemService, SubmissionService} from '../Services';
 import {Injectable} from '@angular/core';
-import {SubmissionsComponent} from '../../submissions/submissions.component';
-import {switchMap} from 'rxjs/operators';
-import {Judge, JUDGE_STATUSES, JudgeResponse, JudgeStatus, Submission} from '../../models';
+import {Judge, JUDGE_STATUSES, JudgeResponse, JudgeStatus, Submission, SubmittedCode} from '../../models';
 
 @Injectable(
   {providedIn: 'root'}
@@ -111,6 +108,10 @@ export class StubSubmissionService extends SubmissionService {
 
   get judgeObservable(): Observable<JudgeResponse> {
     return this.schedulingSubject;
+  }
+
+  getSubmittedCodes(problemId: number, submissionId: number): Observable<SubmittedCode[]> {
+    return undefined;  // TODO: not easy to implement
   }
 
 
