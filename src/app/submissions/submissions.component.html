@@ -1,12 +1,10 @@
-
 <!-- Spinner -->
-<div *ngIf="loadingSubmissions"  class="row w-100 h-100 align-items-center justify-content-center">
+<div *ngIf="loadingSubmissions" class="row w-100 h-100 align-items-center justify-content-center">
   <ld-circle></ld-circle>
 </div>
 
 
-
-<div *ngIf="studentService.hasLogin()" class="my-panel">
+<div *ngIf="studentService.tryLogin() | async" class="my-panel">
   <p *ngIf="!bestSubmission">You have not submitted to this problem yet.</p>
 
   <p *ngIf="bestSubmission" id="best-record-label">Best Record</p>
@@ -27,7 +25,8 @@
       <th scope="col">Avg Runtime</th>
       <th scope="col">Avg Memory</th>
       <th scope="col">Total Grade</th>
-      <th scope="col"></th>
+      <th scope="col"><!-- View Details --></th>
+      <th scope="col"><!-- View Codes --></th>
     </tr>
     </thead>
     <tbody class="submissions-table">
@@ -38,15 +37,22 @@
           <span class="sr-only">Loading...</span>
         </div>
       </td>
-      <td *ngIf="isJudged(submission)" [width]="'60px'" class="{{submission.summaryStatus}}">{{submission.summaryStatus}}</td>
-      <td *ngIf="isJudged(submission)" [width]="'60px'">{{avgRuntime(submission) ? avgRuntime(submission)  : '--'}}</td>
+      <td *ngIf="isJudged(submission)" [width]="'60px'"
+          class="{{submission.summaryStatus}}">{{submission.summaryStatus}}</td>
+      <td *ngIf="isJudged(submission)" [width]="'60px'">{{avgRuntime(submission) ? avgRuntime(submission) : '--'}}</td>
       <td *ngIf="isJudged(submission)" [width]="'60px'">{{avgMemory(submission) ? avgMemory(submission) : '--'}}</td>
       <td *ngIf="isJudged(submission)" [width]="'60px'">{{submission.totalGrade}}</td>
       <td>
         <button *ngIf="isJudged(submission)" type="button" class="btn btn-link see-details-btn" data-toggle="modal"
                 (click)="onSubmissionDetailsBtnClick(submission)"
                 data-target="#submission-details-modal">
-          See Details
+          View Details
+        </button>
+      </td>
+      <td>
+        <button *ngIf="isJudged(submission)" type="button" class="btn btn-link see-details-btn" data-toggle="modal"
+                data-target="#submission-codes-modal">
+          View Codes
         </button>
       </td>
     </tr>
@@ -54,9 +60,10 @@
   </table>
 </div>
 
-<!-- Modal -->
+<!-- View Details Modal -->
 <div *ngIf="viewingDetailsSubmission"
-  class="modal fade" id="submission-details-modal" tabindex="-1" role="dialog" aria-labelledby="submission-details-modal-title" aria-hidden="true">
+     class="modal fade" id="submission-details-modal" tabindex="-1" role="dialog"
+     aria-labelledby="submission-details-modal-title" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -70,7 +77,7 @@
           <thead class="modal-title" id="submission-judges-table-header" [style.fontSize]="'14px'">
           <tr>
             <th scope="col">Test Case</th>
-            <th scope="col" >Status</th>
+            <th scope="col">Status</th>
             <th scope="col">Runtime</th>
             <th scope="col">Memory</th>
             <th scope="col">Grade</th>
@@ -91,3 +98,22 @@
     </div>
   </div>
 </div>
+
+
+<div
+     class="modal fade" id="submission-codes-modal" tabindex="-1" role="dialog"
+     aria-labelledby="submission-details-modal-title" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="submission-codes-modal-title">Submission Details</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      </div>
+    </div>
+  </div>
+</div>
+

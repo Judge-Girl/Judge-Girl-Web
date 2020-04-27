@@ -12,14 +12,14 @@
 <p-toast position="top-right" key="{{MESSAGE_KEY_ERROR_TOAST}}"></p-toast>
 
 
-<div *ngIf="!studentService.hasLogin()">
+<div *ngIf="! (studentService.tryLogin() | async)">
   <h4>Wanna submit?</h4>
   <span>You must login to view your submissions.</span>
   <button class="btn btn-link" [routerLink]="'/'" [style.fontSize]="'17px'">Log in</button>
   <hr>
 </div>
 
-<div *ngIf="studentService.hasLogin()" class="my-panel">
+<div *ngIf="studentService.tryLogin() | async" class="my-panel">
   <h3>Submissions</h3>
   <hr>
   <form>
@@ -28,7 +28,7 @@
         <div class="upload-row"
              *ngFor="let codeSpec of problem.submittedCodeSpecs; let i = index" #codeSpecRow>
           <span>{{codeSpec.fileName}}</span>
-          <p-fileUpload mode="basic" chooseLabel="Upload" name="files"
+          <p-fileUpload mode="basic" chooseLabel="Upload" name="files" accept="{{getAcceptedFileExtensionByCodeSpec(codeSpec)}}"
                         (change)="onFileInputChange(i, codeSpecRow, fileInput)" #fileInput></p-fileUpload>
 
           <button *ngIf="selectedFiles[i]" type="button" class="clear-upload-cross"

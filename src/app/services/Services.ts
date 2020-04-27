@@ -41,6 +41,8 @@ export abstract class StudentService {
       new Date().getTime() < this.currentStudent.expiryTime;
   }
 
+  abstract tryLogin(): Observable<boolean>;
+
   abstract auth(token: string): Observable<Student>;
 
   abstract login(account: string, password: string): Observable<Student>;

@@ -21,11 +21,12 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     if (this.studentService.hasLogin()) {
       this.routeToProblemListPage();
+    } else {
+      this.authenticateWithCookie();
     }
-    this.authenticateFromCookieAndLoginIfValid();
   }
 
-  private authenticateFromCookieAndLoginIfValid() {
+  private authenticateWithCookie() {
     const token = this.cookieService.get(StudentService.KEY_TOKEN);
     if (token) {
       this.studentService.auth(token).toPromise()

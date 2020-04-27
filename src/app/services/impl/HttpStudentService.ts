@@ -1,7 +1,7 @@
 import {AccountNotFoundError, IncorrectPasswordFoundError, StudentService} from '../Services';
 import {HttpClient} from '@angular/common/http';
 import {Inject, Injectable} from '@angular/core';
-import {Observable} from 'rxjs';
+import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {Student} from '../../models';
 import {catchError, map} from 'rxjs/operators';
 import {Router} from '@angular/router';
@@ -37,6 +37,22 @@ export class HttpStudentService extends StudentService {
         }
         throw new Error(`Catch unknown error from the server: ${err.status}`);
       }));
+  }
+
+  tryLogin(): Observable<boolean> {
+    if (this.hasLogin()) {
+      return new BehaviorSubject(true);
+    } else {
+      const login$ = new Subject<boolean>();
+      this.auth(this.cookieService.get(StudentService.KEY_TOKEN)).toPromise()
+        .then(s => {
+          login$.next(true);
+          login$.complete();
+        }).catch(err => {
+        login$.error(err);
+      });
+      return login$;
+    }
   }
 
   auth(token: string): Observable<Student> {

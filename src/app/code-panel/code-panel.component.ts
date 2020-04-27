@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {FileUpload, MessageService} from 'primeng';
 import {StudentService, ProblemService, SubmissionService} from '../services/Services';
-import {Problem} from '../models';
+import {Problem, SubmittedCodeSpec} from '../models';
 import {switchMap} from 'rxjs/operators';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Observable} from 'rxjs';
@@ -73,5 +73,17 @@ export class CodePanelComponent implements OnInit {
   onFileSelectedCanceled(i: number, fileUpload: FileUpload) {
     this.selectedFiles[i] = undefined;
     fileUpload.clear();
+  }
+
+  getAcceptedFileExtensionByCodeSpec(codeSpec: SubmittedCodeSpec): string {
+    const lang = codeSpec.language.toLowerCase();
+    switch (lang) {
+      case 'c':
+        return '.c';
+      case 'java':
+        return '.java';
+      default:
+        throw new Error(`The language not supported, given ${lang}`);
+    }
   }
 }

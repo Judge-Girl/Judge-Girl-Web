@@ -1,5 +1,5 @@
 import {StudentService} from '../Services';
-import {Observable, Subject} from 'rxjs';
+import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {Student} from '../../models';
 import {Router} from '@angular/router';
 import {Injectable} from '@angular/core';
@@ -33,5 +33,21 @@ export class StubStudentService extends StudentService {
       student$.complete();
     });
     return student$;
+  }
+
+  tryLogin(): Observable<boolean> {
+    if (this.hasLogin()) {
+      return new BehaviorSubject(true);
+    } else {
+      const login$ = new Subject<boolean>();
+      this.auth(this.cookieService.get(StudentService.KEY_TOKEN)).toPromise()
+        .then(s => {
+          login$.next(true);
+          login$.complete();
+        }).catch(err => {
+          login$.error(err);
+      });
+      return login$;
+    }
   }
 }
