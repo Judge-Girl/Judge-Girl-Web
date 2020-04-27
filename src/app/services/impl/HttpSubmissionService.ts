@@ -80,16 +80,23 @@ export class HttpSubmissionService extends SubmissionService {
         const zipInfo = await unzip(arrayBuffer);
         const submittedCodes: SubmittedCode[] = [];
         let codeIndex = 0;
+        const numberOfCodes = Object.keys(zipInfo.entries).length;
+        const finishUnzip$ = new Subject<any>();
+
         for (const [fileName, entry] of Object.entries(zipInfo.entries)) {
           const reader = new FileReader();
           reader.addEventListener('loadend', (e) => {
             const codeContent = e.target.result as string;
             console.log(`${fileName}: ${codeContent}`);
             submittedCodes.push(new SubmittedCode(codeIndex++, fileName, codeContent));
+            if (submittedCodes.length === numberOfCodes) {
+              finishUnzip$.complete();
+            }
           });
           const codeBlob = await entry.blob();
           reader.readAsText(codeBlob);
         }
+        await finishUnzip$.toPromise();
         return submittedCodes;
       }));
   }

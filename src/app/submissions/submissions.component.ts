@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {ProblemService, StudentService, SubmissionService} from '../services/Services';
 import {map, switchMap} from 'rxjs/operators';
@@ -12,11 +12,11 @@ import * as CodeMirror from 'codemirror';
   templateUrl: './submissions.component.html',
   styleUrls: ['./submissions.component.css']
 })
-export class SubmissionsComponent implements OnInit {
+export class SubmissionsComponent implements OnInit, AfterViewInit {
   viewingJudgesSubmission: Submission;
   loadingCodes = false;
   viewingCodes: SubmittedCode[];
-  viewingCodesSubmissionCodes: Submission;
+  viewingCodesSubmission: Submission;
 
   loadingSubmissions = false;
 
@@ -40,6 +40,8 @@ export class SubmissionsComponent implements OnInit {
   MLE = JudgeStatus.MLE;
   WA = JudgeStatus.WA;
   RE = JudgeStatus.RE;
+
+  @ViewChildren('codeArea') codeAreas: QueryList<any>;
 
 
   private static compareSubmissions(s1: Submission, s2: Submission): number {
@@ -101,25 +103,20 @@ export class SubmissionsComponent implements OnInit {
   }
 
   onSubmissionCodesBtnClick(submission: Submission): boolean {
-    this.viewingCodesSubmissionCodes = submission;
+    this.viewingCodesSubmission = submission;
+    this.viewingCodes = undefined;
     this.loadingCodes = true;
 
     this.submissionService.getSubmittedCodes(this.problem.id, submission.id).toPromise()
       .then(submittedCodes => {
         this.loadingCodes = false;
         this.viewingCodes = submittedCodes;
-        for (const submittedCode of submittedCodes) {
-          const submittedCodeTextArea = document.getElementById(this.getSubmittedCodeElementId(submittedCode)) as HTMLTextAreaElement;
-          CodeMirror.fromTextArea(submittedCodeTextArea, {
-            lineNumbers: true,
-            mode: 'text/x-csrc'
-          });
-        }
         console.log(`Submitted codes downloaded.`);
       });
 
     return true;  // propagate the click event to the bootstrap's modal
   }
+
 
   describeTime(time: number): string {
     return moment(time).fromNow();
@@ -137,7 +134,26 @@ export class SubmissionsComponent implements OnInit {
     return getAverageRuntime(submission);
   }
 
-  getSubmittedCodeElementId(code: SubmittedCode): string {
-    return `submittedCode-${code.index}`;
+
+  renderCodeAreas() {
+    if (this.codeAreas.toArray().length > 0) {
+      console.log('Rendering codes');
+      for (const codeArea of this.codeAreas.toArray()) {
+        const editor = CodeMirror.fromTextArea(codeArea.nativeElement, {
+          lineNumbers: true,
+          readOnly: 'noncursor',
+          mode: 'text/x-csrc'
+        });
+        // waiting 200 seconds to let the editor load the content, then refresh it
+        setTimeout(() => editor.refresh(), 200);
+      }
+    }
   }
+
+  ngAfterViewInit() {
+    this.codeAreas.changes.subscribe(s => {
+      this.renderCodeAreas();
+    });
+  }
+
 }
