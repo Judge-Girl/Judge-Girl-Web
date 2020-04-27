@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
-import {JudgeResponse, Problem, ProblemItem, Student, Submission, TestCase} from '../models';
+import {JudgeResponse, Problem, ProblemItem, Student, Submission, SubmittedCode, TestCase} from '../models';
 import {Router} from '@angular/router';
 import {CookieService} from './cookie/cookie.service';
 
@@ -87,5 +87,7 @@ export abstract class SubmissionService {
   abstract getSubmissions(problemId: number): Observable<Submission[]>;
 
   abstract submitFromFile(problemId: number, files: File[]): Observable<Submission>;
+
+  abstract getSubmittedCodes(problemId: number, submissionId: number): Observable<SubmittedCode[]>;
 }
 

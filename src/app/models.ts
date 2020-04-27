@@ -116,7 +116,7 @@ export function getAverageRuntime(submission: Submission) {
     }
     submission._averageRuntime = sum / submission.judges.length;
   }
-  return submission._averageRuntime;
+  return submission._averageRuntime.toFixed(2);
 }
 
 export function getAverageMemory(submission: Submission) {
@@ -131,7 +131,7 @@ export function getAverageMemory(submission: Submission) {
     }
     submission._averageRuntime = sum / submission.judges.length;
   }
-  return submission._averageRuntime;
+  return submission._averageRuntime.toFixed(2);
 }
 
 export class JudgeResponse {
@@ -143,3 +143,11 @@ export class JudgeResponse {
 
 export let JUDGE_STATUSES = [JudgeStatus.RE, JudgeStatus.TLE,
   JudgeStatus.MLE, JudgeStatus.CE, JudgeStatus.WA, JudgeStatus.AC];
+
+
+export class SubmittedCode {
+  constructor(public index: number,
+              public fileName: string,
+              public content: string) {
+  }
+}
