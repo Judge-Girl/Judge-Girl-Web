@@ -20,37 +20,47 @@
   <table *ngIf="submissions.length != 0" class="table" id="submissions-table">
     <thead id="submission-table-header" [style.fontSize]="'14px'">
     <tr>
-      <th scope="col">Time</th>
-      <th scope="col">Status</th>
-      <th scope="col">Avg Runtime</th>
-      <th scope="col">Avg Memory</th>
-      <th scope="col">Total Grade</th>
-      <th scope="col"><!-- View Judges --></th>
-      <th scope="col"><!-- View Codes --></th>
+      <th scope="col" [width]="'170px'">Time</th>
+      <th scope="col" [width]="'60px'">Status</th>
+      <th scope="col" [width]="'60px'">Avg Runtime</th>
+      <th scope="col" [width]="'60px'">Avg Memory</th>
+      <th scope="col" [width]="'60px'">Total Grade</th>
+      <th scope="col" [width]="'80px'">View Judges</th>
+      <th scope="col" [width]="'80px'">View Codes</th>
     </tr>
     </thead>
     <tbody class="submissions-table">
     <tr *ngFor="let submission of submissions">
-      <th [width]="'170px'" scope="row">{{describeTimeFromNow(submission.submissionTime)}}</th>
+      <th scope="row">{{describeTimeFromNow(submission.submissionTime)}}</th>
+
+      <!-- Show loading during the judge uncompleted-->
       <td *ngIf="!isJudged(submission)">
         <div class="spinner-border text-primary" role="status" id="spinner">
           <span class="sr-only">Loading...</span>
         </div>
       </td>
-      <td *ngIf="isJudged(submission)" [width]="'60px'"
+      <!-- Empty field placeholders during the judge uncompleted -->
+      <td *ngIf="!isJudged(submission)"></td>
+      <td *ngIf="!isJudged(submission)"></td>
+      <td *ngIf="!isJudged(submission)"></td>
+
+      <!-- Info that only available after the judge completed-->
+      <td *ngIf="isJudged(submission)"
           class="{{submission.summaryStatus}}">{{submission.summaryStatus}}</td>
-      <td *ngIf="isJudged(submission)" [width]="'60px'">{{avgRuntime(submission) ? avgRuntime(submission) : '--'}}</td>
-      <td *ngIf="isJudged(submission)" [width]="'60px'">{{avgMemory(submission) ? avgMemory(submission) : '--'}}</td>
-      <td *ngIf="isJudged(submission)" [width]="'60px'">{{submission.totalGrade}}</td>
-      <td [width]="'80px'">
+      <td *ngIf="isJudged(submission)">{{avgRuntime(submission) ? avgRuntime(submission) : '--'}}</td>
+      <td *ngIf="isJudged(submission)">{{avgMemory(submission) ? avgMemory(submission) : '--'}}</td>
+      <td *ngIf="isJudged(submission)">{{submission.totalGrade}}</td>
+      <td>
         <button *ngIf="isJudged(submission)" type="button" class="btn btn-link see-details-btn" data-toggle="modal"
                 (click)="onViewSubmissionJudgesBtnClick(submission)"
                 data-target="#submission-judges-modal">
           View Judges
         </button>
       </td>
-      <td [width]="'80px'">
-        <button *ngIf="isJudged(submission)" type="button" class="btn btn-link see-details-btn" data-toggle="modal"
+
+      <!-- Codes are available when it's submitted -->
+      <td>
+        <button type="button" class="btn btn-link see-details-btn" data-toggle="modal"
                 (click)="onViewSubmissionCodesBtnClick(submission)"
                 data-target="#submission-codes-modal">
           View Codes

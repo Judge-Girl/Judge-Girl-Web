@@ -8,7 +8,7 @@ import {ProblemListComponent} from './problem-list/problem-list.component';
 import {StubStudentService} from './services/impl/StubStudentService';
 import {StudentService, ProblemService, SubmissionService} from './services/Services';
 import {StubProblemService} from './services/impl/StubProblemService';
-import {ProblemSubmissionTabPanelComponent} from './problem-submission-tab-panel/problem-submission-tab-panel.component';
+import {TabPanelComponent} from './problem-submission-tab-panel/tab-panel.component';
 import {ProblemDescriptionComponent} from './problem-description/problem-description.component';
 import {CodePanelComponent} from './code-panel/code-panel.component';
 import {SubmissionsComponent} from './submissions/submissions.component';
@@ -25,6 +25,7 @@ import {HttpSubmissionService} from './services/impl/HttpSubmissionService';
 import {AuthenticatedDirective} from './directives/AuthenticatedDirective';
 import {CookieModule} from "./services/cookie/cookie.module";
 import {CookieService} from "./services/cookie/cookie.service";
+import { TestcasesComponent } from './testcases/testcases.component';
 
 
 
@@ -34,7 +35,7 @@ import {CookieService} from "./services/cookie/cookie.service";
     AppComponent,
     LoginComponent,
     ProblemListComponent,
-    ProblemSubmissionTabPanelComponent,
+    TabPanelComponent,
     ProblemDescriptionComponent,
     CodePanelComponent,
     SubmissionsComponent,
@@ -45,7 +46,9 @@ import {CookieService} from "./services/cookie/cookie.service";
     ProblemTagDropDownComponent,
 
     /*directives*/
-    AuthenticatedDirective
+    AuthenticatedDirective,
+
+    TestcasesComponent
   ],
   imports: [
     CookieModule.forRoot(),
