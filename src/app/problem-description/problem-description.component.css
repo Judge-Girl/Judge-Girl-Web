@@ -1,5 +1,4 @@
 
-
 .my-container {
   font-family: "Times New Roman", serif;
   width: 100%;
@@ -23,10 +22,13 @@
 }
 
 .markdown-panel {
-  font-family: "Times New Roman", serif !important;
+  font-family: "Times New Roman", serif;
 }
 
 .markdown-panel table {
   width: 100%;
 }
 
+.markdown-panel td, th {
+  padding: .5rem;
+}
