@@ -2,9 +2,10 @@ import {ProblemService, StudentService, SubmissionService} from '../Services';
 import {Observable, Subject} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {Inject, Injectable} from '@angular/core';
-import {JudgeResponse, Submission, SubmittedCode} from '../../models';
+import {JudgeResponse, Submission, CodeFile} from '../../models';
 import {map, switchMap} from 'rxjs/operators';
 import {unzip, ZipInfo} from 'unzipit';
+import {unzipCodesArrayBuffer} from '../../utils';
 
 @Injectable({
   providedIn: 'root'
@@ -64,7 +65,7 @@ export class HttpSubmissionService extends SubmissionService {
       }));
   }
 
-  getSubmittedCodes(problemId: number, submissionId: number): Observable<SubmittedCode[]> {
+  getSubmittedCodes(problemId: number, submissionId: number): Observable<CodeFile[]> {
     return this.problemService.getProblem(problemId)
       .pipe(switchMap(p => {
         return this.http.get(`${this.host}/api/problems/${p.id}/students/${this.studentService.currentStudent.id}
@@ -76,32 +77,7 @@ export class HttpSubmissionService extends SubmissionService {
           responseType: 'arraybuffer'
         });
       }))
-      .pipe(switchMap(this.unzipArrayBuffer));
-  }
-
-  private async unzipArrayBuffer(arrayBuffer: ArrayBuffer, index: number) {
-    const zipInfo: ZipInfo = await unzip(arrayBuffer);
-    const submittedCodes: SubmittedCode[] = [];
-    let codeIndex = 0;
-    const numberOfCodes = Object.keys(zipInfo.entries).length;
-    const waitForAllCodesUnzippedAndPushedIntoArray = new Subject<any>();
-
-    for (const [fileName, entry] of Object.entries(zipInfo.entries)) {
-      const reader = new FileReader();  // TODO, whether the reader can be shared?
-      reader.addEventListener('loadend', (e) => {
-        const codeContent = e.target.result as string;
-        console.log(`${fileName}: ${codeContent}`);
-        submittedCodes.push(new SubmittedCode(codeIndex++, fileName, codeContent));
-        if (submittedCodes.length === numberOfCodes) {
-          waitForAllCodesUnzippedAndPushedIntoArray.complete();
-        }
-      });
-      const codeBlob = await entry.blob();
-      reader.readAsText(codeBlob);
-    }
-
-    await waitForAllCodesUnzippedAndPushedIntoArray.toPromise();
-    return submittedCodes;
+      .pipe(switchMap(unzipCodesArrayBuffer));
   }
 
 }

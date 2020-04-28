@@ -100,6 +100,8 @@ export class Submission {
 
 }
 
+// We don't place these get-like functions into the model classes
+// because when the model classes are deserialized from JSON, functions are not set to the classes.
 export function isJudged(submission: Submission) {
   return submission.judges && submission.judges.length > 0;
 }
@@ -145,7 +147,7 @@ export let JUDGE_STATUSES = [JudgeStatus.RE, JudgeStatus.TLE,
   JudgeStatus.MLE, JudgeStatus.CE, JudgeStatus.WA, JudgeStatus.AC];
 
 
-export class SubmittedCode {
+export class CodeFile {
   constructor(public index: number,
               public fileName: string,
               public content: string) {

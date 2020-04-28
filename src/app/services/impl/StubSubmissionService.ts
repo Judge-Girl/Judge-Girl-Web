@@ -1,7 +1,7 @@
 import {Observable, Subject} from 'rxjs';
 import {ProblemService, SubmissionService} from '../Services';
 import {Injectable} from '@angular/core';
-import {Judge, JUDGE_STATUSES, JudgeResponse, JudgeStatus, Submission, SubmittedCode} from '../../models';
+import {Judge, JUDGE_STATUSES, JudgeResponse, JudgeStatus, Submission, CodeFile} from '../../models';
 
 @Injectable(
   {providedIn: 'root'}
@@ -110,7 +110,7 @@ export class StubSubmissionService extends SubmissionService {
     return this.schedulingSubject;
   }
 
-  getSubmittedCodes(problemId: number, submissionId: number): Observable<SubmittedCode[]> {
+  getSubmittedCodes(problemId: number, submissionId: number): Observable<CodeFile[]> {
     return undefined;  // TODO: not easy to implement
   }
 

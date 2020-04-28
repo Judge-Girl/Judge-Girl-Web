@@ -3,7 +3,7 @@ import {ActivatedRoute} from '@angular/router';
 import {ProblemService, StudentService, SubmissionService} from '../services/Services';
 import {map, switchMap} from 'rxjs/operators';
 import {Observable} from 'rxjs';
-import {getAverageMemory, getAverageRuntime, isJudged, JudgeStatus, Problem, Submission, SubmittedCode, TestCase} from '../models';
+import {getAverageMemory, getAverageRuntime, isJudged, JudgeStatus, Problem, Submission, CodeFile, TestCase} from '../models';
 import * as moment from 'moment';
 import * as CodeMirror from 'codemirror';
 
@@ -15,7 +15,7 @@ import * as CodeMirror from 'codemirror';
 export class SubmissionsComponent implements OnInit, AfterViewInit {
   viewingJudgesSubmission: Submission;
   loadingSubmittedCodes = false;
-  viewingSubmittedCodes: SubmittedCode[];
+  viewingSubmittedCodes: CodeFile[];
   viewingCodesSubmission: Submission;
 
   loadingSubmissions = false;
