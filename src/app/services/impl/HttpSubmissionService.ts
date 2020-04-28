@@ -2,9 +2,8 @@ import {ProblemService, StudentService, SubmissionService} from '../Services';
 import {Observable, Subject} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {Inject, Injectable} from '@angular/core';
-import {JudgeResponse, Submission, CodeFile} from '../../models';
+import {CodeFile, JudgeResponse, Submission} from '../../models';
 import {map, switchMap} from 'rxjs/operators';
-import {unzip, ZipInfo} from 'unzipit';
 import {unzipCodesArrayBuffer} from '../../utils';
 
 @Injectable({
@@ -52,7 +51,8 @@ export class HttpSubmissionService extends SubmissionService {
         for (let i = 0; i < p.submittedCodeSpecs.length; i++) {
           formData.append('submittedCodes', files[i], p.submittedCodeSpecs[i].fileName);
         }
-        return this.http.post<Submission>(`${this.host}/api/problems/${p.id}/students/${this.studentService.currentStudent.id}/submissions`,
+        return this.http.post<Submission>(`${this.host}/api/problems/${problemId}/students/
+          ${this.studentService.currentStudent.id}/submissions`,
           formData, {
             headers: {
               Authorization: `Bearer ${this.studentService.currentStudent.token}`
@@ -68,7 +68,7 @@ export class HttpSubmissionService extends SubmissionService {
   getSubmittedCodes(problemId: number, submissionId: number): Observable<CodeFile[]> {
     return this.problemService.getProblem(problemId)
       .pipe(switchMap(p => {
-        return this.http.get(`${this.host}/api/problems/${p.id}/students/${this.studentService.currentStudent.id}
+        return this.http.get(`${this.host}/api/problems/${problemId}/students/${this.studentService.currentStudent.id}
         /submissions/${submissionId}/zippedSubmittedCodes`, {
           headers: {
             'Content-Type': 'application/zip',
