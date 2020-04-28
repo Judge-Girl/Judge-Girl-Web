@@ -142,7 +142,8 @@ export class SubmissionsComponent implements OnInit, AfterViewInit {
         const editor = CodeMirror.fromTextArea(codeArea.nativeElement, {
           lineNumbers: true,
           readOnly: 'noncursor',
-          mode: 'text/x-csrc'
+          mode: 'text/x-csrc',  /* TODO set mode according to the language spec */
+          theme: 'darcula'
         });
         // waiting 200 seconds to let the editor load the content, then refresh it
         setTimeout(() => editor.refresh(), 200);
