@@ -20,7 +20,7 @@
   <table *ngIf="submissions.length != 0" class="table" id="submissions-table">
     <thead id="submission-table-header" [style.fontSize]="'14px'">
     <tr>
-      <th scope="col" [width]="'170px'">Time</th>
+      <th scope="col" [width]="'100px'">Time</th>
       <th scope="col" [width]="'60px'">Status</th>
       <th scope="col" [width]="'60px'">Avg Runtime</th>
       <th scope="col" [width]="'60px'">Avg Memory</th>
@@ -47,9 +47,9 @@
       <!-- Info that only available after the judge completed-->
       <td *ngIf="isJudged(submission)"
           class="{{submission.summaryStatus}}">{{submission.summaryStatus}}</td>
-      <td *ngIf="isJudged(submission)">{{avgRuntime(submission) ? avgRuntime(submission) : '--'}}</td>
-      <td *ngIf="isJudged(submission)">{{avgMemory(submission) ? avgMemory(submission) : '--'}}</td>
-      <td *ngIf="isJudged(submission)">{{submission.totalGrade}}</td>
+      <td *ngIf="isJudged(submission)">{{avgRuntime(submission) ? avgRuntime(submission) : '--'}} ms</td>
+      <td *ngIf="isJudged(submission)">{{avgMemory(submission) ? avgMemory(submission) : '--'}} B</td>
+      <td *ngIf="isJudged(submission)">{{submission.totalGrade}} pt</td>
       <td>
         <button *ngIf="isJudged(submission)" type="button" class="btn btn-link see-details-btn" data-toggle="modal"
                 (click)="onViewSubmissionJudgesBtnClick(submission)"
@@ -98,9 +98,9 @@
           <tr *ngFor="let judge of viewingJudgesSubmission?.judges; let i = index">
             <th [width]="'80px'" scope="row">{{testCases[i].name}}</th>
             <td [width]="'50px'" class="{{judge.status}}">{{judge.status}}</td>
-            <td [width]="'50px'">{{judge.status === CE ? '--' : judge.runtime}}</td>
-            <td [width]="'50px'">{{judge.status === CE ? '--' : judge.memory}}</td>
-            <td [width]="'50px'">{{judge.grade}}</td>
+            <td [width]="'50px'">{{judge.status === CE ? '--' : judge.runtime}} ms</td>
+            <td [width]="'50px'">{{judge.status === CE ? '--' : judge.memory}} B</td>
+            <td [width]="'50px'">{{judge.grade}} pt</td>
           </tr>
           </tbody>
         </table>

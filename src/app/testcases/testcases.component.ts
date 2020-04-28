@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {ProblemService} from '../services/Services';
+import {ActivatedRoute} from '@angular/router';
+import {TestCase} from '../models';
 
 @Component({
   selector: 'app-testcases',
@@ -6,10 +9,17 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./testcases.component.css']
 })
 export class TestcasesComponent implements OnInit {
+  public testCases: TestCase[];
 
-  constructor() { }
+  constructor(private problemService: ProblemService,
+              private route: ActivatedRoute) {
+  }
 
-  ngOnInit(): void {
+  ngOnInit() {
+    this.route.parent.params.subscribe(params => {
+      this.problemService.getTestCases(+params.problemId).toPromise()
+        .then(tc => this.testCases = tc);
+    });
   }
 
 }

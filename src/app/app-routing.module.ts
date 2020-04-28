@@ -13,7 +13,7 @@ const routes: Routes = [
   {
     path: 'problems/:problemId', component: TabPanelComponent,
     children: [
-      {path: '', redirectTo: 'description', pathMatch: 'full'},
+      {path: '', component: ProblemDescriptionComponent},
       {path: 'description', component: ProblemDescriptionComponent},
       {path: 'testcases', component: TestcasesComponent},
       {path: 'submissions', component: SubmissionsComponent}]

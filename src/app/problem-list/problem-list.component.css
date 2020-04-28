@@ -15,6 +15,7 @@ hr {
 }
 
 .problem-item {
+  text-align: left;
   cursor: pointer;
 }
 

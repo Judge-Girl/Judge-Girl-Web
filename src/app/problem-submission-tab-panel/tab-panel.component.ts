@@ -44,7 +44,6 @@ export class TabPanelComponent implements OnInit, AfterViewInit {
   }
 
   switchTab(tab: Tab): boolean {
-    console.log(tab);
     if (tab === Tab.PROBLEM) {
       this.router.navigate([`problems/${this.problemId}`]);
       this.activateTabAndDeactivateOthers(this.problemTab);

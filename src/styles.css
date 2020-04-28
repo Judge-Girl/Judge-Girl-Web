@@ -53,6 +53,9 @@ html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 /* Override bootstrap's table */
+.table th {
+  border-top: 0;
+}
 .table td, .table th {
   padding: .5rem;
 }
