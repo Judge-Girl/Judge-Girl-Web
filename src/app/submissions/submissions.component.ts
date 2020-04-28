@@ -14,8 +14,8 @@ import * as CodeMirror from 'codemirror';
 })
 export class SubmissionsComponent implements OnInit, AfterViewInit {
   viewingJudgesSubmission: Submission;
-  loadingCodes = false;
-  viewingCodes: SubmittedCode[];
+  loadingSubmittedCodes = false;
+  viewingSubmittedCodes: SubmittedCode[];
   viewingCodesSubmission: Submission;
 
   loadingSubmissions = false;
@@ -44,12 +44,12 @@ export class SubmissionsComponent implements OnInit, AfterViewInit {
   @ViewChildren('codeArea') codeAreas: QueryList<any>;
 
 
-  private static compareSubmissions(s1: Submission, s2: Submission): number {
+  private static compareSubmissionsByTime(s1: Submission, s2: Submission): number {
     return s2.submissionTime - s1.submissionTime;
   }
 
-  private static sortSubmissions(submissions: Submission[]): Submission[] {
-    return submissions.sort(SubmissionsComponent.compareSubmissions);
+  private static sortSubmissionsByTime(submissions: Submission[]): Submission[] {
+    return submissions.sort(SubmissionsComponent.compareSubmissionsByTime);
   }
 
   async ngOnInit() {
@@ -68,17 +68,17 @@ export class SubmissionsComponent implements OnInit, AfterViewInit {
       this.loadingSubmissions = true;
       this.submissions$ = this.route.parent.params.pipe(switchMap(params =>
         this.submissionService.getSubmissions(+params.problemId)
-          .pipe(map(SubmissionsComponent.sortSubmissions))
+          .pipe(map(SubmissionsComponent.sortSubmissionsByTime))
       ));
 
       this.submissions$.subscribe(submissions => {
-        this.submissions = SubmissionsComponent.sortSubmissions(submissions);
+        this.submissions = SubmissionsComponent.sortSubmissionsByTime(submissions);
         this.loadingSubmissions = false;
       });
     }
   }
 
-  get bestSubmission(): Submission {
+  get bestRecord(): Submission {
     if (!this.submissions) {
       return undefined;
     }
@@ -94,23 +94,23 @@ export class SubmissionsComponent implements OnInit, AfterViewInit {
   }
 
   ifTheBestSubmissionStatusIs(status: JudgeStatus) {
-    return this.bestSubmission && this.bestSubmission.summaryStatus === status;
+    return this.bestRecord && this.bestRecord.summaryStatus === status;
   }
 
-  onSubmissionJudgesBtnClick(submission: Submission): boolean {
+  onViewSubmissionJudgesBtnClick(submission: Submission): boolean {
     this.viewingJudgesSubmission = submission;
     return true;  // propagate the click event to the bootstrap's modal
   }
 
-  onSubmissionCodesBtnClick(submission: Submission): boolean {
+  onViewSubmissionCodesBtnClick(submission: Submission): boolean {
     this.viewingCodesSubmission = submission;
-    this.viewingCodes = undefined;
-    this.loadingCodes = true;
+    this.viewingSubmittedCodes = undefined;
+    this.loadingSubmittedCodes = true;
 
     this.submissionService.getSubmittedCodes(this.problem.id, submission.id).toPromise()
       .then(submittedCodes => {
-        this.loadingCodes = false;
-        this.viewingCodes = submittedCodes;
+        this.loadingSubmittedCodes = false;
+        this.viewingSubmittedCodes = submittedCodes;
         console.log(`Submitted codes downloaded.`);
       });
 
@@ -118,7 +118,7 @@ export class SubmissionsComponent implements OnInit, AfterViewInit {
   }
 
 
-  describeTime(time: number): string {
+  describeTimeFromNow(time: number): string {
     return moment(time).fromNow();
   }
 
@@ -134,6 +134,12 @@ export class SubmissionsComponent implements OnInit, AfterViewInit {
     return getAverageRuntime(submission);
   }
 
+  ngAfterViewInit() {
+    // when the codeAreas' members changed, re-render them
+    this.codeAreas.changes.subscribe(s => {
+      this.renderCodeAreas();
+    });
+  }
 
   renderCodeAreas() {
     if (this.codeAreas.toArray().length > 0) {
@@ -151,10 +157,5 @@ export class SubmissionsComponent implements OnInit, AfterViewInit {
     }
   }
 
-  ngAfterViewInit() {
-    this.codeAreas.changes.subscribe(s => {
-      this.renderCodeAreas();
-    });
-  }
 
 }

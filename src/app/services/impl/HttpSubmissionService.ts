@@ -4,7 +4,7 @@ import {HttpClient} from '@angular/common/http';
 import {Inject, Injectable} from '@angular/core';
 import {JudgeResponse, Submission, SubmittedCode} from '../../models';
 import {map, switchMap} from 'rxjs/operators';
-import {unzip} from 'unzipit';
+import {unzip, ZipInfo} from 'unzipit';
 
 @Injectable({
   providedIn: 'root'
@@ -76,30 +76,32 @@ export class HttpSubmissionService extends SubmissionService {
           responseType: 'arraybuffer'
         });
       }))
-      .pipe(switchMap(async (arrayBuffer, index) => {
-        const zipInfo = await unzip(arrayBuffer);
-        const submittedCodes: SubmittedCode[] = [];
-        let codeIndex = 0;
-        const numberOfCodes = Object.keys(zipInfo.entries).length;
-        const finishUnzip$ = new Subject<any>();
-
-        for (const [fileName, entry] of Object.entries(zipInfo.entries)) {
-          const reader = new FileReader();
-          reader.addEventListener('loadend', (e) => {
-            const codeContent = e.target.result as string;
-            console.log(`${fileName}: ${codeContent}`);
-            submittedCodes.push(new SubmittedCode(codeIndex++, fileName, codeContent));
-            if (submittedCodes.length === numberOfCodes) {
-              finishUnzip$.complete();
-            }
-          });
-          const codeBlob = await entry.blob();
-          reader.readAsText(codeBlob);
-        }
-        await finishUnzip$.toPromise();
-        return submittedCodes;
-      }));
+      .pipe(switchMap(this.unzipArrayBuffer));
   }
 
+  private async unzipArrayBuffer(arrayBuffer: ArrayBuffer, index: number) {
+    const zipInfo: ZipInfo = await unzip(arrayBuffer);
+    const submittedCodes: SubmittedCode[] = [];
+    let codeIndex = 0;
+    const numberOfCodes = Object.keys(zipInfo.entries).length;
+    const waitForAllCodesUnzippedAndPushedIntoArray = new Subject<any>();
+
+    for (const [fileName, entry] of Object.entries(zipInfo.entries)) {
+      const reader = new FileReader();  // TODO, whether the reader can be shared?
+      reader.addEventListener('loadend', (e) => {
+        const codeContent = e.target.result as string;
+        console.log(`${fileName}: ${codeContent}`);
+        submittedCodes.push(new SubmittedCode(codeIndex++, fileName, codeContent));
+        if (submittedCodes.length === numberOfCodes) {
+          waitForAllCodesUnzippedAndPushedIntoArray.complete();
+        }
+      });
+      const codeBlob = await entry.blob();
+      reader.readAsText(codeBlob);
+    }
+
+    await waitForAllCodesUnzippedAndPushedIntoArray.toPromise();
+    return submittedCodes;
+  }
 
 }

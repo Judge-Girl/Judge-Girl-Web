@@ -5,9 +5,9 @@
 
 
 <div *ngIf="studentService.tryLogin() | async" class="my-panel">
-  <p *ngIf="!bestSubmission">You have not submitted to this problem yet.</p>
+  <p *ngIf="!bestRecord">You have not submitted to this problem yet.</p>
 
-  <p *ngIf="bestSubmission" id="best-record-label">Best Record</p>
+  <p *ngIf="bestRecord" id="best-record-label">Best Record</p>
   <span *ngIf="ifTheBestSubmissionStatusIs(AC)" class="badge badge-success judge-status">AC</span>
   <span *ngIf="ifTheBestSubmissionStatusIs(RE)" class="badge badge-danger judge-status">RE</span>
   <span *ngIf="ifTheBestSubmissionStatusIs(MLE)" class="badge badge-warning judge-status">MLE</span>
@@ -15,7 +15,7 @@
   <span *ngIf="ifTheBestSubmissionStatusIs(CE)" class="badge badge-danger judge-status">CE</span>
   <span *ngIf="ifTheBestSubmissionStatusIs(WA)" class="badge badge-danger judge-status">WA</span>
 
-  <p *ngIf="bestSubmission" class="text">Total Grade: {{bestSubmission.totalGrade}}&nbsp;pt</p>
+  <p *ngIf="bestRecord" class="text">Total Grade: {{bestRecord.totalGrade}}&nbsp;pt</p>
 
   <table *ngIf="submissions.length != 0" class="table" id="submissions-table">
     <thead id="submission-table-header" [style.fontSize]="'14px'">
@@ -31,7 +31,7 @@
     </thead>
     <tbody class="submissions-table">
     <tr *ngFor="let submission of submissions">
-      <th [width]="'170px'" scope="row">{{describeTime(submission.submissionTime)}}</th>
+      <th [width]="'170px'" scope="row">{{describeTimeFromNow(submission.submissionTime)}}</th>
       <td *ngIf="!isJudged(submission)">
         <div class="spinner-border text-primary" role="status" id="spinner">
           <span class="sr-only">Loading...</span>
@@ -42,16 +42,16 @@
       <td *ngIf="isJudged(submission)" [width]="'60px'">{{avgRuntime(submission) ? avgRuntime(submission) : '--'}}</td>
       <td *ngIf="isJudged(submission)" [width]="'60px'">{{avgMemory(submission) ? avgMemory(submission) : '--'}}</td>
       <td *ngIf="isJudged(submission)" [width]="'60px'">{{submission.totalGrade}}</td>
-      <td>
+      <td [width]="'80px'">
         <button *ngIf="isJudged(submission)" type="button" class="btn btn-link see-details-btn" data-toggle="modal"
-                (click)="onSubmissionJudgesBtnClick(submission)"
+                (click)="onViewSubmissionJudgesBtnClick(submission)"
                 data-target="#submission-judges-modal">
           View Judges
         </button>
       </td>
-      <td>
+      <td [width]="'80px'">
         <button *ngIf="isJudged(submission)" type="button" class="btn btn-link see-details-btn" data-toggle="modal"
-                (click)="onSubmissionCodesBtnClick(submission)"
+                (click)="onViewSubmissionCodesBtnClick(submission)"
                 data-target="#submission-codes-modal">
           View Codes
         </button>
@@ -112,11 +112,11 @@
       </div>
       <div class="modal-body">
         <!-- Spinner -->
-        <div [hidden]="!loadingCodes" class="row w-100 h-100 align-items-center justify-content-center">
+        <div [hidden]="!loadingSubmittedCodes" class="row w-100 h-100 align-items-center justify-content-center">
           <ld-circle></ld-circle>
         </div>
-        <div [hidden]="loadingCodes">
-          <div *ngFor="let code of viewingCodes;" class="card">
+        <div [hidden]="loadingSubmittedCodes">
+          <div *ngFor="let code of viewingSubmittedCodes;" class="card">
             <div class="card-body">
               <h5 class="card-title">{{code.fileName}}</h5>
               <textarea  class="card-text" #codeArea>{{code.content}}</textarea>

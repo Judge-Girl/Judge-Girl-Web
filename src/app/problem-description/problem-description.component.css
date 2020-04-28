@@ -22,17 +22,11 @@
   background: rgb(246, 246, 246);
 }
 
-#title {
-  display: inline;
-  font-size: 26px;
-  margin-bottom: 30px;
-}
-
-.markdown-panel h2 {
-  margin: 3px;
-  color: #56baed;
+.markdown-panel {
+  font-family: "Times New Roman", serif !important;
 }
 
 .markdown-panel table {
   width: 100%;
 }
+
