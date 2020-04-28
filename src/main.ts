@@ -3,6 +3,7 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
 // Codemirror's mode won't work if remove this import
 import 'codemirror/mode/clike/clike.js';
+import 'codemirror/mode/shell/shell.js';
 
 import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';

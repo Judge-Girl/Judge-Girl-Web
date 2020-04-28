@@ -48,12 +48,11 @@ export class ProblemDescriptionComponent implements OnInit, AfterViewInit {
         html: true,
         linkify: true,
         typographer: true,
-        highlight(str, lang) {
+        highlight(str, lang) {  // TODO not work
           if (lang && hljs.getLanguage(lang)) {
             try {
               return hljs.highlight(lang, str).value;
-            } catch (__) {
-            }
+            } catch (__) {}
           }
           return ''; // use external default escaping
         }

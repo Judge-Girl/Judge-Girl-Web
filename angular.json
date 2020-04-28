@@ -34,6 +34,7 @@
 
               "node_modules/codemirror/lib/codemirror.css",
               "node_modules/codemirror/theme/darcula.css",
+              "node_modules/codemirror/theme/material-palenight.css",
 
               "node_modules/markdown-it-katex/node_modules/katex/dist/katex.min.css"
             ],
@@ -46,6 +47,7 @@
 
               "node_modules/codemirror/lib/codemirror.js",
               "node_modules/codemirror/mode/clike/clike.js",
+              "node_modules/codemirror/mode/shell/shell.js",
 
               "node_modules/chart.js/dist/Chart.js",
               "node_modules/@fullcalendar/core/main.min.js",
