@@ -1,40 +1,44 @@
 import {ProblemService} from '../Services';
-import {Observable} from 'rxjs';
+import {merge, Observable, ReplaySubject, Subject} from 'rxjs';
 import {Problem, ProblemItem, TestCase} from '../../models';
 import {HttpClient} from '@angular/common/http';
 import {Inject, Injectable} from '@angular/core';
+import {shareReplay, switchMap} from 'rxjs/operators';
+import {HttpRequestCache} from './HttpRequestCache';
 
 @Injectable({
   providedIn: 'root'
 })
 export class HttpProblemService extends ProblemService {
+  httpRequestCache: HttpRequestCache;
   host: string;
 
-  constructor(private http: HttpClient,
+  constructor(protected http: HttpClient,
               @Inject('BASE_URL') baseUrl: string,
               @Inject('PORT_PROBLEM_SERVICE') port: number) {
     super();
+    this.httpRequestCache = new HttpRequestCache(http);
     this.host = `${baseUrl}:${port}`;
   }
 
   getProblem(problemId: number): Observable<Problem> {
-    return this.http.get<Problem>(`${this.host}/api/problems/${problemId}`);
+    return this.httpRequestCache.get(`${this.host}/api/problems/${problemId}`);
   }
 
   getProblemItemsByTag(problemTag: string): Observable<ProblemItem[]> {
-    return this.http.get<ProblemItem[]>(`${this.host}/api/problems?tag=${problemTag}`);
+    return this.httpRequestCache.get(`${this.host}/api/problems?tag=${problemTag}`);
   }
 
   getProblemItemsInPage(page: number): Observable<ProblemItem[]> {
-    return this.http.get<ProblemItem[]>(`${this.host}/api/problems`);
+    return this.httpRequestCache.get(`${this.host}/api/problems`);
   }
 
   getProblemTags(): Observable<string[]> {
-    return this.http.get<string[]>(`${this.host}/api/problems/tags`);
+    return this.httpRequestCache.get(`${this.host}/api/problems/tags`);
   }
 
   getTestCases(problemId: number): Observable<TestCase[]> {
-    return this.http.get<TestCase[]>(`${this.host}/api/problems/${problemId}/testcases`);
+    return this.httpRequestCache.get(`${this.host}/api/problems/${problemId}/testcases`);
   }
 
 }

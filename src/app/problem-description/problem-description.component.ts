@@ -35,10 +35,12 @@ export class ProblemDescriptionComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.problem$.subscribe(p => {
-      this.problem = p;
-      this.renderer.removeClass(this.problemDescriptionPanel.nativeElement, 'hidden');
-      this.renderMarkdown();
+    // setTimeout(...) to avoid ExpressionChangedAfterItHasBeenCheckedError
+    setTimeout(() => {
+      this.problem$.subscribe(p => {
+        this.problem = p;
+        this.renderMarkdown();
+      });
     });
   }
 

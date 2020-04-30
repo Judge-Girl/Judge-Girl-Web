@@ -41,12 +41,14 @@ export class StubProblemService extends ProblemService {
 
 
   getProblemItemsInPage(page: number): Observable<ProblemItem[]> {
-    const problemItems$ = new Subject<ProblemItem[]>();
-    setTimeout(() => {
-      problemItems$.next(this.problems);
-      problemItems$.complete();
-    }, 400);
-    return problemItems$;
+    return new Observable<ProblemItem[]>(observer => {
+      setTimeout(() => {
+        observer.next(this.problems);
+        observer.complete();
+      }, 400);
+      return () => {
+      };
+    });
   }
 
 

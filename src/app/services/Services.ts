@@ -1,8 +1,11 @@
-import {Injectable} from '@angular/core';
+import {Inject, Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
-import {JudgeResponse, Problem, ProblemItem, Student, Submission, CodeFile, TestCase} from '../models';
+import {CodeFile, JudgeResponse, Problem, ProblemItem, Student, Submission, TestCase} from '../models';
 import {Router} from '@angular/router';
 import {CookieService} from './cookie/cookie.service';
+import {shareReplay} from 'rxjs/operators';
+import {HttpClient} from '@angular/common/http';
+
 
 
 export class UnauthenticatedError extends Error {
@@ -90,4 +93,5 @@ export abstract class SubmissionService {
 
   abstract getSubmittedCodes(problemId: number, submissionId: number): Observable<CodeFile[]>;
 }
+
 

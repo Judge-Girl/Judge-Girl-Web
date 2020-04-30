@@ -5,22 +5,25 @@ import {Inject, Injectable} from '@angular/core';
 import {CodeFile, JudgeResponse, Submission} from '../../models';
 import {map, switchMap} from 'rxjs/operators';
 import {unzipCodesArrayBuffer} from '../../utils';
+import {HttpRequestCache} from './HttpRequestCache';
 
 @Injectable({
   providedIn: 'root'
 })
 export class HttpSubmissionService extends SubmissionService {
+  httpRequestCache: HttpRequestCache;
   host: string;
   judgeResponse$ = new Subject<JudgeResponse>();
   private readonly submissionMap = new Map<number, Array<Submission>>();
   private submissions$ = new Subject<Submission[]>();
 
-  constructor(private http: HttpClient,
+  constructor(protected http: HttpClient,
               private studentService: StudentService,
               private problemService: ProblemService,
               @Inject('BASE_URL') baseUrl: string,
               @Inject('PORT_SUBMISSION_SERVICE') port: number) {
     super();
+    this.httpRequestCache = new HttpRequestCache(http);  //TODO
     this.host = `${baseUrl}:${port}`;
   }
 
