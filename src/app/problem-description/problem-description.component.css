@@ -13,22 +13,11 @@
 
 #problem-description-panel {
   text-align: left;
+  margin-bottom: 15px;
 }
 
 .example-card .card-title {
   padding: 5px 5px 5px 15px;
   font-weight: bold;
   background: rgb(246, 246, 246);
-}
-
-.markdown-panel {
-  font-family: "Times New Roman", serif;
-}
-
-.markdown-panel table {
-  width: 100%;
-}
-
-.markdown-panel td, th {
-  padding: .5rem;
 }
