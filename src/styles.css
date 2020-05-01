@@ -15,10 +15,15 @@
   height: 100%
 }
 
-.my-panel {
-  margin: 0;
+.center-content-panel {
+  margin: 0 auto 0 auto;
   padding: 12px;
-  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.my-panel {
+  padding: 12px;
 }
 
 .shadow {
