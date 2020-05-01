@@ -39,7 +39,6 @@
             ],
             "scripts": [
               "node_modules/unzipit/dist/unzipit.min.js",
-              "node_modules/angular-split/bundles/angular-split.umd.min.js",
 
               "node_modules/jquery/dist/jquery.slim.min.js",
               "node_modules/popper.js/dist/popper.min.js",
@@ -57,7 +56,9 @@
               "node_modules/moment/min/moment.min.js",
               "node_modules/markdown-it/dist/markdown-it.min.js",
               "node_modules/highlight.js/lib/highlight.js",
-              "node_modules/markdown-it-katex/index.js"
+              "node_modules/markdown-it-katex/index.js",
+
+              "node_modules/angular-split/bundles/angular-split.umd.min.js"
             ]
           },
           "configurations": {

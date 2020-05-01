@@ -11,13 +11,13 @@
   justify-content: center;
   margin-left: auto;
   margin-right: auto;
-  padding: 33px 10px 20px 10px;
+  padding: 25px 10px 20px 10px;
   height: 100%
 }
 
 .my-panel {
   margin: 0;
-  padding: 5px;
+  padding: 12px;
   width: 100%;
 }
 

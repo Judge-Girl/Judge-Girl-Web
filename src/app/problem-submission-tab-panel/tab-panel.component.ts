@@ -1,6 +1,7 @@
 import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import {StudentService} from '../services/Services';
+import {SplitAreaDirective, SplitComponent} from 'angular-split';
 
 export enum Tab {
   TESTCASES,
@@ -31,6 +32,7 @@ export class TabPanelComponent implements OnInit, AfterViewInit {
   @ViewChild('problemTab') problemTab: ElementRef;
   @ViewChild('testcasesTab') testcasesTab: ElementRef;
   @ViewChild('submissionsTab') submissionsTab: ElementRef;
+  @ViewChild('splitter') splitter: SplitComponent;
   private allTabs: ElementRef[];
 
   private problemId: number;
@@ -42,6 +44,7 @@ export class TabPanelComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     this.allTabs = [this.problemTab, this.testcasesTab, this.submissionsTab];
   }
+
 
   switchTab(tab: Tab): boolean {
     if (tab === Tab.PROBLEM) {
@@ -74,7 +77,18 @@ export class TabPanelComponent implements OnInit, AfterViewInit {
     }
   }
 
-
+  onResize($event: UIEvent) {
+    if (this.splitter) {
+      console.log(window.innerWidth);
+      if (window.innerWidth <= 1000) {
+        console.log('vertical');
+        this.splitter.direction = 'vertical';
+      } else {
+        console.log('horizontal');
+        this.splitter.direction = 'horizontal';
+      }
+    }
+  }
 }
 
 
