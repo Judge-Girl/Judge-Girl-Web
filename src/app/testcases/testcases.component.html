@@ -1,4 +1,9 @@
-<table class="table" [style.marginLeft]="'15px'">
+<!-- Spinner -->
+<div [hidden]="testCases" class="row w-100 h-100 align-items-center justify-content-center">
+  <ld-circle></ld-circle>
+</div>
+
+<table [hidden]="!testCases" class="table" [style.marginLeft]="'15px'">
   <thead class="modal-title" id="submission-judges-table-header" [style.fontSize]="'14px'">
   <tr>
     <th scope="col">Test Case</th>

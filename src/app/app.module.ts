@@ -26,6 +26,7 @@ import {AuthenticatedDirective} from './directives/AuthenticatedDirective';
 import {CookieModule} from "./services/cookie/cookie.module";
 import {CookieService} from "./services/cookie/cookie.service";
 import { TestcasesComponent } from './testcases/testcases.component';
+import {AngularSplitModule} from 'angular-split';
 
 
 
@@ -52,6 +53,7 @@ import { TestcasesComponent } from './testcases/testcases.component';
   ],
   imports: [
     CookieModule.forRoot(),
+    AngularSplitModule.forRoot(),
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
@@ -64,9 +66,9 @@ import { TestcasesComponent } from './testcases/testcases.component';
     HttpClient,
     MessageService,
     CookieService,
-    {provide: StudentService, useClass: HttpStudentService},
-    {provide: ProblemService, useClass: HttpProblemService},
-    {provide: SubmissionService, useClass: HttpSubmissionService},
+    {provide: StudentService, useClass: StubStudentService},
+    {provide: ProblemService, useClass: StubProblemService},
+    {provide: SubmissionService, useClass: StubSubmissionService},
     {provide: 'BASE_URL', useValue: 'http://127.0.0.1'},
     {provide: 'PORT_STUDENT_SERVICE', useValue: 33001},
     {provide: 'PORT_PROBLEM_SERVICE', useValue: 33002},

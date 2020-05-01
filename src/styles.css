@@ -11,7 +11,8 @@
   justify-content: center;
   margin-left: auto;
   margin-right: auto;
-  padding: 10px 10px 20px 10px;
+  padding: 33px 10px 20px 10px;
+  height: 100%
 }
 
 .my-panel {
@@ -21,41 +22,48 @@
 }
 
 .shadow {
-  -webkit-box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
-  box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
+  -webkit-box-shadow: 0 30px 60px 0 rgba(0, 0, 0, 0.3);
+  box-shadow: 0 30px 60px 0 rgba(0, 0, 0, 0.3);
 }
 
 header {
   text-align: center;
   font-size: 22px;
   font-weight: 600;
-  display:inline-block;
+  display: inline-block;
   margin: 20px 8px 20px 8px;
   color: rgba(0, 0, 0, 0.68);
 }
 
 .fadeIn {
-  opacity:0;
-  -webkit-animation:fadeIn ease-in 1;
-  -moz-animation:fadeIn ease-in 1;
-  animation:fadeIn ease-in 1;
+  opacity: 0;
+  -webkit-animation: fadeIn ease-in 1;
+  -moz-animation: fadeIn ease-in 1;
+  animation: fadeIn ease-in 1;
 
-  -webkit-animation-fill-mode:forwards;
-  -moz-animation-fill-mode:forwards;
-  animation-fill-mode:forwards;
+  -webkit-animation-fill-mode: forwards;
+  -moz-animation-fill-mode: forwards;
+  animation-fill-mode: forwards;
 
-  -webkit-animation-duration:1s;
-  -moz-animation-duration:1s;
-  animation-duration:1s;
+  -webkit-animation-duration: 1s;
+  -moz-animation-duration: 1s;
+  animation-duration: 1s;
 }
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
 
 /* Override bootstrap's table */
 .table th {
   border-top: 0;
 }
+
 .table td, .table th {
   padding: .5rem;
 }

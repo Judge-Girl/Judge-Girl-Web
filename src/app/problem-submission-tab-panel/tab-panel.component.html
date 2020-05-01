@@ -12,15 +12,19 @@
            (click)="switchTab(TAB_SUBMISSIONS)" #submissionsTab>Submissions</a>
       </li>
     </ul>
-    <div class="my-panel justify-content-start">
-      <div class="row w-100">
-        <div class="col-xl-8">
-          <router-outlet></router-outlet>
-        </div>
-        <div class="col-xl-4">
-          <app-code-panel></app-code-panel>
-        </div>
-      </div>
+    <div class="my-panel justify-content-start" [style.height]="'100%'">
+        <as-split unit="percent" [direction]="'horizontal'" [gutterSize]="10">
+          <as-split-area size="66">
+            <div class="side-by-side-scroll">
+              <router-outlet></router-outlet>
+            </div>
+          </as-split-area>
+          <as-split-area size="34">
+            <div class="side-by-side-scroll">
+              <app-code-panel></app-code-panel>
+            </div>
+          </as-split-area>
+        </as-split>
     </div>
 
   </div>
