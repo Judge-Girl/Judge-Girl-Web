@@ -1,6 +1,7 @@
 @import '~primeicons/primeicons.css';
 @import '~primeng/resources/themes/nova-light/theme.css';
 @import '~primeng/resources/primeng.min.css';
+@import '~highlight.js/styles/darcula.css';
 
 .hidden {
   display: none;
@@ -73,32 +74,22 @@ body {
   padding: .5rem;
 }
 
+table tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
 /* Auto Resize*/
 .CodeMirror {
   height: auto !important;
 }
 
+/* Markdown */
 .markdown-panel {
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
 .markdown-panel p {
   color: #363636;
-}
-
-
-.markdown-panel table {
-  margin-top: 15px;
-  margin-bottom: 15px;
-  width: 100%;
-}
-
-.markdown-panel table, td, th {
-  border: #dddddd solid 1px;
-}
-
-.markdown-panel table tr:nth-child(even) {
-  background-color: #fafafa;
 }
 
 .markdown-panel h1, h2, h3, h4, h5, h6 {
@@ -111,11 +102,22 @@ body {
   margin-bottom: 0;
 }
 
+.markdown-panel table {
+  margin-top: 15px;
+  margin-bottom: 15px;
+  width: 100%;
+}
+
+.markdown-panel table, .markdown-panel td, .markdown-panel th {
+  border: #dddddd solid 1px;
+}
+
 .markdown-panel td, th {
   padding: .5rem;
 }
 
+/* Code section */
 .markdown-panel pre {
-  padding: 5px;
+  padding: 12px;
   background: #f7f7f7;
 }

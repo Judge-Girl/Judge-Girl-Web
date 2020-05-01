@@ -5,6 +5,8 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import 'codemirror/mode/clike/clike.js';
 import 'codemirror/mode/shell/shell.js';
 
+import 'highlight.js/lib/languages/shell.js';
+
 import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
 

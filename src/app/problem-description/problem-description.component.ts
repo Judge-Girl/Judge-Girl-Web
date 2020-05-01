@@ -29,6 +29,7 @@ export class ProblemDescriptionComponent implements OnInit, AfterViewInit {
   @ViewChild('compilationScriptPanel') compilationScriptPanel: ElementRef;
 
   ngOnInit(): void {
+    hljs.initHighlightingOnLoad();
     this.problem$ = this.route.parent.params.pipe(switchMap(params =>
       this.problemService.getProblem(+params.problemId)
     ));
@@ -51,10 +52,15 @@ export class ProblemDescriptionComponent implements OnInit, AfterViewInit {
         linkify: true,
         typographer: true,
         highlight(str, lang) {  // TODO not work
-          if (lang && hljs.getLanguage(lang)) {
+          const langModule = hljs.getLanguage(lang);
+          if (lang && langModule) {
             try {
-              return hljs.highlight(lang, str).value;
-            } catch (__) {}
+              const res = hljs.highlight(lang, str);
+              console.log(`Render language ${lang} to markdown: ${res.value}`);
+              return res.value;
+            } catch (err) {
+              console.log(err);
+            }
           }
           return ''; // use external default escaping
         }
@@ -67,7 +73,7 @@ export class ProblemDescriptionComponent implements OnInit, AfterViewInit {
       markdownIt.render(this.problem.markdownDescription));
     this.renderer.setProperty(this.compilationScriptPanel.nativeElement, 'innerHTML',
       markdownIt.render('## Compilation \n' +
-        '```shell\n' +
+        '```sh\n' +
         this.problem.compilation.script + '\n' +
         '```'));
   }

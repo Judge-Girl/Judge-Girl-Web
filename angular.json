@@ -35,7 +35,10 @@
               "node_modules/codemirror/theme/darcula.css",
               "node_modules/codemirror/theme/material-palenight.css",
 
-              "node_modules/markdown-it-katex/node_modules/katex/dist/katex.min.css"
+              "node_modules/markdown-it-katex/node_modules/katex/dist/katex.min.css",
+
+              "node_modules/highlight.js/styles/default.css",
+              "node_modules/highlight.js/styles/darcula.css"
             ],
             "scripts": [
               "node_modules/unzipit/dist/unzipit.min.js",
@@ -55,8 +58,11 @@
 
               "node_modules/moment/min/moment.min.js",
               "node_modules/markdown-it/dist/markdown-it.min.js",
-              "node_modules/highlight.js/lib/highlight.js",
               "node_modules/markdown-it-katex/index.js",
+
+              "node_modules/highlight.js/lib/highlight.js",
+              "node_modules/highlight.js/lib/languages/shell.js",
+              "node_modules/highlight.js/lib/languages/bash.js",
 
               "node_modules/angular-split/bundles/angular-split.umd.min.js"
             ]

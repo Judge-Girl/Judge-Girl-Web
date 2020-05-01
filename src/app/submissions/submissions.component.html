@@ -31,7 +31,7 @@
     </thead>
     <tbody class="submissions-table">
     <tr *ngFor="let submission of submissions">
-      <th scope="row">{{describeTimeFromNow(submission.submissionTime)}}</th>
+      <td>{{describeTimeFromNow(submission.submissionTime)}}</td>
 
       <!-- Show loading during the judge uncompleted-->
       <td *ngIf="!isJudged(submission)">
@@ -96,7 +96,7 @@
           </thead>
           <tbody class="submissions-table">
           <tr *ngFor="let judge of viewingJudgesSubmission?.judges; let i = index">
-            <th [width]="'80px'" scope="row">{{testCases[i].name}}</th>
+            <td [width]="'80px'" scope="row">{{testCases[i].name}}</td>
             <td [width]="'50px'" class="{{judge.status}}">{{judge.status}}</td>
             <td [width]="'50px'">{{judge.status === CE ? '--' : judge.runtime}} ms</td>
             <td [width]="'50px'">{{judge.status === CE ? '--' : judge.memory}} B</td>
