@@ -35,7 +35,7 @@ export class StubStudentService extends StudentService {
     return student$;
   }
 
-  tryLogin(): Observable<boolean> {
+  authWithTokenToTryLogin(): Observable<boolean> {
     if (this.hasLogin()) {
       return new BehaviorSubject(true);
     } else {
@@ -45,7 +45,8 @@ export class StubStudentService extends StudentService {
           login$.next(true);
           login$.complete();
         }).catch(err => {
-          login$.error(err);
+        login$.next(false);
+        login$.complete();
       });
       return login$;
     }

@@ -40,11 +40,11 @@ export abstract class StudentService {
   }
 
   hasLogin(): boolean {
-    return this.currentStudent !== undefined &&
+    return this.currentStudent &&
       new Date().getTime() < this.currentStudent.expiryTime;
   }
 
-  abstract tryLogin(): Observable<boolean>;
+  abstract authWithTokenToTryLogin(): Observable<boolean>;
 
   abstract auth(token: string): Observable<Student>;
 
@@ -55,8 +55,13 @@ export abstract class StudentService {
   }
 
   set currentStudent(student: Student) {
+    console.log(`Set current student to ${student.account}.`);
     this._currentStudent = student;
-    this.cookieService.put(StudentService.KEY_TOKEN, student.token);
+    if (student) {
+      this.cookieService.put(StudentService.KEY_TOKEN, student.token);
+    } else {
+      this.cookieService.remove(StudentService.KEY_TOKEN);
+    }
   }
 
   public redirectToLoginPage() {

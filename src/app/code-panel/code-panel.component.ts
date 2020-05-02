@@ -5,6 +5,7 @@ import {Problem, SubmittedCodeSpec} from '../models';
 import {switchMap} from 'rxjs/operators';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Observable} from 'rxjs';
+import {log} from 'util';
 
 @Component({
   selector: 'app-code-panel',
@@ -16,6 +17,7 @@ export class CodePanelComponent implements OnInit {
   selectedFiles: File[];
   private problem$: Observable<Problem>;
   problem: Problem;
+  hasLogin: boolean;
 
 
   constructor(public studentService: StudentService,
@@ -28,6 +30,7 @@ export class CodePanelComponent implements OnInit {
 
   ngOnInit(): void {
     this.selectedFiles = undefined;
+    this.studentService.authWithTokenToTryLogin().toPromise().then(hasLogin => this.hasLogin = hasLogin);
 
     // TODO understand why route.parent is not needed
     this.problem$ = this.route.params.pipe(switchMap(params =>

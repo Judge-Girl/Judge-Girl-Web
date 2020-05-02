@@ -19,6 +19,7 @@ export class SubmissionsComponent implements OnInit, AfterViewInit {
   viewingCodesSubmission: Submission;
 
   loadingSubmissions = false;
+  hasLogin: boolean;
 
   constructor(public studentService: StudentService,
               private problemService: ProblemService,
@@ -52,7 +53,9 @@ export class SubmissionsComponent implements OnInit, AfterViewInit {
     return submissions.sort(SubmissionsComponent.compareSubmissionsByTime);
   }
 
-  async ngOnInit() {
+  ngOnInit() {
+    this.studentService.authWithTokenToTryLogin().toPromise().then(hasLogin => this.hasLogin = hasLogin);
+
     this.problem$ = this.route.parent.params.pipe(switchMap(params =>
       this.problemService.getProblem(+params.problemId)
     ));

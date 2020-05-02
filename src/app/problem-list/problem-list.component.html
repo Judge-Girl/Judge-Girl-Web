@@ -11,8 +11,8 @@
       </div>
 
       <!-- Spinner -->
-      <div *ngIf="loadingProblems" id="spinner" class="spinner-border text-primary" role="status">
-        <span class="sr-only">Loading...</span>
+      <div  *ngIf="loadingProblems" class="row w-100 h-100 align-items-center justify-content-center">
+        <ld-circle></ld-circle>
       </div>
 
       <ul class="list-group" *ngFor="let problemItem of problemItems">

@@ -4,8 +4,8 @@
 </div>
 
 
-<div *ngIf="studentService.tryLogin() | async" class="my-panel">
-  <p *ngIf="!bestRecord">You have not submitted to this problem yet.</p>
+<div *ngIf="hasLogin" class="my-panel">
+  <p *ngIf="!loadingSubmissions && !bestRecord">You have not submitted to this problem yet.</p>
 
   <p *ngIf="bestRecord" id="best-record-label">Best Record</p>
   <span *ngIf="ifTheBestSubmissionStatusIs(AC)" class="badge badge-success judge-status">AC</span>
