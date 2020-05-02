@@ -6,7 +6,7 @@ import {JudgeResponse, JudgeStatus, Submission} from './models';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: []
+  styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
   readonly MESSAGE_KEY_SUBMISSION_TOAST = 'submission-toast-key';
