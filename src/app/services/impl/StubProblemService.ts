@@ -138,7 +138,8 @@ export let EXAMPLE_MARKDOWN_DESCRIPTION = '<!-- Highest Discount Rate -->\n' +
   'Since we have not yet discuss the floating point numbers, ' +
   'so we compare two fractional numbers $a/b$ and $c/d$, by ' +
   'comparing $a \\* d$ and $b \\* c$ instead, when both $b$ ' +
-  'and $d$ are positive integers.';
+  'and $d$ are positive integers.\n\n---\n' +
+  '![Test Image](https://i.imgur.com/E9hmeDw.png)';
 
 
 export let EXAMPLE_COMPILATION = new Compilation(

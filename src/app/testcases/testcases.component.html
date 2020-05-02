@@ -3,26 +3,29 @@
   <ld-circle></ld-circle>
 </div>
 
-<table [hidden]="!testCases" class="table" [style.marginLeft]="'15px'">
-  <thead class="modal-title" id="submission-judges-table-header" [style.fontSize]="'14px'">
-  <tr>
-    <th scope="col">Test Case</th>
-    <th scope="col">Runtime Limit</th>
-    <th scope="col">Memory Limit</th>
-    <th scope="col">Output Limit</th>
-    <th scope="col">Thread Limit</th>
-    <th scope="col">Grade</th>
-    <th scope="col"></th>
-  </tr>
-  </thead>
-  <tbody class="submissions-table">
-  <tr *ngFor="let testcase of testCases; let i = index">
-    <td>{{testcase.name}}</td>
-    <td>{{testcase.timeLimit}} ms</td>
-    <td>{{testcase.memoryLimit}} B</td>
-    <td>{{testcase.outputLimit}} B</td>
-    <td>{{testcase.threadNumberLimit}}</td>
-    <td>{{testcase.grade}} pt</td>
-  </tr>
-  </tbody>
-</table>
+<div [style.padding]="'10px'">
+  <table [hidden]="!testCases" class="table" >
+    <thead class="modal-title" id="submission-judges-table-header" [style.fontSize]="'14px'">
+    <tr>
+      <th scope="col">Test Case</th>
+      <th scope="col">Runtime Limit</th>
+      <th scope="col">Memory Limit</th>
+      <th scope="col">Output Limit</th>
+      <th scope="col">Thread Limit</th>
+      <th scope="col">Grade</th>
+    </tr>
+    </thead>
+    <tbody class="submissions-table">
+    <tr *ngFor="let testcase of testCases; let i = index">
+      <td>{{testcase.name}}</td>
+      <td>{{testcase.timeLimit}} ms</td>
+      <td>{{testcase.memoryLimit}} B</td>
+      <td>{{testcase.outputLimit}} B</td>
+      <td>{{testcase.threadNumberLimit}}</td>
+      <td>{{testcase.grade}} pt</td>
+    </tr>
+    </tbody>
+  </table>
+
+
+</div>

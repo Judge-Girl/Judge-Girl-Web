@@ -66,8 +66,13 @@ body {
 }
 
 /* Override bootstrap's table */
+
 .table th {
   border-top: 0;
+}
+
+.table th, .table td {
+  text-align: center;
 }
 
 .table td, .table th {
