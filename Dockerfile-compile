@@ -5,5 +5,4 @@ RUN mkdir -p /usr/src/app/dist
 
 WORKDIR /usr/src/app
 
-CMD npm install
-CMD npm run build
+CMD npm install && npm run build
