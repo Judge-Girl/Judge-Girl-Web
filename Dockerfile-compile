@@ -1,0 +1,8 @@
+FROM node:13-alpine3.10
+
+RUN mkdir -p /usr/src/app
+RUN mkdir -p /usr/src/app/dist
+
+WORKDIR /usr/src/app
+
+CMD npm install && npm run build
