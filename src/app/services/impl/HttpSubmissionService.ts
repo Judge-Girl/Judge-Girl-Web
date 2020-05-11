@@ -23,7 +23,7 @@ export class HttpSubmissionService extends SubmissionService {
               @Inject('BASE_URL') baseUrl: string,
               @Inject('PORT_SUBMISSION_SERVICE') port: number) {
     super();
-    this.httpRequestCache = new HttpRequestCache(http);  //TODO
+    this.httpRequestCache = new HttpRequestCache(http);  // TODO
     this.host = `${baseUrl}:${port}`;
   }
 
@@ -54,8 +54,8 @@ export class HttpSubmissionService extends SubmissionService {
         for (let i = 0; i < p.submittedCodeSpecs.length; i++) {
           formData.append('submittedCodes', files[i], p.submittedCodeSpecs[i].fileName);
         }
-        return this.http.post<Submission>(`${this.host}/api/problems/${problemId}/students/
-          ${this.studentService.currentStudent.id}/submissions`,
+        return this.http.post<Submission>(`${this.host}/api/problems/${problemId}/students/` +
+          `${this.studentService.currentStudent.id}/submissions`,
           formData, {
             headers: {
               Authorization: `Bearer ${this.studentService.currentStudent.token}`
@@ -71,8 +71,8 @@ export class HttpSubmissionService extends SubmissionService {
   getSubmittedCodes(problemId: number, submissionId: number): Observable<CodeFile[]> {
     return this.problemService.getProblem(problemId)
       .pipe(switchMap(p => {
-        return this.http.get(`${this.host}/api/problems/${problemId}/students/${this.studentService.currentStudent.id}
-        /submissions/${submissionId}/zippedSubmittedCodes`, {
+        return this.http.get(`${this.host}/api/problems/${problemId}/students/${this.studentService.currentStudent.id}` +
+          `/submissions/${submissionId}/zippedSubmittedCodes`, {
           headers: {
             'Content-Type': 'application/zip',
             Authorization: `Bearer ${this.studentService.currentStudent.token}`

@@ -1,6 +1,6 @@
 import {Inject, Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
-import {CodeFile, JudgeResponse, Problem, ProblemItem, Student, Submission, TestCase} from '../models';
+import {CodeFile, JudgeResponse, Problem, ProblemItem, Student, studentToString, Submission, TestCase} from '../models';
 import {Router} from '@angular/router';
 import {CookieService} from './cookie/cookie.service';
 import {shareReplay} from 'rxjs/operators';
@@ -55,9 +55,9 @@ export abstract class StudentService {
   }
 
   set currentStudent(student: Student) {
-    console.log(`Set current student to ${student.account}.`);
     this._currentStudent = student;
     if (student) {
+      console.log(`Set current student to ${studentToString(student)}.`);
       this.cookieService.put(StudentService.KEY_TOKEN, student.token);
     } else {
       this.cookieService.remove(StudentService.KEY_TOKEN);

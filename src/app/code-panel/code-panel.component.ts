@@ -85,6 +85,8 @@ export class CodePanelComponent implements OnInit {
         return '.c';
       case 'java':
         return '.java';
+      case 'open_cl':
+        return '.cl';
       default:
         throw new Error(`The language not supported, given ${lang}`);
     }

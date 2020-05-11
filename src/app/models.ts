@@ -6,6 +6,10 @@ export class Student {
   }
 }
 
+export function studentToString(student: Student): string {
+    return `{id: ${student.id}, account: ${student.account}, expiryTime: ${student.expiryTime}, token: ${student.token}}`;
+}
+
 export class TestCase {
   constructor(public name: string,
               public timeLimit: number,
