@@ -8,19 +8,23 @@ import {ProblemService} from '../../services/Services';
   styleUrls: []
 })
 export class ProblemTagDropDownComponent implements OnInit {
-  @Output() tagSelect = new EventEmitter<string>();
-  public readonly DUMMY_TAG = 'All';
-  currentSelectedTag = this.DUMMY_TAG;
-  problemTags: string[];
 
   constructor(private problemService: ProblemService) {
   }
 
+  public static readonly ALL = 'All';
+  @Output() tagSelect = new EventEmitter<string>();
+  currentSelectedTag = ProblemTagDropDownComponent.ALL;
+  problemTags: string[];
+
   ngOnInit(): void {
-    this.problemTags = [this.DUMMY_TAG];
+    this.problemTags = [ProblemTagDropDownComponent.ALL];
     this.problemService.getProblemTags()
       .subscribe(tags => {
-        this.problemTags = tags;
+        this.problemTags = [ProblemTagDropDownComponent.ALL];
+        for (const tag of tags) {
+          this.problemTags.push(tag);
+        }
       });
   }
 

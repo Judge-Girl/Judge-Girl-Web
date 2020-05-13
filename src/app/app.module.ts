@@ -23,8 +23,8 @@ import {HttpProblemService} from './services/impl/HttpProblemService';
 import {HttpStudentService} from './services/impl/HttpStudentService';
 import {HttpSubmissionService} from './services/impl/HttpSubmissionService';
 import {AuthenticatedDirective} from './directives/AuthenticatedDirective';
-import {CookieModule} from "./services/cookie/cookie.module";
-import {CookieService} from "./services/cookie/cookie.service";
+import {CookieModule} from './services/cookie/cookie.module';
+import {CookieService} from './services/cookie/cookie.service';
 import { TestcasesComponent } from './testcases/testcases.component';
 import {AngularSplitModule} from 'angular-split';
 
@@ -69,10 +69,10 @@ import {AngularSplitModule} from 'angular-split';
     {provide: StudentService, useClass: HttpStudentService},
     {provide: ProblemService, useClass: HttpProblemService},
     {provide: SubmissionService, useClass: HttpSubmissionService},
-    {provide: 'BASE_URL', useValue: 'http://140.112.31.198'},
-    {provide: 'PORT_STUDENT_SERVICE', useValue: 8000},
-    {provide: 'PORT_PROBLEM_SERVICE', useValue: 8000},
-    {provide: 'PORT_SUBMISSION_SERVICE', useValue: 8000}
+    {provide: 'BASE_URL', useValue: 'http://127.0.0.1'},
+    {provide: 'PORT_STUDENT_SERVICE', useValue: 33001},
+    {provide: 'PORT_PROBLEM_SERVICE', useValue: 33002},
+    {provide: 'PORT_SUBMISSION_SERVICE', useValue: 33003}
   ],
   bootstrap: [AppComponent]
 })
