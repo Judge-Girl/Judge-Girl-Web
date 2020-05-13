@@ -21,7 +21,7 @@
       <td>{{describeTimeInSeconds(testcase.timeLimit)}}</td>
       <td>{{describeMemory(testcase.memoryLimit)}}</td>
       <td>{{describeMemory(testcase.outputLimit)}}</td>
-      <td>{{testcase.threadNumberLimit === -1 ? -- testcase.threadNumberLimit}}</td>
+      <td>{{testcase.threadNumberLimit === -1 ? '--' : testcase.threadNumberLimit}}</td>
       <td>{{testcase.grade}} pt</td>
     </tr>
     </tbody>

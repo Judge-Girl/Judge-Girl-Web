@@ -16,24 +16,24 @@ export class StubSubmissionService extends SubmissionService {
     super();
 
     this.submissionMap.set(1, [
-      new Submission(1, 1).addJudge(new Judge(JudgeStatus.RE, 4, 22.3, 0)).summary(0, JudgeStatus.RE),
-      new Submission(2, 1).addJudge(new Judge(JudgeStatus.AC, 8, 39.7, 40))
+      new Submission('1', 1).addJudge(new Judge(JudgeStatus.RE, 4, 22.3, 0)).summary(0, JudgeStatus.RE),
+      new Submission('2', 1).addJudge(new Judge(JudgeStatus.AC, 8, 39.7, 40))
         .addJudge(new Judge(JudgeStatus.TLE, 8, 39.7, 0)).summary(40, JudgeStatus.TLE)
     ]);
 
     this.submissionMap.set(2, [
-      new Submission(4, 2).addJudge(new Judge(JudgeStatus.AC, 8, 39.7, 30))
+      new Submission('4', 2).addJudge(new Judge(JudgeStatus.AC, 8, 39.7, 30))
         .addJudge(new Judge(JudgeStatus.AC, 8, 39.7, 30))
         .addJudge(new Judge(JudgeStatus.TLE, 8, 39.7, 0)).summary(60, JudgeStatus.TLE),
-      new Submission(5, 2).addJudge(new Judge(JudgeStatus.AC, 8, 39.7, 100)).summary(100, JudgeStatus.AC),
-      new Submission(6, 2).addJudge(new Judge(JudgeStatus.CE, -1, -1, 0)).summary(0, JudgeStatus.CE),
+      new Submission('5', 2).addJudge(new Judge(JudgeStatus.AC, 8, 39.7, 100)).summary(100, JudgeStatus.AC),
+      new Submission('6', 2).addJudge(new Judge(JudgeStatus.CE, -1, -1, 0)).summary(0, JudgeStatus.CE),
     ]);
 
 
     this.submissionMap.set(3, [
-      new Submission(7, 3).addJudge(new Judge(JudgeStatus.AC, 2, 39.3, 30)).summary(100, JudgeStatus.AC),
-      new Submission(8, 3).addJudge(new Judge(JudgeStatus.AC, 2, 39.3, 30)).summary(100, JudgeStatus.AC),
-      new Submission(9, 3).addJudge(new Judge(JudgeStatus.AC, 2, 39.3, 40)).summary(100, JudgeStatus.AC)
+      new Submission('7', 3).addJudge(new Judge(JudgeStatus.AC, 2, 39.3, 30)).summary(100, JudgeStatus.AC),
+      new Submission('8', 3).addJudge(new Judge(JudgeStatus.AC, 2, 39.3, 30)).summary(100, JudgeStatus.AC),
+      new Submission('9', 3).addJudge(new Judge(JudgeStatus.AC, 2, 39.3, 40)).summary(100, JudgeStatus.AC)
     ]);
 
     // assign random dates to every submission stub
@@ -61,7 +61,7 @@ export class StubSubmissionService extends SubmissionService {
   submitFromFile(problemId: number, files: File[]): Observable<Submission> {
     const submitSubject = new Subject<Submission>();
     const id = this.submissionMap.size + 1;
-    const submission = new Submission(id, problemId);
+    const submission = new Submission(String(id), problemId);
 
     // insert the submission at the head and then broadcast
     this.submissionMap.set(problemId, [submission].concat(this.submissionMap.get(problemId)));
@@ -110,7 +110,7 @@ export class StubSubmissionService extends SubmissionService {
     return this.schedulingSubject;
   }
 
-  getSubmittedCodes(problemId: number, submissionId: number): Observable<CodeFile[]> {
+  getSubmittedCodes(problemId: number, submissionId: string): Observable<CodeFile[]> {
     return undefined;  // TODO: not easy to implement
   }
 

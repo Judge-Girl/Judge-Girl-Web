@@ -77,7 +77,7 @@ export class Submission {
   _maximumRuntime: number;
   _maximumMemory: number;
 
-  constructor(public id: number,
+  constructor(public id: string,
               public problemId: number) {
   }
 

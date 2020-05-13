@@ -96,7 +96,7 @@ export abstract class SubmissionService {
 
   abstract submitFromFile(problemId: number, files: File[]): Observable<Submission>;
 
-  abstract getSubmittedCodes(problemId: number, submissionId: number): Observable<CodeFile[]>;
+  abstract getSubmittedCodes(problemId: number, submissionId: string): Observable<CodeFile[]>;
 }
 
 
