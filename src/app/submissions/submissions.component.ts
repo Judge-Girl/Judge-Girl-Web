@@ -3,7 +3,18 @@ import {ActivatedRoute} from '@angular/router';
 import {ProblemService, StudentService, SubmissionService} from '../services/Services';
 import {map, switchMap} from 'rxjs/operators';
 import {Observable} from 'rxjs';
-import {getMaximumMemory, getMaximumRuntime, isJudged, JudgeStatus, Problem, Submission, CodeFile, TestCase} from '../models';
+import {
+  getMaximumMemory,
+  getMaximumRuntime,
+  isJudged,
+  describeMemory,
+  describeTimeInSeconds,
+  JudgeStatus,
+  Problem,
+  Submission,
+  CodeFile,
+  TestCase
+} from '../models';
 import * as moment from 'moment';
 import * as CodeMirror from 'codemirror';
 
@@ -120,7 +131,6 @@ export class SubmissionsComponent implements OnInit, AfterViewInit {
     return true;  // propagate the click event to the bootstrap's modal
   }
 
-
   describeTimeFromNow(time: number): string {
     return moment(time).fromNow();
   }
@@ -138,29 +148,11 @@ export class SubmissionsComponent implements OnInit, AfterViewInit {
   }
 
   describeMemory(memoryInBytes: number): string {
-    if (!memoryInBytes) {
-      return '--';
-    }
-    if (memoryInBytes < 1024) {
-      return `${memoryInBytes.toFixed(2)} B`;
-    }
-    memoryInBytes /= 1024;
-    if (memoryInBytes < 1024) {
-      return `${memoryInBytes.toFixed(2)} KB`;
-    }
-    memoryInBytes /= 1024;
-    if (memoryInBytes < 1024) {
-      return `${memoryInBytes.toFixed(2)} MB`;
-    }
-    memoryInBytes /= 1024;
-    return `${memoryInBytes.toFixed(2)} GB`;
+    return describeMemory(memoryInBytes);
   }
 
   describeTimeInSeconds(ms: number) {
-    if (!ms) {
-      return '--';
-    }
-    return `${(ms / 1000).toFixed(2)} s`;
+    return describeTimeInSeconds(ms);
   }
 
   ngAfterViewInit() {

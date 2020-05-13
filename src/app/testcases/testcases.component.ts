@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ProblemService} from '../services/Services';
 import {ActivatedRoute} from '@angular/router';
-import {TestCase} from '../models';
+import {TestCase, describeMemory, describeTimeInSeconds} from '../models';
 
 @Component({
   selector: 'app-testcases',
@@ -20,6 +20,14 @@ export class TestcasesComponent implements OnInit {
       this.problemService.getTestCases(+params.problemId).toPromise()
         .then(tc => this.testCases = tc);
     });
+  }
+
+  describeMemory(memoryInBytes: number): string {
+    return describeMemory(memoryInBytes);
+  }
+
+  describeTimeInSeconds(ms: number) {
+    return describeTimeInSeconds(ms);
   }
 
 }

@@ -18,11 +18,7 @@ export class TabPanelComponent implements OnInit, AfterViewInit {
   constructor(private elementRef: ElementRef, public studentService: StudentService,
               private router: Router, private route: ActivatedRoute) {
     route.params.subscribe(params => this.problemId = +params.problemId);
-    this.router.events.subscribe(e => {
-      if (e instanceof NavigationEnd) {
-        this.refreshTabState();
-      }
-    });
+
   }
 
   readonly TAB_SUBMISSIONS = Tab.SUBMISSIONS;
@@ -38,11 +34,16 @@ export class TabPanelComponent implements OnInit, AfterViewInit {
   private problemId: number;
 
   ngOnInit(): void {
-    this.refreshTabState();
   }
 
   ngAfterViewInit(): void {
     this.allTabs = [this.problemTab, this.testcasesTab, this.submissionsTab];
+    this.router.events.subscribe(e => {
+      if (e instanceof NavigationEnd) {
+        this.refreshTabState();
+      }
+    });
+    this.refreshTabState();
   }
 
 
@@ -61,11 +62,13 @@ export class TabPanelComponent implements OnInit, AfterViewInit {
   }
 
   private activateTabAndDeactivateOthers(tab: ElementRef) {
-    for (const t of this.allTabs) {
-      if (t === tab) {
-        t.nativeElement.classList.add('active');
-      } else {
-        t.nativeElement.classList.remove('active');
+    if (this.allTabs) {
+      for (const t of this.allTabs) {
+        if (t === tab) {
+          t.nativeElement.classList.add('active');
+        } else {
+          t.nativeElement.classList.remove('active');
+        }
       }
     }
   }

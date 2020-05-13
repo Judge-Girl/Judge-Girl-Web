@@ -140,6 +140,33 @@ export function getMaximumMemory(submission: Submission) {
   return submission._maximumMemory;
 }
 
+
+export function describeMemory(memoryInBytes: number): string {
+  if (!memoryInBytes) {
+    return '--';
+  }
+  if (memoryInBytes < 1024) {
+    return `${memoryInBytes.toFixed(2)} B`;
+  }
+  memoryInBytes /= 1024;
+  if (memoryInBytes < 1024) {
+    return `${memoryInBytes.toFixed(2)} KB`;
+  }
+  memoryInBytes /= 1024;
+  if (memoryInBytes < 1024) {
+    return `${memoryInBytes.toFixed(2)} MB`;
+  }
+  memoryInBytes /= 1024;
+  return `${memoryInBytes.toFixed(2)} GB`;
+}
+
+export function describeTimeInSeconds(ms: number) {
+  if (!ms) {
+    return '--';
+  }
+  return `${(ms / 1000).toFixed(2)} s`;
+}
+
 export class JudgeResponse {
   constructor(public problemId: number,
               public problemTitle: string,
