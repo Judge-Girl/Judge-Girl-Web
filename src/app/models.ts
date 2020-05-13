@@ -7,7 +7,7 @@ export class Student {
 }
 
 export function studentToString(student: Student): string {
-    return `{id: ${student.id}, account: ${student.account}, expiryTime: ${student.expiryTime}, token: ${student.token}}`;
+  return `{id: ${student.id}, account: ${student.account}, expiryTime: ${student.expiryTime}, token: ${student.token}}`;
 }
 
 export class TestCase {
@@ -74,8 +74,8 @@ export class Submission {
   submissionTime: number;
   judgeTime: number;
 
-  _averageRuntime: number;
-  _averageMemory: number;
+  _maximumRuntime: number;
+  _maximumMemory: number;
 
   constructor(public id: number,
               public problemId: number) {
@@ -110,34 +110,34 @@ export function isJudged(submission: Submission) {
   return submission.judges && submission.judges.length > 0;
 }
 
-export function getAverageRuntime(submission: Submission) {
-  let sum = 0;
-  if (!submission._averageRuntime) {
+export function getMaximumRuntime(submission: Submission): number {
+  if (!submission._maximumRuntime) {
+    let max = -1;
     for (const judge of submission.judges) {
       if (judge.status === JudgeStatus.CE) {
         return undefined;
-      } else {
-        sum += judge.runtime;
+      } else if (max < judge.runtime) {
+        max = judge.runtime;
       }
     }
-    submission._averageRuntime = sum / submission.judges.length;
+    submission._maximumRuntime = max;
   }
-  return submission._averageRuntime.toFixed(2);
+  return submission._maximumRuntime;
 }
 
-export function getAverageMemory(submission: Submission) {
-  let sum = 0;
-  if (!submission._averageRuntime) {
+export function getMaximumMemory(submission: Submission) {
+  if (!submission._maximumMemory) {
+    let max = -1;
     for (const judge of submission.judges) {
       if (judge.status === JudgeStatus.CE) {
         return undefined;
-      } else {
-        sum += judge.runtime;
+      } else if (max < judge.memory) {
+        max = judge.memory;
       }
     }
-    submission._averageRuntime = sum / submission.judges.length;
+    submission._maximumMemory = max;
   }
-  return submission._averageRuntime.toFixed(2);
+  return submission._maximumMemory;
 }
 
 export class JudgeResponse {

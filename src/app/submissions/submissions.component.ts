@@ -3,7 +3,7 @@ import {ActivatedRoute} from '@angular/router';
 import {ProblemService, StudentService, SubmissionService} from '../services/Services';
 import {map, switchMap} from 'rxjs/operators';
 import {Observable} from 'rxjs';
-import {getAverageMemory, getAverageRuntime, isJudged, JudgeStatus, Problem, Submission, CodeFile, TestCase} from '../models';
+import {getMaximumMemory, getMaximumRuntime, isJudged, JudgeStatus, Problem, Submission, CodeFile, TestCase} from '../models';
 import * as moment from 'moment';
 import * as CodeMirror from 'codemirror';
 
@@ -129,12 +129,38 @@ export class SubmissionsComponent implements OnInit, AfterViewInit {
     return isJudged(submission);
   }
 
-  avgMemory(submission: Submission) {
-    return getAverageMemory(submission);
+  maximumMemory(submission: Submission) {
+    return getMaximumMemory(submission);
   }
 
-  avgRuntime(submission: Submission) {
-    return getAverageRuntime(submission);
+  maximumRuntime(submission: Submission) {
+    return getMaximumRuntime(submission);
+  }
+
+  describeMemory(memoryInBytes: number): string {
+    if (!memoryInBytes) {
+      return '--';
+    }
+    if (memoryInBytes < 1024) {
+      return `${memoryInBytes.toFixed(2)} B`;
+    }
+    memoryInBytes /= 1024;
+    if (memoryInBytes < 1024) {
+      return `${memoryInBytes.toFixed(2)} KB`;
+    }
+    memoryInBytes /= 1024;
+    if (memoryInBytes < 1024) {
+      return `${memoryInBytes.toFixed(2)} MB`;
+    }
+    memoryInBytes /= 1024;
+    return `${memoryInBytes.toFixed(2)} GB`;
+  }
+
+  describeTimeInSeconds(ms: number) {
+    if (!ms) {
+      return '--';
+    }
+    return `${(ms / 1000).toFixed(2)} s`;
   }
 
   ngAfterViewInit() {
@@ -161,4 +187,10 @@ export class SubmissionsComponent implements OnInit, AfterViewInit {
   }
 
 
+  describeGrade(totalGrade: number) {
+    if (!totalGrade) {
+      return '--';
+    }
+    return `${totalGrade} pt`;
+  }
 }

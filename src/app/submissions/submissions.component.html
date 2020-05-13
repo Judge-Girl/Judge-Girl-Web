@@ -47,9 +47,9 @@
       <!-- Info that only available after the judge completed-->
       <td *ngIf="isJudged(submission)"
           class="{{submission.summaryStatus}}">{{submission.summaryStatus}}</td>
-      <td *ngIf="isJudged(submission)">{{avgRuntime(submission) ? avgRuntime(submission) : '--'}} ms</td>
-      <td *ngIf="isJudged(submission)">{{avgMemory(submission) ? avgMemory(submission) : '--'}} B</td>
-      <td *ngIf="isJudged(submission)">{{submission.totalGrade}} pt</td>
+      <td *ngIf="isJudged(submission)">{{describeTimeInSeconds(maximumRuntime(submission))}}</td>
+      <td *ngIf="isJudged(submission)">{{describeMemory(maximumMemory(submission))}}</td>
+      <td *ngIf="isJudged(submission)">{{describeGrade(submission.totalGrade)}}</td>
       <td>
         <button *ngIf="isJudged(submission)" type="button" class="btn btn-link see-details-btn" data-toggle="modal"
                 (click)="onViewSubmissionJudgesBtnClick(submission)"
@@ -96,10 +96,10 @@
           </thead>
           <tbody class="submissions-table">
           <tr *ngFor="let judge of viewingJudgesSubmission?.judges; let i = index">
-            <td [width]="'80px'" scope="row">{{testCases[i].name}}</td>
+            <td [width]="'80px'">{{testCases[i].name}}</td>
             <td [width]="'50px'" class="{{judge.status}}">{{judge.status}}</td>
-            <td [width]="'50px'">{{judge.status === CE ? '--' : judge.runtime}} ms</td>
-            <td [width]="'50px'">{{judge.status === CE ? '--' : judge.memory}} B</td>
+            <td [width]="'50px'">{{judge.status === CE ? '--' : describeTimeInSeconds(judge.runtime)}}</td>
+            <td [width]="'50px'">{{judge.status === CE ? '--' : describeMemory(judge.memory)}} B</td>
             <td [width]="'50px'">{{judge.grade}} pt</td>
           </tr>
           </tbody>
