@@ -2,7 +2,7 @@ import {ProblemService, StudentService, SubmissionService} from '../Services';
 import {Observable, Subject} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {Inject, Injectable} from '@angular/core';
-import {CodeFile, JudgeResponse, Problem, Submission} from '../../models';
+import {CodeFile, isJudged, JudgeResponse, Problem, Submission} from '../../models';
 import {map, switchMap} from 'rxjs/operators';
 import {unzipCodesArrayBuffer} from '../../utils';
 import {HttpRequestCache} from './HttpRequestCache';
@@ -20,6 +20,11 @@ export class HttpSubmissionService extends SubmissionService {
   judgeResponse$ = new Subject<JudgeResponse>();
   private readonly submissionMap = new Map<number, Array<Submission>>();
   private submissions$ = new Subject<Submission[]>();
+
+  // TODO (to remove) polling trick
+  // store a set of pollingItem's stringified representation <problemId:problemTitle-studentId-submissionId>
+  // this set is used for avoid duplicate pollings
+  private readonly pollingSets = new Set<string>();
 
   constructor(protected http: HttpClient,
               private studentService: StudentService,
@@ -46,8 +51,9 @@ export class HttpSubmissionService extends SubmissionService {
         // TODO (to remove) Polling Tricks
         this.problemService.getProblem(problemId).toPromise()
           .then(p => {
+            // for every non-judged submission, register it for polling
             for (const submission of submissions) {
-              if (!submission.judges || !submission.judgeTime) {
+              if (!isJudged(submission)) {
                 this.pollForSubmission(problemId, p.title, this.studentService.currentStudent.id, submission.id);
               }
             }
@@ -88,7 +94,7 @@ export class HttpSubmissionService extends SubmissionService {
           });
       })).pipe(map(newSubmission => {
         this.pollForSubmission(problemId, problem.title, this.studentService.currentStudent.id, newSubmission.id);
-        this.submissionMap.get(problemId).push(newSubmission);
+        this.addOrReplaceSubmissionDistinctById(problemId, newSubmission);
         this.submissions$.next(this.submissionMap.get(problemId));
         return newSubmission;
       }));
@@ -96,25 +102,31 @@ export class HttpSubmissionService extends SubmissionService {
 
   // TODO (to remove) Polling Tricks
   private pollForSubmission(problemId: number, problemTitle: string, studentId: number, submissionId: string) {
-    const id = setInterval(() => {
-      if (studentId === this.studentService.currentStudent.id) {
-        console.log(`Poll for submission ${submissionId}`);
-        this.getSubmission(problemId, submissionId).toPromise()
-          .then(submission => {
-            if (submission.judges && submission.judgeTime) {
-              console.log(`Submission ${submissionId} judged.`);
-              for (const sub of this.submissionMap.get(problemId)) {
-                if (submission.id === sub.id) {
-                  const array = this.submissionMap.get(problemId);
-                  array.splice(array.indexOf(sub), 1, submission);
-                }
-              }
-              this.judgeResponse$.next(new JudgeResponse(problemId, problemTitle, submission));
-              clearInterval(id);
-            }
-          });
-      }
-    }, 8000);
+    const pollingItemStr = this.stringifyPollingItem(problemId, problemTitle, studentId, submissionId);
+    if (!this.pollingSets.has(pollingItemStr)) {
+      this.pollingSets.add(pollingItemStr);
+      const id = setInterval(async () => {
+        // make sure it's polling for the same student, otherwise cancel it
+        if (studentId === this.studentService.currentStudent.id) {
+          console.log(`Polling for submission ${submissionId}`);
+          const submission = await this.getSubmission(problemId, submissionId).toPromise();
+          if (isJudged(submission)) {
+            console.log(`Submission ${submissionId} judged.`);
+            this.addOrReplaceSubmissionDistinctById(problemId, submission);
+            this.judgeResponse$.next(new JudgeResponse(problemId, problemTitle, submission));
+            this.pollingSets.delete(pollingItemStr);
+            clearInterval(id);
+          }
+        } else {
+          this.pollingSets.delete(pollingItemStr);
+          clearInterval(id);
+        }
+      }, 8000);
+    }
+  }
+
+  private stringifyPollingItem(problemId: number, problemTitle: string, studentId: number, submissionId: string): string {
+    return `${problemId}:${problemTitle}-${studentId}-${submissionId}`;
   }
 
   getSubmittedCodes(problemId: number, submissionId: string): Observable<CodeFile[]> {
@@ -131,5 +143,20 @@ export class HttpSubmissionService extends SubmissionService {
       }))
       .pipe(switchMap(unzipCodesArrayBuffer));
   }
+
+  private addOrReplaceSubmissionDistinctById(problemId: number, submission: Submission) {
+    const submissions = this.submissionMap.get(problemId);
+    for (const sub of submissions) {
+      if (sub.id === submission.id) {
+        submissions.splice(submissions.indexOf(sub), 1, submission);
+        return; // found, replace and terminate
+      }
+    }
+    submissions.push(submission); // otherwise push it
+  }
+}
+
+
+function stringifyPollingItem() {
 
 }

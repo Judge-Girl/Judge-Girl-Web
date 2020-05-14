@@ -107,7 +107,7 @@ export class Submission {
 // We don't place these get-like functions into the model classes
 // because when the model classes are deserialized from JSON, functions are not set to the classes.
 export function isJudged(submission: Submission) {
-  return submission.judges && submission.judges.length > 0;
+  return submission.judges && submission.judgeTime && submission.judges.length > 0;
 }
 
 export function getMaximumRuntime(submission: Submission): number {

@@ -2,7 +2,7 @@
 <!-- Toast Template -->
 <p-toast id="submission-toast" position="top-right" key="{{MESSAGE_KEY_SUBMISSION_TOAST}}" >
   <ng-template let-message pTemplate="message">
-    <a [routerLink]="'/problems/'+message.data.problemId">{{message.data.judgeStatus}}: {{message.data.problemTitle}}</a>
+    <a [routerLink]="'/problems/'+message.data.problemId+'/submissions'">{{message.data.judgeStatus}}: {{message.data.problemTitle}}</a>
   </ng-template>
 </p-toast>
 

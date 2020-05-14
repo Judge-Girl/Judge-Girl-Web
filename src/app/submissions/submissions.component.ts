@@ -65,12 +65,9 @@ export class SubmissionsComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    this.studentService.authWithTokenToTryLogin().toPromise().then(hasLogin => this.hasLogin = hasLogin);
-
     this.problem$ = this.route.parent.params.pipe(switchMap(params =>
       this.problemService.getProblem(+params.problemId)
     ));
-
 
     this.problem$.subscribe(p => {
       this.problem = p;
@@ -78,18 +75,21 @@ export class SubmissionsComponent implements OnInit, AfterViewInit {
         .then(testCases => this.testCases = testCases);
     });
 
-    if (this.studentService.hasLogin()) {
-      this.loadingSubmissions = true;
-      this.submissions$ = this.route.parent.params.pipe(switchMap(params =>
-        this.submissionService.getSubmissions(+params.problemId)
-          .pipe(map(SubmissionsComponent.sortSubmissionsByTime))
-      ));
+    this.studentService.authWithTokenToTryLogin().toPromise().then(hasLogin => {
+      this.hasLogin = hasLogin;
+      if (this.studentService.hasLogin()) {
+        this.loadingSubmissions = true;
+        this.submissions$ = this.route.parent.params.pipe(switchMap(params =>
+          this.submissionService.getSubmissions(+params.problemId)
+            .pipe(map(SubmissionsComponent.sortSubmissionsByTime))
+        ));
 
-      this.submissions$.subscribe(submissions => {
-        this.submissions = SubmissionsComponent.sortSubmissionsByTime(submissions);
-        this.loadingSubmissions = false;
-      });
-    }
+        this.submissions$.subscribe(submissions => {
+          this.submissions = SubmissionsComponent.sortSubmissionsByTime(submissions);
+          this.loadingSubmissions = false;
+        });
+      }
+    });
   }
 
   get bestRecord(): Submission {

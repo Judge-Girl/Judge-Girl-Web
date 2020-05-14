@@ -52,10 +52,10 @@ export class TabPanelComponent implements OnInit, AfterViewInit {
       this.router.navigate([`problems/${this.problemId}`]);
       this.activateTabAndDeactivateOthers(this.problemTab);
     } else if (tab === Tab.TESTCASES) {
-      this.router.navigate([`problems/${this.problemId}/testcases`], {skipLocationChange: true});
+      this.router.navigate([`problems/${this.problemId}/testcases`]);
       this.activateTabAndDeactivateOthers(this.testcasesTab);
     } else if (tab === Tab.SUBMISSIONS) {
-      this.router.navigate([`problems/${this.problemId}/submissions`], {skipLocationChange: true});
+      this.router.navigate([`problems/${this.problemId}/submissions`]);
       this.activateTabAndDeactivateOthers(this.submissionsTab);
     }
     return false;  // avoid <a>'s changing page
@@ -74,13 +74,18 @@ export class TabPanelComponent implements OnInit, AfterViewInit {
   }
 
   private refreshTabState() {
-    if (window.location.pathname.endsWith('submissions')) {
-      console.log(window.location.pathname);
-      this.switchTab(Tab.SUBMISSIONS);
-    }
+    if (window.location.pathname.endsWith('testcases')) {
+      this.switchTab(Tab.TESTCASES);
+    } else if (window.location.pathname.endsWith('submissions')) {
+        this.switchTab(Tab.SUBMISSIONS);
+      }
   }
 
   onResize($event: UIEvent) {
+    this.effectResponsiveSplitter();
+  }
+
+  private effectResponsiveSplitter() {
     if (this.splitter) {
       console.log(window.innerWidth);
       if (window.innerWidth <= 1000) {
