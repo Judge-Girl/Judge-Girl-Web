@@ -1,11 +1,12 @@
 import {Component, OnInit} from '@angular/core';
 import {FileUpload, MessageService} from 'primeng';
-import {StudentService, ProblemService, SubmissionService} from '../services/Services';
+import {StudentService, ProblemService, SubmissionService, SubmissionThrottlingError} from '../services/Services';
 import {Problem, SubmittedCodeSpec} from '../models';
 import {switchMap} from 'rxjs/operators';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Observable} from 'rxjs';
 import {log} from 'util';
+import {HttpErrorResponse} from '@angular/common/http';
 
 @Component({
   selector: 'app-code-panel',
@@ -54,6 +55,12 @@ export class CodePanelComponent implements OnInit {
       this.submissionService.submitFromFile(this.problem.id, this.selectedFiles)
         .toPromise().then(submission => {
         console.log(`Submit successfully, ${submission}`);
+      }).catch((err: SubmissionThrottlingError) => {
+        this.messageService.add({
+          key: this.MESSAGE_KEY_ERROR_TOAST,
+          severity: 'warn', summary: 'Hold down...',
+          detail: err.message
+        });
       });
     }
     return false;

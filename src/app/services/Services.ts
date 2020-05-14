@@ -21,6 +21,12 @@ export class AccountNotFoundError extends Error {
 export class IncorrectPasswordFoundError extends Error {
 }
 
+export class SubmissionThrottlingError extends Error {
+  constructor(message: string) {
+    super(message);
+  }
+}
+
 @Injectable({
   providedIn: 'root'
 })

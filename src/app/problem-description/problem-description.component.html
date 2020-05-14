@@ -5,7 +5,7 @@
 </div>
 
 <div [hidden]="!problem" class="my-panel" id="problem-description-panel" #problemDescriptionPanel>
-  <header class="markdown-panel"><h1>{{problem?.title}}</h1></header>
+  <header class="markdown-panel"><h1>{{problem?.id + '. ' + problem?.title}}</h1></header>
   <div class="markdown-panel" #markdownPanel></div>
   <div class="darcula markdown-panel " #compilationScriptPanel></div>
   <hr>

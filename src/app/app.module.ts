@@ -69,10 +69,10 @@ import {AngularSplitModule} from 'angular-split';
     {provide: StudentService, useClass: HttpStudentService},
     {provide: ProblemService, useClass: HttpProblemService},
     {provide: SubmissionService, useClass: HttpSubmissionService},
-    {provide: 'BASE_URL', useValue: 'http://nami.csie.ntu.edu.tw'},
-    {provide: 'PORT_STUDENT_SERVICE', useValue: 8000},
-    {provide: 'PORT_PROBLEM_SERVICE', useValue: 8000},
-    {provide: 'PORT_SUBMISSION_SERVICE', useValue: 8000}
+    {provide: 'BASE_URL', useValue: 'http://localhost'},  // 'http://nami.csie.ntu.edu.tw'
+    {provide: 'PORT_STUDENT_SERVICE', useValue: 33001},
+    {provide: 'PORT_PROBLEM_SERVICE', useValue: 33002},
+    {provide: 'PORT_SUBMISSION_SERVICE', useValue: 33003}
   ],
   bootstrap: [AppComponent]
 })

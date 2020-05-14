@@ -1,9 +1,9 @@
-import {ProblemService, StudentService, SubmissionService} from '../Services';
-import {Observable, Subject} from 'rxjs';
-import {HttpClient} from '@angular/common/http';
+import {ProblemService, StudentService, SubmissionService, SubmissionThrottlingError} from '../Services';
+import {Observable, Subject, throwError} from 'rxjs';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {Inject, Injectable} from '@angular/core';
 import {CodeFile, isJudged, JudgeResponse, Problem, Submission} from '../../models';
-import {map, switchMap} from 'rxjs/operators';
+import {catchError, map, switchMap} from 'rxjs/operators';
 import {unzipCodesArrayBuffer} from '../../utils';
 import {HttpRequestCache} from './HttpRequestCache';
 
@@ -77,6 +77,7 @@ export class HttpSubmissionService extends SubmissionService {
   }
 
   submitFromFile(problemId: number, files: File[]): Observable<Submission> {
+    this.studentService.authenticate();
     const formData = new FormData();
     let problem: Problem;
     return this.problemService.getProblem(problemId)
@@ -92,6 +93,12 @@ export class HttpSubmissionService extends SubmissionService {
               Authorization: `Bearer ${this.studentService.currentStudent.token}`
             }
           });
+      })).pipe(catchError((err: HttpErrorResponse) => {
+        if (err.status === 400) {
+          return throwError(new SubmissionThrottlingError(err.error.message));
+        } else {
+          return throwError(err);
+        }
       })).pipe(map(newSubmission => {
         this.pollForSubmission(problemId, problem.title, this.studentService.currentStudent.id, newSubmission.id);
         this.addOrReplaceSubmissionDistinctById(problemId, newSubmission);
