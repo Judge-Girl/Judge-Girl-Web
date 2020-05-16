@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {MessageService} from 'primeng';
-import {SubmissionService} from './services/Services';
+import {StudentService, SubmissionService} from './services/Services';
 import {JudgeResponse, JudgeStatus, Submission} from './models';
 
 @Component({
@@ -12,6 +12,7 @@ export class AppComponent implements OnInit {
   readonly MESSAGE_KEY_SUBMISSION_TOAST = 'submission-toast-key';
 
   constructor(private submissionService: SubmissionService,
+              private studentService: StudentService,
               private messageService: MessageService) {
   }
 
@@ -31,5 +32,10 @@ export class AppComponent implements OnInit {
         problemId: judgeResponse.problemId
       }
     });
+  }
+
+  onLogoutClick(): boolean {
+    this.studentService.logout();
+    return true; // propagate click event
   }
 }

@@ -7,7 +7,6 @@ import {shareReplay} from 'rxjs/operators';
 import {HttpClient} from '@angular/common/http';
 
 
-
 export class UnauthenticatedError extends Error {
   constructor() {
     super('The student has not authenticated.');
@@ -56,9 +55,14 @@ export abstract class StudentService {
 
   abstract login(account: string, password: string): Observable<Student>;
 
+  public logout() {
+    this.currentStudent = undefined;
+  }
+
   get currentStudent(): Student {
     return this._currentStudent;
   }
+
 
   set currentStudent(student: Student) {
     this._currentStudent = student;
@@ -74,6 +78,7 @@ export abstract class StudentService {
     this.router.navigateByUrl('/');
     this.cookieService.remove(StudentService.KEY_TOKEN);
   }
+
 }
 
 @Injectable({

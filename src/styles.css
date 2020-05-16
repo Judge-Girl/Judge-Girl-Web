@@ -126,3 +126,7 @@ table tr:nth-child(even) {
   padding: 12px;
   background: #f7f7f7;
 }
+
+.cursor-pointer {
+  cursor: pointer;
+}
