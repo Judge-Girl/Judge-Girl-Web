@@ -4,15 +4,15 @@ import {ProblemService, StudentService, SubmissionService} from '../services/Ser
 import {map, switchMap} from 'rxjs/operators';
 import {Observable} from 'rxjs';
 import {
+  CodeFile,
+  describeMemory,
+  describeTimeInSeconds,
   getMaximumMemory,
   getMaximumRuntime,
   isJudged,
-  describeMemory,
-  describeTimeInSeconds,
   JudgeStatus,
   Problem,
   Submission,
-  CodeFile,
   TestCase
 } from '../models';
 import * as moment from 'moment';
@@ -52,6 +52,8 @@ export class SubmissionsComponent implements OnInit, AfterViewInit {
   MLE = JudgeStatus.MLE;
   WA = JudgeStatus.WA;
   RE = JudgeStatus.RE;
+  SYSTEM_ERR = JudgeStatus.SYSTEM_ERR;
+  NONE = JudgeStatus.NONE;
 
   @ViewChildren('codeArea') codeAreas: QueryList<any>;
 
@@ -109,6 +111,15 @@ export class SubmissionsComponent implements OnInit, AfterViewInit {
 
   ifTheBestSubmissionStatusIs(status: JudgeStatus) {
     return this.bestRecord && this.bestRecord.summaryStatus === status;
+  }
+
+  isErrorJudgeStatus(submission: Submission) {
+    return submission && (submission.summaryStatus === JudgeStatus.RE ||
+      submission.summaryStatus === JudgeStatus.CE || submission.summaryStatus === JudgeStatus.SYSTEM_ERR);
+  }
+
+  isJudgeStatus(submission: Submission, status: JudgeStatus) {
+    return submission && submission.summaryStatus === status;
   }
 
   onViewSubmissionJudgesBtnClick(submission: Submission): boolean {
@@ -184,5 +195,12 @@ export class SubmissionsComponent implements OnInit, AfterViewInit {
       return '--';
     }
     return `${totalGrade} pt`;
+  }
+
+  describeRuntimeErrorMessage(errorMessage: string) {
+    if (errorMessage && errorMessage.length > 0) {
+      return errorMessage;
+    }
+    return 'No error message, \nmaybe it\'s some kind of system error (e.g. Segmentation fault?)';
   }
 }

@@ -8,9 +8,9 @@ import {ProblemListComponent} from './problem-list/problem-list.component';
 import {StubStudentService} from './services/impl/StubStudentService';
 import {StudentService, ProblemService, SubmissionService} from './services/Services';
 import {StubProblemService} from './services/impl/StubProblemService';
-import {TabPanelComponent} from './problem-submission-tab-panel/tab-panel.component';
+import {MultiTabsPanelComponent} from './problem-submission-tab-panel/multi-tabs-panel.component';
 import {ProblemDescriptionComponent} from './problem-description/problem-description.component';
-import {CodePanelComponent} from './code-panel/code-panel.component';
+import {CodeUploadPanelComponent} from './code-panel/code-upload-panel.component';
 import {SubmissionsComponent} from './submissions/submissions.component';
 import {StubSubmissionService} from './services/impl/StubSubmissionService';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -36,9 +36,9 @@ import {AngularSplitModule} from 'angular-split';
     AppComponent,
     LoginComponent,
     ProblemListComponent,
-    TabPanelComponent,
+    MultiTabsPanelComponent,
     ProblemDescriptionComponent,
-    CodePanelComponent,
+    CodeUploadPanelComponent,
     SubmissionsComponent,
 
     /*items*/

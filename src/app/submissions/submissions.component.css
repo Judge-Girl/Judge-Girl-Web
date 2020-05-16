@@ -41,7 +41,7 @@
   color: green;
 }
 
-.WA, .RE {
+.WA, .RE, .SYSTEM_ERR {
   font-weight: bold;
   color: Red;
 }
@@ -62,4 +62,8 @@
   .modal-xl {
     width: 90%;
   }
+}
+
+.judge-error-message {
+  color: #ff1309;
 }

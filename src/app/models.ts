@@ -56,10 +56,12 @@ export class Problem extends ProblemItem {
 }
 
 export enum JudgeStatus {
-  AC = 'AC', RE = 'RE', TLE = 'TLE', MLE = 'MLE', CE = 'CE', WA = 'WA'
+  AC = 'AC', RE = 'RE', TLE = 'TLE', MLE = 'MLE', CE = 'CE', WA = 'WA', SYSTEM_ERR = 'SYSTEM_ERR', NONE = 'NONE'
 }
 
 export class Judge {
+  errorMessage = '';
+
   constructor(public status: JudgeStatus,
               public runtime: number,
               public memory: number,
@@ -77,8 +79,10 @@ export class Submission {
   _maximumRuntime: number;
   _maximumMemory: number;
 
+  compileErrorMessage: string;
+
   constructor(public id: string,
-              public problemId: number) {
+              public problemId: number,) {
   }
 
   setJudges(judges: Judge[]): Submission {

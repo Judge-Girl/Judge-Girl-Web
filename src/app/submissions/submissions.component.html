@@ -8,12 +8,12 @@
   <p *ngIf="!loadingSubmissions && !bestRecord">You have not submitted to this problem yet.</p>
 
   <p *ngIf="bestRecord" id="best-record-label">Best Record</p>
-  <span *ngIf="ifTheBestSubmissionStatusIs(AC)" class="badge badge-success judge-status">AC</span>
-  <span *ngIf="ifTheBestSubmissionStatusIs(RE)" class="badge badge-danger judge-status">RE</span>
-  <span *ngIf="ifTheBestSubmissionStatusIs(MLE)" class="badge badge-warning judge-status">MLE</span>
-  <span *ngIf="ifTheBestSubmissionStatusIs(TLE)" class="badge badge-warning judge-status">TLE</span>
-  <span *ngIf="ifTheBestSubmissionStatusIs(CE)" class="badge badge-danger judge-status">CE</span>
-  <span *ngIf="ifTheBestSubmissionStatusIs(WA)" class="badge badge-danger judge-status">WA</span>
+  <span *ngIf="isJudgeStatus(bestRecord, AC)" class="badge badge-success judge-status">AC</span>
+  <span *ngIf="isJudgeStatus(bestRecord, RE)" class="badge badge-danger judge-status">RE</span>
+  <span *ngIf="isJudgeStatus(bestRecord, MLE)" class="badge badge-warning judge-status">MLE</span>
+  <span *ngIf="isJudgeStatus(bestRecord, TLE)" class="badge badge-warning judge-status">TLE</span>
+  <span *ngIf="isJudgeStatus(bestRecord, CE)" class="badge badge-danger judge-status">CE</span>
+  <span *ngIf="isJudgeStatus(bestRecord, WA)" class="badge badge-danger judge-status">WA</span>
 
   <p *ngIf="bestRecord" class="text">Total Grade: {{bestRecord.totalGrade}}&nbsp;pt</p>
 
@@ -22,8 +22,8 @@
     <tr>
       <th scope="col" [width]="'100px'">Time</th>
       <th scope="col" [width]="'60px'">Status</th>
-      <th scope="col" [width]="'60px'">Avg Runtime</th>
-      <th scope="col" [width]="'60px'">Avg Memory</th>
+      <th scope="col" [width]="'60px'">Max Runtime</th>
+      <th scope="col" [width]="'60px'">Max Memory</th>
       <th scope="col" [width]="'60px'">Total Grade</th>
       <th scope="col" [width]="'80px'">View Judges</th>
       <th scope="col" [width]="'80px'">View Codes</th>
@@ -33,32 +33,31 @@
     <tr *ngFor="let submission of submissions">
       <td>{{describeTimeFromNow(submission.submissionTime)}}</td>
 
-      <!-- Show loading during the judge uncompleted-->
-      <td *ngIf="!isJudged(submission)">
-        <div class="spinner-border text-primary" role="status" id="spinner">
+      <td>
+        <p *ngIf="isJudged(submission)" class="{{submission.summaryStatus}}">{{submission.summaryStatus}}</p>
+        <div *ngIf="!isJudged(submission)" class="spinner-border text-primary" role="status" id="spinner">
           <span class="sr-only">Loading...</span>
         </div>
       </td>
-      <!-- Empty field placeholders during the judge uncompleted -->
-      <td *ngIf="!isJudged(submission)"></td>
-      <td *ngIf="!isJudged(submission)"></td>
-      <td *ngIf="!isJudged(submission)"></td>
 
-      <!-- Info that only available after the judge completed-->
-      <td *ngIf="isJudged(submission)"
-          class="{{submission.summaryStatus}}">{{submission.summaryStatus}}</td>
-      <td *ngIf="isJudged(submission)">{{describeTimeInSeconds(maximumRuntime(submission))}}</td>
-      <td *ngIf="isJudged(submission)">{{describeMemory(maximumMemory(submission))}}</td>
-      <td *ngIf="isJudged(submission)">{{describeGrade(submission.totalGrade)}}</td>
+      <td>{{isJudged(submission) ? describeTimeInSeconds(maximumRuntime(submission)) : ''}}</td>
+      <td>{{isJudged(submission) ? describeMemory(maximumMemory(submission)) : ''}}</td>
+      <td>{{isJudged(submission) ? describeGrade(submission.totalGrade) : ''}}</td>
+
       <td>
-        <button *ngIf="isJudged(submission)" type="button" class="btn btn-link see-details-btn" data-toggle="modal"
+        <button *ngIf="isJudged(submission) && isJudgeStatus(submission, CE)" type="button" class="btn btn-link see-details-btn" data-toggle="modal"
+                (click)="onViewSubmissionJudgesBtnClick(submission)"
+                data-target="#submission-judges-modal-CE">
+          View Compile Error
+        </button>
+        <button *ngIf="isJudged(submission) && !isJudgeStatus(submission, CE)" type="button" class="btn btn-link see-details-btn" data-toggle="modal"
                 (click)="onViewSubmissionJudgesBtnClick(submission)"
                 data-target="#submission-judges-modal">
           View Judges
         </button>
       </td>
 
-      <!-- Codes are available when it's submitted -->
+      <!-- Codes are available immediately when it's submitted -->
       <td>
         <button type="button" class="btn btn-link see-details-btn" data-toggle="modal"
                 (click)="onViewSubmissionCodesBtnClick(submission)"
@@ -74,24 +73,24 @@
 <!-- View Judges Modal -->
 <div [hidden]="!viewingJudgesSubmission" class="modal fade" id="submission-judges-modal" tabindex="-1" role="dialog"
      aria-labelledby="submission-judges-modal-title" aria-hidden="true">
-  <div class="modal-dialog" role="document">
+  <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="submission-judges-modal-title">Submission Judges</h5>
+        <h5 class="modal-title" >Submission Judges</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        <table class="table" id="submission-judges-table">
-          <thead class="modal-title" id="submission-judges-table-header" [style.fontSize]="'14px'">
+        <table class="table">
+          <thead class="modal-title" [style.fontSize]="'14px'">
           <tr>
             <th scope="col">Test Case</th>
             <th scope="col">Status</th>
             <th scope="col">Runtime</th>
             <th scope="col">Memory</th>
             <th scope="col">Grade</th>
-            <th scope="col"></th>
+            <th scope="col" *ngIf="isErrorJudgeStatus(viewingJudgesSubmission)">Error Message</th>
           </tr>
           </thead>
           <tbody class="submissions-table">
@@ -101,6 +100,8 @@
             <td [width]="'50px'">{{judge.status === CE ? '--' : describeTimeInSeconds(judge.runtime)}}</td>
             <td [width]="'50px'">{{judge.status === CE ? '--' : describeMemory(judge.memory)}} B</td>
             <td [width]="'50px'">{{judge.grade}} pt</td>
+            <td *ngIf="isErrorJudgeStatus(viewingJudgesSubmission)"
+                class="judge-error-message">{{describeRuntimeErrorMessage(judge.errorMessage)}}</td>
           </tr>
           </tbody>
         </table>
@@ -109,13 +110,30 @@
   </div>
 </div>
 
+<!-- View Judges Compile Error Message Modal -->
+<div [hidden]="!viewingJudgesSubmission" class="modal fade" id="submission-judges-modal-CE" tabindex="-1" role="dialog"
+     aria-labelledby="submission-judges-modal-title" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" >Compile Error Message</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body judge-error-message">
+        <p >{{viewingJudgesSubmission?.compileErrorMessage}}</p>
+      </div>
+    </div>
+  </div>
+</div>
 
 <div [hidden]="!viewingCodesSubmission" class="modal fade" id="submission-codes-modal" tabindex="-1" role="dialog"
      aria-labelledby="submission-judges-modal-title" aria-hidden="true">
   <div class="modal-dialog modal-xl" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="submission-codes-modal-title">Submission Codes</h5>
+        <h5 class="modal-title">Submission Codes</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -129,7 +147,7 @@
           <div *ngFor="let code of viewingSubmittedCodes;" class="card">
             <div class="card-body">
               <h5 class="card-title">{{code.fileName}}</h5>
-              <textarea  class="card-text" #codeArea>{{code.content}}</textarea>
+              <textarea class="card-text" #codeArea>{{code.content}}</textarea>
             </div>
           </div>
         </div>

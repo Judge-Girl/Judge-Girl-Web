@@ -9,11 +9,11 @@ export enum Tab {
 }
 
 @Component({
-  selector: 'app-tab-panel',
-  templateUrl: './tab-panel.component.html',
-  styleUrls: ['./tab-panel.component.css']
+  selector: 'app-multi-tabs-panel',
+  templateUrl: './multi-tabs-panel.component.html',
+  styleUrls: ['./multi-tabs-panel.component.css']
 })
-export class TabPanelComponent implements OnInit, AfterViewInit {
+export class MultiTabsPanelComponent implements OnInit, AfterViewInit {
 
   constructor(private elementRef: ElementRef, public studentService: StudentService,
               private router: Router, private route: ActivatedRoute) {

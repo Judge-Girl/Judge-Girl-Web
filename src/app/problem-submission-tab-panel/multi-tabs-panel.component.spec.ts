@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CodePanelComponent } from './code-panel.component';
+import { MultiTabsPanelComponent } from './multi-tabs-panel.component';
 
-describe('CodePanelComponent', () => {
-  let component: CodePanelComponent;
-  let fixture: ComponentFixture<CodePanelComponent>;
+describe('ProblemSubmissionComponent', () => {
+  let component: MultiTabsPanelComponent;
+  let fixture: ComponentFixture<MultiTabsPanelComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CodePanelComponent ]
+      declarations: [ MultiTabsPanelComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CodePanelComponent);
+    fixture = TestBed.createComponent(MultiTabsPanelComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

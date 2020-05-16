@@ -1,19 +1,17 @@
 import {Component, OnInit} from '@angular/core';
 import {FileUpload, MessageService} from 'primeng';
-import {StudentService, ProblemService, SubmissionService, SubmissionThrottlingError} from '../services/Services';
+import {ProblemService, StudentService, SubmissionService, SubmissionThrottlingError} from '../services/Services';
 import {Problem, SubmittedCodeSpec} from '../models';
 import {switchMap} from 'rxjs/operators';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Observable} from 'rxjs';
-import {log} from 'util';
-import {HttpErrorResponse} from '@angular/common/http';
 
 @Component({
-  selector: 'app-code-panel',
-  templateUrl: './code-panel.component.html',
-  styleUrls: ['./code-panel.component.css']
+  selector: 'app-code-upload-panel',
+  templateUrl: './code-upload-panel.component.html',
+  styleUrls: ['./code-upload-panel.component.css']
 })
-export class CodePanelComponent implements OnInit {
+export class CodeUploadPanelComponent implements OnInit {
   readonly MESSAGE_KEY_ERROR_TOAST = 'error-toast-key';
   selectedFiles: File[];
   private problem$: Observable<Problem>;
