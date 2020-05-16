@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChildren} from '@angular/core';
 import {FileUpload, MessageService} from 'primeng';
 import {ProblemService, StudentService, SubmissionService, SubmissionThrottlingError} from '../services/Services';
 import {Problem, SubmittedCodeSpec} from '../models';
@@ -17,6 +17,8 @@ export class CodeUploadPanelComponent implements OnInit {
   private problem$: Observable<Problem>;
   problem: Problem;
   hasLogin: boolean;
+
+  @ViewChildren('fileInput') private fileUploads: FileUpload[];
 
 
   constructor(public studentService: StudentService,
@@ -53,13 +55,7 @@ export class CodeUploadPanelComponent implements OnInit {
       this.submissionService.submitFromFile(this.problem.id, this.selectedFiles)
         .toPromise().then(submission => {
         console.log(`Submit successfully, ${submission}`);
-      }).catch((err: SubmissionThrottlingError) => {
-        this.messageService.add({
-          key: this.MESSAGE_KEY_ERROR_TOAST,
-          severity: 'warn', summary: 'Hold down...',
-          detail: err.message
-        });
-      });
+      }).catch(err => this.handleSubmitError(err));
     }
     return false;
   }
@@ -76,6 +72,30 @@ export class CodeUploadPanelComponent implements OnInit {
       }
     }
     return true;
+  }
+
+  private handleSubmitError(err: Error) {
+    if (err instanceof SubmissionThrottlingError) {
+      this.messageService.add({
+        key: this.MESSAGE_KEY_ERROR_TOAST,
+        severity: 'warn', summary: 'Hold down...',
+        detail: err.message
+      });
+    } else {
+      this.messageService.add({
+        key: this.MESSAGE_KEY_ERROR_TOAST,
+        severity: 'error', summary: 'Error',
+        detail: 'Unknown error, have you file contents been changed? Please re-upload them again.'
+      });
+      this.clearAllFileUploads();
+    }
+  }
+
+  private clearAllFileUploads() {
+    for (let i = 0; i < this.selectedFiles.length; i++) {
+      this.selectedFiles[i] = undefined;
+    }
+    this.fileUploads.forEach(f => f.clear());
   }
 
   onFileSelectedCanceled(i: number, fileUpload: FileUpload) {

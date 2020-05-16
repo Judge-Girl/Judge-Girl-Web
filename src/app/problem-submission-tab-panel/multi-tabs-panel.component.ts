@@ -44,6 +44,7 @@ export class MultiTabsPanelComponent implements OnInit, AfterViewInit {
       }
     });
     this.refreshTabState();
+    this.effectResponsiveSplitter();
   }
 
 
