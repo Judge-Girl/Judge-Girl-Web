@@ -35,7 +35,7 @@ export class StubStudentService extends StudentService {
     return student$;
   }
 
-  authWithTokenToTryLogin(): Observable<boolean> {
+  tryAuthWithCurrentToken(): Observable<boolean> {
     if (this.hasLogin()) {
       return new BehaviorSubject(true);
     } else {

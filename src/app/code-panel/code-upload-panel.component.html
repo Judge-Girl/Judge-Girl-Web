@@ -3,7 +3,7 @@
 <p-toast position="top-right" key="{{MESSAGE_KEY_ERROR_TOAST}}"></p-toast>
 
 
-<div *ngIf="!hasLogin">
+<div *ngIf="!hasLogin" class="my-panel">
   <h4>Wanna submit?</h4>
   <span>You must login to view your submissions.</span>
   <button class="btn btn-link" [routerLink]="'/'" [style.fontSize]="'17px'">Log in</button>

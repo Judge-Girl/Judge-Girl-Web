@@ -16,8 +16,8 @@
       </div>
 
       <ul class="list-group" *ngFor="let problemItem of problemItems">
-        <li class="problem-item list-group-item fadeIn" (click)="routeToProblem(problemItem.id)" >
-          <header class="problem-item-title"> {{problemItem.id + '. ' + problemItem.title}}</header>
+        <li class="problem-item list-group-item fade-in" (click)="routeToProblem(problemItem.id)" >
+          <p class="problem-item-title"> {{problemItem.id + '. ' + problemItem.title}}</p>
         </li>
       </ul>
     </div>

@@ -1,19 +1,21 @@
-
-<div class="center-content-panel fadeInDown">
-  <div id="formContent" class="shadow">
+<div class="center-content-panel fade-in-down">
+  <div id="form-content" class="shadow">
     <!-- Icon -->
-    <div class="fadeIn first">
-      <header id="title">Judge Girl (Kubernetes) Beta V1.0</header>
+    <div class="fade-in first" [style.padding]="'6px'">
+      <!--img src="https://banner.uclipart.com/20200112/zvt/judge-symbol-emblem.png" height="100" width="100" alt="logo"/> <br-->
+      <header id="title">Judge Girl (K8S)</header>
     </div>
 
     <!-- Login Form -->
     <form>
-      <input type="text" id="login" class="input-field fadeIn second" name="studentId" placeholder="Student Id" #studentIdInput>
-      <input type="password" id="password" class=" input-field fadeIn third" name="password" placeholder="Password" #passwordInput>
+      <input type="text" id="login" class="input-field fade-in second" name="studentId" placeholder="Student Id"
+             #studentIdInput>
+      <input type="password" id="password" class=" input-field fade-in third" name="password" placeholder="Password"
+             #passwordInput>
       <p id="error-message">{{errorMessage}}</p>
       <div class="d-flex align-items-center justify-content-center"
            [style.padding]="'13px 0 35px 0'">
-        <input type="submit" id="login-btn" class="fadeIn fourth"
+        <input type="submit" id="login-btn" class="fade-in fourth"
                (click)="login(studentIdInput.value, passwordInput.value)" value="Log In">
         <div class="spinner-border text-primary" role="status" id="spinner">
           <span class="sr-only">Loading...</span>
@@ -28,3 +30,4 @@
 
   </div>
 </div>
+

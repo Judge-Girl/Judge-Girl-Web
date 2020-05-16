@@ -77,7 +77,7 @@ export class SubmissionsComponent implements OnInit, AfterViewInit {
         .then(testCases => this.testCases = testCases);
     });
 
-    this.studentService.authWithTokenToTryLogin().toPromise().then(hasLogin => {
+    this.studentService.tryAuthWithCurrentToken().toPromise().then(hasLogin => {
       this.hasLogin = hasLogin;
       if (this.studentService.hasLogin()) {
         this.loadingSubmissions = true;

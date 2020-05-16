@@ -31,7 +31,7 @@ export class CodeUploadPanelComponent implements OnInit {
 
   ngOnInit(): void {
     this.selectedFiles = undefined;
-    this.studentService.authWithTokenToTryLogin().toPromise().then(hasLogin => this.hasLogin = hasLogin);
+    this.studentService.tryAuthWithCurrentToken().toPromise().then(hasLogin => this.hasLogin = hasLogin);
 
     // TODO understand why route.parent is not needed
     this.problem$ = this.route.params.pipe(switchMap(params =>

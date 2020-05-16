@@ -20,22 +20,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.studentService.hasLogin()) {
-      this.routeToProblemListPage();
-    } else {
-      this.authenticateWithCookie();
-    }
-  }
-
-  private authenticateWithCookie() {
-    const token = this.cookieService.get(StudentService.KEY_TOKEN);
-    if (token) {
-      this.studentService.auth(token).toPromise()
-        .then(s => {
-          this.routeToProblemListPage();
-        })
-        .catch(err => {
-          console.error(err);
-        });
+      this.router.navigateByUrl('problems');
     }
   }
 
@@ -47,7 +32,7 @@ export class LoginComponent implements OnInit {
       .subscribe({
         complete: () => {
           spinner.style.display = 'none';
-          this.routeToProblemListPage();
+          this.router.navigateByUrl('problems');
         },
         error: (err) => {
           spinner.style.display = 'none';
@@ -63,11 +48,5 @@ export class LoginComponent implements OnInit {
 
     return false;  // consume the submit button
   }
-
-  private routeToProblemListPage() {
-    console.log(`Routing to the problems page.`);
-    this.router.navigateByUrl('problems');
-  }
-
 
 }

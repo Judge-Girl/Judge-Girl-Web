@@ -34,7 +34,7 @@
       <td>{{describeTimeFromNow(submission.submissionTime)}}</td>
 
       <td>
-        <p *ngIf="isJudged(submission)" class="{{submission.summaryStatus}}">{{submission.summaryStatus}}</p>
+        <span *ngIf="isJudged(submission)" class="{{submission.summaryStatus}}">{{submission.summaryStatus}}</span>
         <div *ngIf="!isJudged(submission)" class="spinner-border text-primary" role="status" id="spinner">
           <span class="sr-only">Loading...</span>
         </div>

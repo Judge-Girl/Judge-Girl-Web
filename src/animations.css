@@ -1,5 +1,5 @@
 
-.fadeInDown {
+.fade-in-down {
   -webkit-animation-name: fadeInDown;
   animation-name: fadeInDown;
   -webkit-animation-duration: 1s;
@@ -63,25 +63,25 @@
 }
 
 
-.fadeIn.first {
+.fade-in.first {
   -webkit-animation-delay: 0.4s;
   -moz-animation-delay: 0.4s;
   animation-delay: 0.4s;
 }
 
-.fadeIn.second {
+.fade-in.second {
   -webkit-animation-delay: 0.6s;
   -moz-animation-delay: 0.6s;
   animation-delay: 0.6s;
 }
 
-.fadeIn.third {
+.fade-in.third {
   -webkit-animation-delay: 0.8s;
   -moz-animation-delay: 0.8s;
   animation-delay: 0.8s;
 }
 
-.fadeIn.fourth {
+.fade-in.fourth {
   -webkit-animation-delay: 1s;
   -moz-animation-delay: 1s;
   animation-delay: 1s;

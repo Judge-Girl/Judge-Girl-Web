@@ -43,7 +43,7 @@ export class HttpStudentService extends StudentService {
       }));
   }
 
-  authWithTokenToTryLogin(): Observable<boolean> {
+  tryAuthWithCurrentToken(): Observable<boolean> {
     if (this.hasLogin()) {
       return of(true);
     } else {

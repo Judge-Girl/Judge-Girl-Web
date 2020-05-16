@@ -1,12 +1,16 @@
 
-/* STRUCTURE */
+#title {
+  font-family: Arial, Helvetica, sans-serif;
+}
 
-#formContent {
-  margin-top: 28px;
+/* STRUCTURE */
+#form-content {
+  margin-top: 100px;
   -webkit-border-radius: 10px 10px 10px 10px;
   border-radius: 10px 10px 10px 10px;
   background: #fff;
   width: 90%;
+  height: fit-content;
   max-width: 550px;
   position: relative;
   padding: 0;

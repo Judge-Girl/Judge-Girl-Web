@@ -1,10 +1,8 @@
-import {Inject, Injectable} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {CodeFile, JudgeResponse, Problem, ProblemItem, Student, studentToString, Submission, TestCase} from '../models';
 import {Router} from '@angular/router';
 import {CookieService} from './cookie/cookie.service';
-import {shareReplay} from 'rxjs/operators';
-import {HttpClient} from '@angular/common/http';
 
 
 export class UnauthenticatedError extends Error {
@@ -45,11 +43,12 @@ export abstract class StudentService {
   }
 
   hasLogin(): boolean {
-    return this.currentStudent &&
+    return this.currentStudent && this.currentStudent.expiryTime && this.currentStudent.token &&
       new Date().getTime() < this.currentStudent.expiryTime;
   }
 
-  abstract authWithTokenToTryLogin(): Observable<boolean>;
+
+  abstract tryAuthWithCurrentToken(): Observable<boolean>;
 
   abstract auth(token: string): Observable<Student>;
 
@@ -63,7 +62,6 @@ export abstract class StudentService {
     return this._currentStudent;
   }
 
-
   set currentStudent(student: Student) {
     this._currentStudent = student;
     if (student) {
@@ -72,6 +70,10 @@ export abstract class StudentService {
     } else {
       this.cookieService.remove(StudentService.KEY_TOKEN);
     }
+  }
+
+  public skipLoginPage() {
+    this.router.navigateByUrl('/problems');
   }
 
   public redirectToLoginPage() {
