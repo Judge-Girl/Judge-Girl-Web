@@ -94,7 +94,7 @@ export class HttpSubmissionService extends SubmissionService {
             }
           });
       })).pipe(catchError((err: HttpErrorResponse) => {
-        if (err.status === 400) {
+        if (err.status === 400) {  // 400 --> throttling problem
           return throwError(new SubmissionThrottlingError(err.error.message));
         } else {
           return throwError(err);
@@ -163,7 +163,3 @@ export class HttpSubmissionService extends SubmissionService {
   }
 }
 
-
-function stringifyPollingItem() {
-
-}

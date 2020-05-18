@@ -21,28 +21,11 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.studentService.hasLogin()) {
-      this.router.navigateByUrl('problems');
-    } else {
-      this.authenticateWithCookie();
-    }
     this.submissionService.judgeObservable.subscribe(
       (judgeResponse) => this.onNextJudgeResponse(judgeResponse));
   }
 
 
-  private authenticateWithCookie() {
-    const token = this.cookieService.get(StudentService.KEY_TOKEN);
-    if (token) {
-      this.studentService.auth(token).toPromise()
-        .then(s => {
-          this.router.navigateByUrl('problems');
-        })
-        .catch(err => {
-          console.error(err);
-        });
-    }
-  }
 
   private onNextJudgeResponse(judgeResponse: JudgeResponse) {
     this.messageService.add({

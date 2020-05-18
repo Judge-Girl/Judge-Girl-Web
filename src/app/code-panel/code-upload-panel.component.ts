@@ -85,9 +85,10 @@ export class CodeUploadPanelComponent implements OnInit {
       this.messageService.add({
         key: this.MESSAGE_KEY_ERROR_TOAST,
         severity: 'error', summary: 'Error',
-        detail: 'Unknown error, have you file contents been changed? Please re-upload them again.'
+        detail: 'Unknown error, have your file contents been changed? Please re-upload them again.'
       });
       this.clearAllFileUploads();
+      throw err;  // hence we don't expect such errors, throw it to debug
     }
   }
 
