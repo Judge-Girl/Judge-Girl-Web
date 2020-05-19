@@ -153,10 +153,12 @@ export class HttpSubmissionService extends SubmissionService {
 
   private addOrReplaceSubmissionDistinctById(problemId: number, submission: Submission) {
     const submissions = this.submissionMap.get(problemId);
-    for (const sub of submissions) {
-      if (sub.id === submission.id) {
-        submissions.splice(submissions.indexOf(sub), 1, submission);
-        return; // found, replace and terminate
+    if (submissions) {
+      for (const sub of submissions) {
+        if (sub.id === submission.id) {
+          submissions.splice(submissions.indexOf(sub), 1, submission);
+          return; // found, replace and terminate
+        }
       }
     }
     submissions.push(submission); // otherwise push it

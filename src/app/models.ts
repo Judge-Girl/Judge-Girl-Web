@@ -146,7 +146,7 @@ export function getMaximumMemory(submission: Submission) {
 
 
 export function describeMemory(memoryInBytes: number): string {
-  if (!memoryInBytes) {
+  if (!memoryInBytes || memoryInBytes < 0) {
     return '--';
   }
   if (memoryInBytes < 1024) {
@@ -165,7 +165,7 @@ export function describeMemory(memoryInBytes: number): string {
 }
 
 export function describeTimeInSeconds(ms: number) {
-  if (!ms) {
+  if (!ms || ms < 0) {
     return '--';
   }
   return `${(ms / 1000).toFixed(2)} s`;
