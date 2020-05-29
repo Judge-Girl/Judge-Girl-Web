@@ -1,11 +1,13 @@
 
 #title {
   font-family: Arial, Helvetica, sans-serif;
+  font-weight: normal;
+  color: #58a4d6;
 }
 
 /* STRUCTURE */
 #form-content {
-  margin-top: 100px;
+  margin-top: 80px;
   -webkit-border-radius: 10px 10px 10px 10px;
   border-radius: 10px 10px 10px 10px;
   background: #fff;
@@ -17,16 +19,15 @@
   text-align: center;
 }
 
-#formFooter {
+#form-footer {
   background-color: #f6f6f6;
   border-top: 1px solid #dce8f1;
   padding: 25px;
   text-align: center;
   -webkit-border-radius: 0 0 10px 10px;
   border-radius: 0 0 10px 10px;
+  color: #777777;
 }
-
-
 #spinner {
   display: none;
   margin: 8px 8px 8px 25px;
