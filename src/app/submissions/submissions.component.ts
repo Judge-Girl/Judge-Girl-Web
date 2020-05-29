@@ -9,7 +9,7 @@ import {
   describeTimeInSeconds,
   getMaximumMemory,
   getMaximumRuntime,
-  isJudged,
+  isJudged, Judge,
   JudgeStatus,
   Problem,
   Submission,
@@ -113,9 +113,20 @@ export class SubmissionsComponent implements OnInit, AfterViewInit {
     return this.bestRecord && this.bestRecord.summaryStatus === status;
   }
 
-  isErrorJudgeStatus(submission: Submission) {
-    return submission && (submission.summaryStatus === JudgeStatus.RE ||
-      submission.summaryStatus === JudgeStatus.CE || submission.summaryStatus === JudgeStatus.SYSTEM_ERR);
+  isRuntimeErrorJudge(judge: Judge) {
+    return judge !== undefined && judge.status === this.RE;
+  }
+
+  hasRuntimeError(submission: Submission) {
+    if (!submission) {
+      return false;
+    }
+    for (const judge of submission.judges) {
+      if (this.isRuntimeErrorJudge(judge)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   isJudgeStatus(submission: Submission, status: JudgeStatus) {

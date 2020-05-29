@@ -90,7 +90,7 @@
             <th scope="col">Runtime</th>
             <th scope="col">Memory</th>
             <th scope="col">Grade</th>
-            <th scope="col" *ngIf="isErrorJudgeStatus(viewingJudgesSubmission)">Error Message</th>
+            <th scope="col" *ngIf="hasRuntimeError(viewingJudgesSubmission)">Error Message</th>
           </tr>
           </thead>
           <tbody class="submissions-table">
@@ -100,7 +100,7 @@
             <td [width]="'50px'">{{judge.status === CE ? '--' : describeTimeInSeconds(judge.runtime)}}</td>
             <td [width]="'50px'">{{judge.status === CE ? '--' : describeMemory(judge.memory)}} B</td>
             <td [width]="'50px'">{{judge.grade}} pt</td>
-            <td *ngIf="isErrorJudgeStatus(viewingJudgesSubmission)"
+            <td [width]="'150px'" *ngIf="isRuntimeErrorJudge(judge)"
                 class="judge-error-message">{{describeRuntimeErrorMessage(judge.errorMessage)}}</td>
           </tr>
           </tbody>
