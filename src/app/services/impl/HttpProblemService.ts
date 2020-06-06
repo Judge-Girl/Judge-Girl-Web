@@ -26,7 +26,7 @@ export class HttpProblemService extends ProblemService {
   }
 
   getProblemItemsByTag(problemTag: string): Observable<ProblemItem[]> {
-    return this.httpRequestCache.get(`${this.host}/api/problems?tag=${problemTag}`);
+    return this.httpRequestCache.get(`${this.host}/api/problems?tags=${problemTag}`);
   }
 
   getProblemItemsInPage(page: number): Observable<ProblemItem[]> {
