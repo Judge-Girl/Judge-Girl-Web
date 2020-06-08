@@ -188,3 +188,20 @@ export class CodeFile {
               public content: string) {
   }
 }
+
+
+export function getCodeFileExtension(codeSpec: SubmittedCodeSpec): string {
+  const lang = codeSpec.language.toLowerCase();
+  switch (lang) {
+    case 'c':
+      return '.c';
+    case 'java':
+      return '.java';
+    case 'open_cl':
+      return '.cl';
+    case 'cuda':
+      return '.cu';
+    default:
+      throw new Error(`The language not supported, given ${lang}`);
+  }
+}

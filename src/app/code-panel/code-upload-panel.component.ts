@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChildren} from '@angular/core';
 import {FileUpload, MessageService} from 'primeng';
 import {ProblemService, StudentService, SubmissionService, SubmissionThrottlingError} from '../services/Services';
-import {Problem, SubmittedCodeSpec} from '../models';
+import {getCodeFileExtension, Problem, SubmittedCodeSpec} from '../models';
 import {switchMap} from 'rxjs/operators';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Observable} from 'rxjs';
@@ -105,16 +105,6 @@ export class CodeUploadPanelComponent implements OnInit {
   }
 
   getAcceptedFileExtensionByCodeSpec(codeSpec: SubmittedCodeSpec): string {
-    const lang = codeSpec.language.toLowerCase();
-    switch (lang) {
-      case 'c':
-        return '.c';
-      case 'java':
-        return '.java';
-      case 'open_cl':
-        return '.cl';
-      default:
-        throw new Error(`The language not supported, given ${lang}`);
-    }
+    return getCodeFileExtension(codeSpec);
   }
 }
