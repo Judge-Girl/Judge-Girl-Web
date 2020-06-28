@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChildren} from '@angular/core';
+import {Component, Input, OnInit, ViewChildren} from '@angular/core';
 import {FileUpload, MessageService} from 'primeng';
 import {ProblemService, StudentService, SubmissionService, SubmissionThrottlingError} from '../services/Services';
 import {getCodeFileExtension, Problem, SubmittedCodeSpec} from '../models';
@@ -43,7 +43,23 @@ export class CodeUploadPanelComponent implements OnInit {
     });
   }
 
+  clearAndSelect(i: number, fileUpload: FileUpload) {
+    if (this.selectedFiles[i] === undefined) {
+      console.log('skip');
+    } else {
+      console.log('clear and select');
+      this.onFileSelectedCanceled(i, fileUpload);
+
+      setTimeout(() => {
+        const btn = document.getElementById('_fileSelector' + i);
+        const inputs = btn.getElementsByTagName('input');
+        inputs[0].click();
+      }, 0);
+    }
+  }
+
   onFileInputChange(index: number, codeSpecRow: HTMLDivElement, fileInput: FileUpload) {
+    console.log('onchange');
     const files = fileInput.files;
     this.selectedFiles[index] = files[0];
     console.log(`File selected: ${this.selectedFiles[index].name}`);

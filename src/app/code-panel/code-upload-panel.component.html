@@ -19,13 +19,13 @@
         <div class="upload-row"
              *ngFor="let codeSpec of problem.submittedCodeSpecs; let i = index" #codeSpecRow>
           <span>{{codeSpec.fileName}}</span>
-          <p-fileUpload mode="basic" chooseLabel="Upload" name="files" accept="{{getAcceptedFileExtensionByCodeSpec(codeSpec)}}"
-                        (change)="onFileInputChange(i, codeSpecRow, fileInput)" #fileInput></p-fileUpload>
+          <p-fileUpload id="_fileSelector{{i}}" mode="basic" chooseLabel="Upload" name="files" accept="{{getAcceptedFileExtensionByCodeSpec(codeSpec)}}"
+                         (click)="clearAndSelect(i, fileInput)" (change)="onFileInputChange(i, codeSpecRow, fileInput)" #fileInput></p-fileUpload>
 
-          <button *ngIf="selectedFiles[i]" type="button" class="clear-upload-cross"
-                  (click)="onFileSelectedCanceled(i, fileInput)">
-            <span>&times;</span>
-          </button>
+<!--          <button *ngIf="selectedFiles[i]" type="button" class="clear-upload-cross"-->
+<!--                  (click)="onFileSelectedCanceled(i, fileInput)">-->
+<!--            <span>x</span>-->
+<!--          </button>-->
         </div>
 
       </div>
