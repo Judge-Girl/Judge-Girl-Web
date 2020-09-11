@@ -6,14 +6,11 @@ import {LoginComponent} from './login/login.component';
 import {AppComponent} from './app.component';
 import {ProblemListComponent} from './problem-list/problem-list.component';
 import {ExamListComponent} from './exam-list/exam-list.component';
-import {StubStudentService} from './services/impl/StubStudentService';
-import {StudentService, ProblemService, ExamService, SubmissionService} from './services/Services';
-import {StubExamService} from './services/impl/StubExamService';
+import {ExamService, ProblemService, StudentService, SubmissionService} from './services/Services';
 import {MultiTabsPanelComponent} from './problem-submission-tab-panel/multi-tabs-panel.component';
 import {ProblemDescriptionComponent} from './problem-description/problem-description.component';
 import {CodeUploadPanelComponent} from './code-panel/code-upload-panel.component';
 import {SubmissionsComponent} from './submissions/submissions.component';
-import {StubSubmissionService} from './services/impl/StubSubmissionService';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {LdCircleComponent} from './items/id-circle/ld-circle.component';
 import {FileUploadModule} from 'primeng/fileupload';
@@ -75,9 +72,9 @@ const HOST = 'http://localhost';
     {provide: ExamService, useClass: HttpExamService},
     {provide: SubmissionService, useClass: HttpSubmissionService},
     {provide: 'HOST', useValue: HOST},
-    {provide: 'STUDENT_SERVICE_BASE_URL', useValue: `${HOST}:33000`},
-    {provide: 'PROBLEM_SERVICE_BASE_URL', useValue: `${HOST}:33001`},
-    {provide: 'SUBMISSION_SERVICE_BASE_URL', useValue: `${HOST}:33002`},
+    {provide: 'STUDENT_SERVICE_BASE_URL', useValue: `${HOST}`},
+    {provide: 'PROBLEM_SERVICE_BASE_URL', useValue: `${HOST}`},
+    {provide: 'SUBMISSION_SERVICE_BASE_URL', useValue: `${HOST}`},
     {provide: 'EXAM_SERVICE_BASE_URL', useValue: `${HOST}`}
   ],
   bootstrap: [AppComponent]
