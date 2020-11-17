@@ -60,88 +60,43 @@ export enum JudgeStatus {
 }
 
 export class Judge {
-  errorMessage = '';
 
-  constructor(public status: JudgeStatus,
-              public runtime: number,
-              public memory: number,
+  constructor(public testcaseName: string,
+              public status: JudgeStatus,
+              public programProfile: ProgramProfile,
               public grade: number) {
   }
 }
 
+export class ProgramProfile {
+  constructor(public runtime: number,
+              public memoryUsage: number,
+              public errorMessage: string) {
+  }
+}
+
 export class Submission {
-  judges: Judge[] = [];
-  summaryStatus: JudgeStatus;
-  totalGrade = 0;
+  verdict: Verdict;
+  isJudged: boolean;
   submissionTime: number;
   judgeTime: number;
-
-  _maximumRuntime: number;
-  _maximumMemory: number;
-
-  compileErrorMessage: string;
+  submittedCodesFileId: string;
 
   constructor(public id: string,
-              public problemId: number,) {
-  }
-
-  setJudges(judges: Judge[]): Submission {
-    this.judges = judges;
-    return this;
-  }
-
-  addJudge(judge: Judge): Submission {
-    this.judges.push(judge);
-    return this;
-  }
-
-  setSubmissionTime(submissionTime: number): Submission {
-    this.submissionTime = submissionTime;
-    return this;
-  }
-
-  summary(totalGrade: number, status: JudgeStatus): Submission {
-    this.totalGrade = totalGrade;
-    this.summaryStatus = status;
-    return this;
+              public problemId: number) {
   }
 
 }
 
-// We don't place these get-like functions into the model classes
-// because when the model classes are deserialized from JSON, functions are not set to the classes.
-export function isJudged(submission: Submission) {
-  return submission.judges && submission.judgeTime && submission.judges.length > 0;
-}
-
-export function getMaximumRuntime(submission: Submission): number {
-  if (!submission._maximumRuntime) {
-    let max = -1;
-    for (const judge of submission.judges) {
-      if (judge.status === JudgeStatus.CE) {
-        return undefined;
-      } else if (max < judge.runtime) {
-        max = judge.runtime;
-      }
-    }
-    submission._maximumRuntime = max;
+export class Verdict {
+  constructor(public judges: Judge[],
+              public summaryStatus: JudgeStatus,
+              public totalGrade: number,
+              public maximumRuntime: number,
+              public maximumMemoryUsage: number,
+              public compileErrorMessage: string,
+              public issueTime: number) {
   }
-  return submission._maximumRuntime;
-}
-
-export function getMaximumMemory(submission: Submission) {
-  if (!submission._maximumMemory) {
-    let max = -1;
-    for (const judge of submission.judges) {
-      if (judge.status === JudgeStatus.CE) {
-        return undefined;
-      } else if (max < judge.memory) {
-        max = judge.memory;
-      }
-    }
-    submission._maximumMemory = max;
-  }
-  return submission._maximumMemory;
 }
 
 
@@ -171,10 +126,11 @@ export function describeTimeInSeconds(ms: number) {
   return `${(ms / 1000).toFixed(2)} s`;
 }
 
-export class JudgeResponse {
+export class VerdictIssuedEvent {
   constructor(public problemId: number,
               public problemTitle: string,
-              public submission: Submission) {
+              public submissionId: string,
+              public verdict: Verdict) {
   }
 }
 

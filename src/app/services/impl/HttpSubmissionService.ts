@@ -2,7 +2,7 @@ import {ProblemService, StudentService, SubmissionService, SubmissionThrottlingE
 import {Observable, Subject, throwError} from 'rxjs';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {Inject, Injectable} from '@angular/core';
-import {CodeFile, isJudged, JudgeResponse, Problem, Submission} from '../../models';
+import {CodeFile, VerdictIssuedEvent, Problem, Submission} from '../../models';
 import {catchError, map, switchMap} from 'rxjs/operators';
 import {unzipCodesArrayBuffer} from '../../utils';
 import {HttpRequestCache} from './HttpRequestCache';
@@ -17,7 +17,7 @@ import {HttpRequestCache} from './HttpRequestCache';
 export class HttpSubmissionService extends SubmissionService {
   httpRequestCache: HttpRequestCache;
   host: string;
-  judgeResponse$ = new Subject<JudgeResponse>();
+  verdictIssuedEvent$ = new Subject<VerdictIssuedEvent>();
   private readonly submissionMap = new Map<number, Array<Submission>>();
   private submissions$ = new Subject<Submission[]>();
 
@@ -53,7 +53,7 @@ export class HttpSubmissionService extends SubmissionService {
           .then(p => {
             // for every non-judged submission, register it for polling
             for (const submission of submissions) {
-              if (!isJudged(submission)) {
+              if (submission.isJudged) {
                 this.pollForSubmission(problemId, p.title, this.studentService.currentStudent.id, submission.id);
               }
             }
@@ -72,8 +72,8 @@ export class HttpSubmissionService extends SubmissionService {
       });
   }
 
-  get judgeObservable(): Observable<JudgeResponse> {
-    return this.judgeResponse$;
+  get verdictIssuedEventObservable(): Observable<VerdictIssuedEvent> {
+    return this.verdictIssuedEvent$;
   }
 
   submitFromFile(problemId: number, files: File[]): Observable<Submission> {
@@ -117,10 +117,11 @@ export class HttpSubmissionService extends SubmissionService {
         if (studentId === this.studentService.currentStudent.id) {
           console.log(`Polling for submission ${submissionId}`);
           const submission = await this.getSubmission(problemId, submissionId).toPromise();
-          if (isJudged(submission)) {
+          if (submission.isJudged) {
             console.log(`Submission ${submissionId} judged.`);
             this.addOrReplaceSubmissionDistinctById(problemId, submission);
-            this.judgeResponse$.next(new JudgeResponse(problemId, problemTitle, submission));
+            this.verdictIssuedEvent$.next(
+              new VerdictIssuedEvent(problemId, problemTitle, submission.id, submission.verdict));
             this.pollingSets.delete(pollingItemStr);
             clearInterval(id);
           }
@@ -136,11 +137,11 @@ export class HttpSubmissionService extends SubmissionService {
     return `${problemId}:${problemTitle}-${studentId}-${submissionId}`;
   }
 
-  getSubmittedCodes(problemId: number, submissionId: string): Observable<CodeFile[]> {
+  getSubmittedCodes(problemId: number, submissionId: string, submittedCodesFileId: string): Observable<CodeFile[]> {
     return this.problemService.getProblem(problemId)
       .pipe(switchMap(p => {
         return this.http.get(`${this.host}/api/problems/${problemId}/students/${this.studentService.currentStudent.id}` +
-          `/submissions/${submissionId}/zippedSubmittedCodes`, {
+          `/submissions/${submissionId}/submittedCodes/${submittedCodesFileId}`, {
           headers: {
             'Content-Type': 'application/zip',
             Authorization: `Bearer ${this.studentService.currentStudent.token}`

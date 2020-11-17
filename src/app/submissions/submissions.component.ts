@@ -7,9 +7,7 @@ import {
   CodeFile,
   describeMemory,
   describeTimeInSeconds,
-  getMaximumMemory,
-  getMaximumRuntime,
-  isJudged, Judge,
+  Judge,
   JudgeStatus,
   Problem,
   Submission,
@@ -101,8 +99,8 @@ export class SubmissionsComponent implements OnInit, AfterViewInit {
     let bestGrade = -1;
     let best: Submission;
     for (const submission of this.submissions) {
-      if (submission.totalGrade > bestGrade) {
-        bestGrade = submission.totalGrade;
+      if (submission.verdict.totalGrade > bestGrade) {
+        bestGrade = submission.verdict.totalGrade;
         best = submission;
       }
     }
@@ -110,7 +108,7 @@ export class SubmissionsComponent implements OnInit, AfterViewInit {
   }
 
   ifTheBestSubmissionStatusIs(status: JudgeStatus) {
-    return this.bestRecord && this.bestRecord.summaryStatus === status;
+    return this.bestRecord && this.bestRecord.verdict.summaryStatus === status;
   }
 
   isRuntimeErrorJudge(judge: Judge) {
@@ -121,7 +119,7 @@ export class SubmissionsComponent implements OnInit, AfterViewInit {
     if (!submission) {
       return false;
     }
-    for (const judge of submission.judges) {
+    for (const judge of submission.verdict.judges) {
       if (this.isRuntimeErrorJudge(judge)) {
         return true;
       }
@@ -130,7 +128,7 @@ export class SubmissionsComponent implements OnInit, AfterViewInit {
   }
 
   isJudgeStatus(submission: Submission, status: JudgeStatus) {
-    return submission && submission.summaryStatus === status;
+    return submission && submission.verdict.summaryStatus === status;
   }
 
   onViewSubmissionJudgesBtnClick(submission: Submission): boolean {
@@ -143,7 +141,8 @@ export class SubmissionsComponent implements OnInit, AfterViewInit {
     this.viewingSubmittedCodes = undefined;
     this.loadingSubmittedCodes = true;
 
-    this.submissionService.getSubmittedCodes(this.problem.id, submission.id).toPromise()
+    this.submissionService.getSubmittedCodes(this.problem.id, submission.id,
+      submission.submittedCodesFileId).toPromise()
       .then(submittedCodes => {
         this.loadingSubmittedCodes = false;
         this.viewingSubmittedCodes = submittedCodes;
@@ -155,18 +154,6 @@ export class SubmissionsComponent implements OnInit, AfterViewInit {
 
   describeTimeFromNow(time: number): string {
     return moment(time).fromNow();
-  }
-
-  isJudged(submission: Submission) {
-    return isJudged(submission);
-  }
-
-  maximumMemory(submission: Submission) {
-    return getMaximumMemory(submission);
-  }
-
-  maximumRuntime(submission: Submission) {
-    return getMaximumRuntime(submission);
   }
 
   describeMemory(memoryInBytes: number): string {

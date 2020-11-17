@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {MessageService} from 'primeng';
 import {StudentService, SubmissionService} from './services/Services';
-import {JudgeResponse, JudgeStatus, Submission} from './models';
+import {VerdictIssuedEvent, JudgeStatus, Submission} from './models';
 import {CookieService} from './services/cookie/cookie.service';
 import {Router} from '@angular/router';
 
@@ -21,21 +21,21 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.submissionService.judgeObservable.subscribe(
-      (judgeResponse) => this.onNextJudgeResponse(judgeResponse));
+    this.submissionService.verdictIssuedEventObservable.subscribe(
+      (verdictIssuedEvent) => this.onVerdictIssued(verdictIssuedEvent));
   }
 
 
-
-  private onNextJudgeResponse(judgeResponse: JudgeResponse) {
+  // TODO migrate to M2
+  private onVerdictIssued(event: VerdictIssuedEvent) {
     this.messageService.add({
       key: this.MESSAGE_KEY_SUBMISSION_TOAST,
-      severity: judgeResponse.submission.summaryStatus === JudgeStatus.AC ? 'success' : 'error',
+      severity: event.verdict.summaryStatus === JudgeStatus.AC ? 'success' : 'error',
       life: 8000,
       data: {
-        judgeStatus: judgeResponse.submission.summaryStatus,
-        problemTitle: judgeResponse.problemTitle,
-        problemId: judgeResponse.problemId
+        judgeStatus: event.verdict.summaryStatus,
+        problemTitle: event.problemTitle,
+        problemId: event.problemId
       }
     });
   }

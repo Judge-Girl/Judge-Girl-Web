@@ -69,10 +69,10 @@ import {AngularSplitModule} from 'angular-split';
     {provide: StudentService, useClass: HttpStudentService},
     {provide: ProblemService, useClass: HttpProblemService},
     {provide: SubmissionService, useClass: HttpSubmissionService},
-    {provide: 'BASE_URL', useValue: 'http://luffy.csie.ntu.edu.tw'},  // 'http://luffy.csie.ntu.edu.tw'
-    {provide: 'PORT_STUDENT_SERVICE', useValue: 80},
-    {provide: 'PORT_PROBLEM_SERVICE', useValue: 80},
-    {provide: 'PORT_SUBMISSION_SERVICE', useValue: 80}
+    {provide: 'BASE_URL', useValue: 'http://localhost'},  // 'http://luffy.csie.ntu.edu.tw'
+    {provide: 'PORT_STUDENT_SERVICE', useValue: 8080},
+    {provide: 'PORT_PROBLEM_SERVICE', useValue: 8081},
+    {provide: 'PORT_SUBMISSION_SERVICE', useValue: 8082}
   ],
   bootstrap: [AppComponent]
 })
