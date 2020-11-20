@@ -99,7 +99,8 @@ export class SubmissionsComponent implements OnInit, AfterViewInit {
     let bestGrade = -1;
     let best: Submission;
     for (const submission of this.submissions) {
-      if (submission.verdict.totalGrade > bestGrade) {
+      if (submission.isJudged &&
+        submission.verdict.totalGrade > bestGrade) {
         bestGrade = submission.verdict.totalGrade;
         best = submission;
       }

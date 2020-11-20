@@ -18,16 +18,15 @@ import {LdCircleComponent} from './items/id-circle/ld-circle.component';
 import {FileUploadModule} from 'primeng/fileupload';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
 import {BlockUIModule, MessageService, MessagesModule, ToastModule} from 'primeng';
-import { ProblemTagDropDownComponent } from './items/problem-tag-drop-down/problem-tag-drop-down.component';
+import {ProblemTagDropDownComponent} from './items/problem-tag-drop-down/problem-tag-drop-down.component';
 import {HttpProblemService} from './services/impl/HttpProblemService';
 import {HttpStudentService} from './services/impl/HttpStudentService';
 import {HttpSubmissionService} from './services/impl/HttpSubmissionService';
 import {AuthenticatedDirective} from './directives/AuthenticatedDirective';
 import {CookieModule} from './services/cookie/cookie.module';
 import {CookieService} from './services/cookie/cookie.service';
-import { TestcasesComponent } from './testcases/testcases.component';
+import {TestcasesComponent} from './testcases/testcases.component';
 import {AngularSplitModule} from 'angular-split';
-
 
 
 @NgModule({
@@ -69,7 +68,7 @@ import {AngularSplitModule} from 'angular-split';
     {provide: StudentService, useClass: HttpStudentService},
     {provide: ProblemService, useClass: HttpProblemService},
     {provide: SubmissionService, useClass: HttpSubmissionService},
-    {provide: 'BASE_URL', useValue: 'http://localhost'},  // 'http://luffy.csie.ntu.edu.tw'
+    {provide: 'BASE_URL', useValue: 'http://localhost'},
     {provide: 'PORT_STUDENT_SERVICE', useValue: 8080},
     {provide: 'PORT_PROBLEM_SERVICE', useValue: 8081},
     {provide: 'PORT_SUBMISSION_SERVICE', useValue: 8082}
