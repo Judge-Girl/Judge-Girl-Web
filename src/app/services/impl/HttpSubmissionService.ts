@@ -167,12 +167,11 @@ export class HttpSubmissionService extends SubmissionService {
         if (sub.id === submission.id) {
           // replace it
           submissions.splice(submissions.indexOf(sub), 1, submission);
-          break;
+          return;
         }
       }
-    } else {
-      submissions.push(submission); // otherwise push it
     }
+    submissions.push(submission); // otherwise push it
   }
 }
 
