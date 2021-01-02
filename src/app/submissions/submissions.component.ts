@@ -26,6 +26,7 @@ export class SubmissionsComponent implements OnInit, AfterViewInit {
   loadingSubmittedCodes = false;
   viewingSubmittedCodes: CodeFile[];
   viewingCodesSubmission: Submission;
+  viewingReport: Map<string, any>;
 
   loadingSubmissions = false;
   hasLogin: boolean;
@@ -135,6 +136,15 @@ export class SubmissionsComponent implements OnInit, AfterViewInit {
   onViewSubmissionJudgesBtnClick(submission: Submission): boolean {
     this.viewingJudgesSubmission = submission;
     return true;  // propagate the click event to the bootstrap's modal
+  }
+
+  onViewReportBtnClick(submission: Submission): boolean {
+    this.viewingReport = submission.verdict.report;
+    return true;  // propagate the click event to the bootstrap's modal
+  }
+
+  getCCScore(): string {
+    return this.viewingReport['rawData']['CodeQualityInspectionReport']['CC-Report'].ccScore;
   }
 
   onViewSubmissionCodesBtnClick(submission: Submission): boolean {

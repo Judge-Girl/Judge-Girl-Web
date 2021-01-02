@@ -27,6 +27,8 @@
       <th scope="col" [width]="'60px'">Total Grade</th>
       <th scope="col" [width]="'80px'">View Judges</th>
       <th scope="col" [width]="'80px'">View Codes</th>
+      <th scope="col" [width]="'80px'">View Report</th>
+
     </tr>
     </thead>
     <tbody class="submissions-table">
@@ -57,12 +59,19 @@
         </button>
       </td>
 
-      <!-- Codes are available immediately when it's submitted -->
       <td>
+        <!-- Codes are available immediately when it's submitted -->
         <button type="button" class="btn btn-link see-details-btn" data-toggle="modal"
                 (click)="onViewSubmissionCodesBtnClick(submission)"
                 data-target="#submission-codes-modal">
           View Codes
+        </button>
+      </td>
+      <td>
+        <button *ngIf="submission.isJudged" type="button" class="btn btn-link see-details-btn" data-toggle="modal"
+                (click)="onViewReportBtnClick(submission)"
+                data-target="#report-modal">
+          View Report
         </button>
       </td>
     </tr>
@@ -123,6 +132,25 @@
       </div>
       <div class="modal-body judge-error-message">
         <p >{{viewingJudgesSubmission?.verdict.compileErrorMessage}}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- View ReportMessage Modal -->
+<div *ngIf="viewingReport" class="modal fade" id="report-modal" tabindex="-1" role="dialog"
+     aria-labelledby="submission-judges-modal-title" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" >Report</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- TODO Hardcoded CC score, should replace with generic way that support any kinds of report-->
+        <p>Cyclometic Complexity Score: {{getCCScore()}}</p>
       </div>
     </div>
   </div>

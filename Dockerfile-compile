@@ -3,6 +3,8 @@ FROM node:12-alpine3.10
 RUN mkdir -p /usr/src/app
 RUN mkdir -p /usr/src/app/dist
 
+COPY chown=node:node ./ /usr/src/app
+
 WORKDIR /usr/src/app
 
 CMD npm install && npm run build

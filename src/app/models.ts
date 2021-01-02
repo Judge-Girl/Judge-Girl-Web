@@ -95,7 +95,8 @@ export class Verdict {
               public maximumRuntime: number,
               public maximumMemoryUsage: number,
               public compileErrorMessage: string,
-              public issueTime: number) {
+              public issueTime: number,
+              public report: Map<string, any>) {
   }
 }
 
