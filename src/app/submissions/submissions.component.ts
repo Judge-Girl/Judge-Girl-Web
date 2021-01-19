@@ -143,8 +143,15 @@ export class SubmissionsComponent implements OnInit, AfterViewInit {
     return true;  // propagate the click event to the bootstrap's modal
   }
 
+  // TODO drunk code, will be improved by #17
   getCCScore(): string {
-    return this.viewingReport['rawData']['CodeQualityInspectionReport']['CC-Report'].ccScore;
+    return this.viewingReport['rawData']['CodeQualityInspectionReport']['CyclomaticComplexityReport'].ccScore;
+  }
+  getCsaScore(): string {
+    return this.viewingReport['rawData']['CodeQualityInspectionReport']['CodingStyleAnalyzeReport'].csaScore;
+  }
+  getGlobalVariables(): string {
+    return this.viewingReport['rawData']['CodeQualityInspectionReport']['CodingStyleAnalyzeReport'].globalVariables;
   }
 
   onViewSubmissionCodesBtnClick(submission: Submission): boolean {

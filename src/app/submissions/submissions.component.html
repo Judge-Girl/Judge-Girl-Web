@@ -149,8 +149,10 @@
         </button>
       </div>
       <div class="modal-body">
-        <!-- TODO Hardcoded CC score, should replace with generic way that support any kinds of report-->
+        <!-- TODO #17 Hardcoded CC score, should replace with generic way that support any kinds of report-->
         <p>Cyclometic Complexity Score: {{getCCScore()}}</p>
+        <p>Coding Style Score: {{getCsaScore()}}</p>
+        <pre>    Global Variables: {{getGlobalVariables()}}</pre>
       </div>
     </div>
   </div>
