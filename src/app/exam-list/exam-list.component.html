@@ -1,0 +1,25 @@
+<div class="center-content-panel">
+  <div id="exams-panel" class="card shadow">
+    <div class="card-title">
+      <header>Exam List</header>
+    </div>
+    <hr>
+    <div class="card-body">
+
+      <div id="exam-tags-bar" >
+        <exam-tag-drop-down (tagSelect)="onExamTagSelected($event)"></exam-tag-drop-down>
+      </div>
+
+      <!-- Spinner -->
+      <div  *ngIf="loadingExams" class="row w-100 h-100 align-items-center justify-content-center">
+        <ld-circle></ld-circle>
+      </div>
+
+      <ul class="list-group" *ngFor="let examItem of examItems">
+        <li class="exam-item list-group-item fade-in" (click)="routeToExam(examItem.id)" >
+          <p class="exam-item-title"> {{examItem.id + '. ' + examItem.title}}</p>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

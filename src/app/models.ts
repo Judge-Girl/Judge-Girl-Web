@@ -26,6 +26,12 @@ export class ProblemItem {
   }
 }
 
+export class ExamItem {
+  constructor(public id: number,
+              public title: string) {
+  }
+}
+
 export class JudgeSpec {
   constructor(public language: string,
               public environment: string,
@@ -51,6 +57,14 @@ export class Problem extends ProblemItem {
               public submittedCodeSpecs: SubmittedCodeSpec[],
               public zippedProvidedCodesFileId: string,
               public compilation: Compilation) {
+    super(id, title);
+  }
+}
+
+export class Exam extends ExamItem {
+  constructor(id: number, title: string,
+              public markdownDescription: string,
+              public examTags: string[]) {
     super(id, title);
   }
 }

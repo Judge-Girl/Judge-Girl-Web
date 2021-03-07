@@ -1,0 +1,10 @@
+<div class="dropdown">
+  <button class="btn btn-secondary dropdown-toggle" [style.font-size]="'20px'"
+          type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Tag: {{currentSelectedTag}}
+  </button>
+  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+    <a *ngFor="let examTag of examTags;"
+       class="dropdown-item" href="#"  (click)="selectExamTag(examTag)">{{examTag}}</a>
+  </div>
+</div>

@@ -1,0 +1,35 @@
+
+hr {
+  margin: 0;
+}
+
+
+#exams-panel {
+  width: 80%;
+  text-align: center;
+}
+
+.exams-item {
+  text-align: left;
+  cursor: pointer;
+}
+
+.exams-item:hover {
+  background: #cccccc;
+}
+
+.exams-item-title {
+  text-align: left;
+  margin: 3px;
+}
+
+.exams-item-description {
+  text-align: left;
+}
+
+#exams-tags-bar {
+  width: 100%;
+  margin-bottom: 25px;
+  text-align: right;
+}
+

@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
-import {CodeFile, VerdictIssuedEvent, Problem, ProblemItem, Student, studentToString, Submission, TestCase} from '../models';
+import {CodeFile, VerdictIssuedEvent, Problem, ProblemItem, Exam, ExamItem, Student, studentToString, Submission, TestCase} from '../models';
 import {Router} from '@angular/router';
 import {CookieService} from './cookie/cookie.service';
 
@@ -99,6 +99,19 @@ export abstract class ProblemService {
   abstract getTestCases(problemId: number): Observable<TestCase[]>;
 }
 
+@Injectable({
+  providedIn: 'root'
+})
+export abstract class ExamService {
+
+  abstract getExamTags(): Observable<string[]>;
+
+  abstract getExamItemsByTag(problemTag: string): Observable<ExamItem[]>;
+
+  abstract getExamItemsInPage(page: number): Observable<ExamItem[]>;
+
+  abstract getExam(examId: number): Observable<Exam>;
+}
 @Injectable({
   providedIn: 'root'
 })
