@@ -36,7 +36,7 @@ export class ProblemDescriptionComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    // setTimeout(...) to avoid ExpressionChangedAfterItHasBeenCheckedError
+    // Use setTimeout(...) to run code asynchronously to avoid ExpressionChangedAfterItHasBeenCheckedError
     setTimeout(() => {
       this.problem$.subscribe(p => {
         this.problem = p;
@@ -51,7 +51,7 @@ export class ProblemDescriptionComponent implements OnInit, AfterViewInit {
         html: true,
         linkify: true,
         typographer: true,
-        highlight(str, lang) {  // TODO not work
+        highlight(str, lang) {  // TODO: highlight currently not work
           const langModule = hljs.getLanguage(lang);
           if (lang && langModule) {
             try {

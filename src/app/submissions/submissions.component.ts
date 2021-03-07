@@ -143,7 +143,7 @@ export class SubmissionsComponent implements OnInit, AfterViewInit {
     return true;  // propagate the click event to the bootstrap's modal
   }
 
-  // TODO drunk code, will be improved by #17
+  // TODO: drunk code, will be improved by #17
   getCCScore(): string {
     return this.viewingReport['rawData']['CodeQualityInspectionReport']['CyclomaticComplexityReport'].ccScore;
   }

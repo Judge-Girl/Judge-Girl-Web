@@ -69,9 +69,9 @@ import {AngularSplitModule} from 'angular-split';
     {provide: ProblemService, useClass: HttpProblemService},
     {provide: SubmissionService, useClass: HttpSubmissionService},
     {provide: 'BASE_URL', useValue: 'http://localhost'},
-    {provide: 'PORT_STUDENT_SERVICE', useValue: 8080},
-    {provide: 'PORT_PROBLEM_SERVICE', useValue: 8081},
-    {provide: 'PORT_SUBMISSION_SERVICE', useValue: 8082}
+    {provide: 'PORT_STUDENT_SERVICE', useValue: 80},
+    {provide: 'PORT_PROBLEM_SERVICE', useValue: 80},
+    {provide: 'PORT_SUBMISSION_SERVICE', useValue: 80}
   ],
   bootstrap: [AppComponent]
 })

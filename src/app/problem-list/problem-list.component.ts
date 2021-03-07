@@ -5,9 +5,6 @@ import {Router} from '@angular/router';
 import {ProblemTagDropDownComponent} from '../items/problem-tag-drop-down/problem-tag-drop-down.component';
 
 
-/**
- * TODO Currently not supporting pagination, so use 0th page instead
- */
 @Component({
   selector: 'app-problem-list',
   templateUrl: './problem-list.component.html',
@@ -24,6 +21,7 @@ export class ProblemListComponent implements OnInit {
   ngOnInit(): void {
     this.problemItems = [];
     this.loadingProblems = true;
+    // Currently we do not support 'Pagination', therefore use the 0th page as default.
     this.problemService.getProblemItemsInPage(0)
       .subscribe(items => {
         this.loadingProblems = false;
