@@ -30,8 +30,7 @@ export class ExamItem {
   constructor(public id: number,
               public title: string, 
               public startTime: Date,
-              public endTime: Date,
-              public examTags: string[]) {
+              public endTime: Date) {
   }
 }
 
@@ -61,16 +60,6 @@ export class Problem extends ProblemItem {
               public zippedProvidedCodesFileId: string,
               public compilation: Compilation) {
     super(id, title);
-  }
-}
-
-export class Exam extends ExamItem {
-  constructor(id: number, title: string,
-              public markdownDescription: string,
-              public startTime: Date,
-              public endTime: Date,
-              public examTags: string[]) {
-    super(id, title, startTime, endTime, examTags);
   }
 }
 

@@ -1,6 +1,6 @@
 import {ExamService} from '../Services';
 import {merge, Observable, ReplaySubject, Subject} from 'rxjs';
-import {Exam, ExamItem} from '../../models';
+import {ExamItem} from '../../models';
 import {HttpClient} from '@angular/common/http';
 import {Inject, Injectable} from '@angular/core';
 import {shareReplay, switchMap} from 'rxjs/operators';
@@ -21,20 +21,11 @@ export class HttpExamService extends ExamService {
     this.host = `${baseUrl}:${port}`;
   }
 
-  getExam(examId: number): Observable<Exam> {
+  getExam(examId: number): Observable<ExamItem> {
     return this.httpRequestCache.get(`${this.host}/api/exams/${examId}`);
   }
 
-  getExamItemsByTag(examTag: string): Observable<ExamItem[]> {
-    return this.httpRequestCache.get(`${this.host}/api/exams?tags=${examTag}`);
+  getExamsByStudentId(studentId: number, examType?: string): Observable<ExamItem[]> {
+    return this.httpRequestCache.get(`${this.host}/api/students/${studentId}/exams?type=${examType}`);
   }
-
-  getExamItemsInPage(page: number): Observable<ExamItem[]> {
-    return this.httpRequestCache.get(`${this.host}/api/exams`);
-  }
-
-  getExamTags(): Observable<string[]> {
-    return this.httpRequestCache.get(`${this.host}/api/exams/tags`);
-  }
-
 }

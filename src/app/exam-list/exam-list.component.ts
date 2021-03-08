@@ -23,7 +23,8 @@ export class ExamListComponent implements OnInit {
     this.examItems = [];
     this.loadingExams = true;
     // Currently we do not support 'Pagination', therefore use the 0th page as default.
-    this.examService.getExamItemsInPage(0)
+    // TODO: get current student id
+    this.examService.getExamsByStudentId(0)
       .subscribe(items => {
         this.loadingExams = false;
         this.examItems = items;
