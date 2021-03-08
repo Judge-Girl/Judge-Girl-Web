@@ -14,9 +14,9 @@ export class StubExamService extends ExamService {
   constructor() {
     super();
     this.exams = [
-      new Exam(1, 'TEST1', 'This is test1', [this.stubTag1]),
-      new Exam(2, 'TEST2', 'This is test2', [this.stubTag2]),
-      new Exam(3, 'TEST3', 'This is test3', [this.stubTag1, this.stubTag2]),
+      new Exam(1, 'TEST1', 'This is test1', new Date(2021, 0, 1), 1000, [this.stubTag1]),
+      new Exam(2, 'TEST2', 'This is test2', new Date(2021, 0, 10), 2000, [this.stubTag2]),
+      new Exam(3, 'TEST3', 'This is test3', new Date(2021, 0, 20), 1000000000, [this.stubTag1, this.stubTag2]),
     ];
   }
 

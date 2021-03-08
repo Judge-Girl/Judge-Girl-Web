@@ -64,6 +64,8 @@ export class Problem extends ProblemItem {
 export class Exam extends ExamItem {
   constructor(id: number, title: string,
               public markdownDescription: string,
+              public startTime: Date,
+              public duration: number,
               public examTags: string[]) {
     super(id, title);
   }
