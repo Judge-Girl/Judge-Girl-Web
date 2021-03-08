@@ -6,8 +6,13 @@
     <hr>
     <div class="card-body">
 
-      <div id="exam-tags-bar" >
+      <!-- <div id="exam-tags-bar" >
         <exam-tag-drop-down (tagSelect)="onExamTagSelected($event)"></exam-tag-drop-down>
+      </div> -->
+
+      <div class="input-group mb-3">
+        <exam-tag-drop-down (tagSelect)="onExamTagSelected($event)"></exam-tag-drop-down>
+        <input type="text" class="form-control" aria-label="Text input with dropdown button">
       </div>
 
       <!-- Spinner -->
@@ -15,7 +20,7 @@
         <ld-circle></ld-circle>
       </div>
 
-      <table class="w-100 table text-left">
+      <table *ngIf="!loadingExams" class="w-100 table text-left">
         <thead>
           <tr>
             <th scope="col"> # </th>
