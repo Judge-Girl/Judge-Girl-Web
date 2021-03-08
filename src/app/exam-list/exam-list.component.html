@@ -6,13 +6,16 @@
     <hr>
     <div class="card-body">
 
-      <!-- <div id="exam-tags-bar" >
-        <exam-tag-drop-down (tagSelect)="onExamTagSelected($event)"></exam-tag-drop-down>
-      </div> -->
-
       <div class="input-group mb-3">
-        <exam-tag-drop-down (tagSelect)="onExamTagSelected($event)"></exam-tag-drop-down>
-        <input type="text" class="form-control" aria-label="Text input with dropdown button">
+        <div class="input-group-prepend">
+          <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown">
+            Filter
+          </button>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="#">bruh</a>
+          </div>
+        </div>
+        <input type="text" class="form-control">
       </div>
 
       <!-- Spinner -->
@@ -26,21 +29,15 @@
             <th scope="col"> # </th>
             <th scope="col"> Exam Name </th>
             <th scope="col"> Start Time </th>
-            <th scope="col"> Duration </th>
-            <th scope="col"> Tags </th>
+            <th scope="col"> End Time </th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let examItem of examItems">
             <th scope="row"> {{ examItem.id }} </th>
             <td> {{ examItem.title }} </td>
-            <td> {{ getStartTimeString(examItem.startTime) }} </td>
-            <td> {{ getDurationString(examItem.duration) }} </td>
-            <td class="d-flex flex-row"> 
-              <span *ngFor="let tag of examItem.examTags" class="d-flex flex-column mr-2 text-white table-tag-item"> 
-                <span class="px-2">{{ tag }}</span>
-              </span>
-            </td>
+            <td> {{ getTimeString(examItem.startTime) }} </td>
+            <td> {{ getTimeString(examItem.endTime) }} </td>
           </tr>
         </tbody>
       </table>

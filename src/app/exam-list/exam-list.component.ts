@@ -4,7 +4,6 @@ import humanizeDuration from 'humanize-duration';
 import {ExamService} from '../services/Services';
 import {ExamItem} from '../models';
 import {Router} from '@angular/router';
-import {ExamTagDropDownComponent} from '../items/exam-tag-drop-down/exam-tag-drop-down.component';
 
 
 @Component({
@@ -35,25 +34,7 @@ export class ExamListComponent implements OnInit {
     this.router.navigateByUrl(`exams/${examId}`);
   }
 
-  onExamTagSelected(examTag: string) {
-    this.examItems = [];
-    this.loadingExams = true;
-    if (ExamTagDropDownComponent.ALL === examTag) {
-      this.examService.getExamItemsInPage(0)
-          .subscribe(items => {
-            this.loadingExams = false;
-            this.examItems = items;
-          });
-    } else {
-      this.examService.getExamItemsByTag(examTag)
-          .subscribe(items => {
-            this.loadingExams = false;
-            this.examItems = items;
-          });
-    }
-  }
-
-  getStartTimeString(date: Date) {
+  getTimeString(date: Date) {
     return dateFormat(date, "yyyy/mm/dd h:MM TT");
   }
 

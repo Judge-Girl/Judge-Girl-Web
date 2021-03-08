@@ -21,7 +21,6 @@ import {FileUploadModule} from 'primeng/fileupload';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
 import {BlockUIModule, MessageService, MessagesModule, ToastModule} from 'primeng';
 import {ProblemTagDropDownComponent} from './items/problem-tag-drop-down/problem-tag-drop-down.component';
-import {ExamTagDropDownComponent} from './items/exam-tag-drop-down/exam-tag-drop-down.component';
 import {HttpProblemService} from './services/impl/HttpProblemService';
 import {HttpExamService} from './services/impl/HttpExamService';
 import {HttpStudentService} from './services/impl/HttpStudentService';
@@ -49,7 +48,6 @@ import {AngularSplitModule} from 'angular-split';
     LdCircleComponent,
 
     ProblemTagDropDownComponent,
-    ExamTagDropDownComponent,
 
     /*directives*/
     AuthenticatedDirective,
