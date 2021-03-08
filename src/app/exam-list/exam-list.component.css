@@ -9,27 +9,27 @@ hr {
   text-align: center;
 }
 
-.exams-item {
-  text-align: left;
-  cursor: pointer;
-}
-
-.exams-item:hover {
-  background: #cccccc;
-}
-
-.exams-item-title {
-  text-align: left;
-  margin: 3px;
-}
-
-.exams-item-description {
-  text-align: left;
-}
-
 #exam-tags-bar {
   width: 100%;
   margin-bottom: 25px;
   text-align: right;
 }
 
+.custom-title-font {
+  font-size: 35px;
+  color: #374550;
+  text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.25);
+}
+
+.table th {
+  text-align: left;
+}
+
+.table td {
+  text-align: left;
+}
+
+.table-tag-item {
+  background: #1273BA;
+  border-radius: 50px;
+}

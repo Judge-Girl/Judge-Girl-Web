@@ -28,7 +28,10 @@ export class ProblemItem {
 
 export class ExamItem {
   constructor(public id: number,
-              public title: string) {
+              public title: string, 
+              public startTime: Date,
+              public duration: number,
+              public examTags: string[]) {
   }
 }
 
@@ -67,7 +70,7 @@ export class Exam extends ExamItem {
               public startTime: Date,
               public duration: number,
               public examTags: string[]) {
-    super(id, title);
+    super(id, title, startTime, duration, examTags);
   }
 }
 
