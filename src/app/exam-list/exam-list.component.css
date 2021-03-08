@@ -1,20 +1,4 @@
 
-hr {
-  margin: 0;
-}
-
-
-#exams-panel {
-  width: 80%;
-  text-align: center;
-}
-
-#exam-tags-bar {
-  width: 100%;
-  margin-bottom: 25px;
-  text-align: right;
-}
-
 .custom-title-font {
   font-size: 35px;
   color: #374550;
@@ -27,9 +11,4 @@ hr {
 
 .table td {
   text-align: left;
-}
-
-.table-tag-item {
-  background: #1273BA;
-  border-radius: 50px;
 }
