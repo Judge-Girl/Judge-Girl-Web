@@ -1,6 +1,7 @@
 import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
-import {StudentService} from '../services/Services';
+import { ExamService } from '../services/Services';
+import { Exam } from '../models';
 import {SplitAreaDirective, SplitComponent} from 'angular-split';
 
 export enum Tab {
@@ -14,7 +15,7 @@ export enum Tab {
 })
 export class ExamIndexComponent implements OnInit, AfterViewInit {
 
-  constructor(private elementRef: ElementRef, public studentService: StudentService,
+  constructor(private elementRef: ElementRef, public examService: ExamService,
               private router: Router, private route: ActivatedRoute) {
     route.params.subscribe(params => this.examId = +params.examId);
 
@@ -31,8 +32,16 @@ export class ExamIndexComponent implements OnInit, AfterViewInit {
   private allTabs: ElementRef[];
 
   private examId: number;
+  public isLoading: boolean;
+  public exam: Exam;
 
   ngOnInit(): void {
+	this.isLoading = true;
+    this.examService.getExam(this.examId)
+      .subscribe(e => {
+		this.exam = e;
+		this.isLoading = false;
+      });
   }
 
   ngAfterViewInit(): void {
@@ -64,9 +73,9 @@ export class ExamIndexComponent implements OnInit, AfterViewInit {
     if (this.allTabs) {
       for (const t of this.allTabs) {
         if (t === tab) {
-          t.nativeElement.classList.add('active');
+          t.nativeElement.classList.add('my-item-active');
         } else {
-          t.nativeElement.classList.remove('active');
+          t.nativeElement.classList.remove('my-item-active');
         }
       }
     }
@@ -78,6 +87,10 @@ export class ExamIndexComponent implements OnInit, AfterViewInit {
     } else if (window.location.pathname.endsWith('submissions')) {
 	  this.switchTab(Tab.SUBMISSIONS);
     }
+  }
+
+  routeToExamList() {
+	this.router.navigateByUrl('exams');
   }
 }
 

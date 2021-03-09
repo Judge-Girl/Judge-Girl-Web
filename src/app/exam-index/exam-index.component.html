@@ -1,29 +1,32 @@
-<div class="my-container">
-  <div id="tab-panel" class="shadow flex-column">
-    <ul [style.width]="'100%'" [style.marginBottom]="'10px'" class="nav nav-tabs">
-      <li class="nav-item">
-        <a class="nav-link active" href="#" (click)="switchTab(TAB_PROBLEMS)" #problemsTab>Problem</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#" (click)="switchTab(TAB_SUBMISSIONS)" #submissionsTab>Submissions</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#" (click)="switchTab(TAB_SCOREBOARD)" #scoreboardTab>Scordboard</a>
-      </li>
-    </ul>
-    <div class="my-panel justify-content-start" [style.height]="'100%'">
-        <as-split unit="percent" [direction]="'horizontal'" #splitter>
-          <as-split-area size="66">
-            <div class="side-by-side-scroll">
-              <router-outlet></router-outlet>
-            </div>
-          </as-split-area>
-          <as-split-area size="34">
-            <div class="side-by-side-scroll">
-            </div>
-          </as-split-area>
-        </as-split>
+<div class="font-poppins">
+  <div class="navbar navbar-light bg-light">
+    <div class="navbar-brand pl-4">
+      <span (click)="routeToExamList()" class="fake-link">
+        Exams
+      </span>
+      /
+      <span [hidden]="isLoading" class="fake-link">
+        {{ exam?.title }}
+      </span>
     </div>
+  </div>
+  <div>
+    <div class="w-100 bg-light px-4 pb-2">
+      <span class="my-item px-3 pb-2 cursor-pointer" (click)="switchTab(TAB_PROBLEMS)" #problemsTab>
+        Problem
+      </span>
+      <span class="my-item px-3 pb-2 cursor-pointer" (click)="switchTab(TAB_SUBMISSIONS)" #submissionsTab>
+        Submissions
+      </span>
+      <span class="my-item px-3 pb-2 cursor-pointer" (click)="switchTab(TAB_SCOREBOARD)" #scoreboardTab>
+        Scoreboard
+      </span>
+    </div>
+  </div>
+</div>
 
+<div class="container">
+  <div class="side-by-side-scroll">
+    <router-outlet></router-outlet>
   </div>
 </div>

@@ -138,3 +138,15 @@ table tr:nth-child(even) {
 .cursor-pointer {
   cursor: pointer;
 }
+
+/* */
+
+.fake-link {
+  color: #1273BA;
+  cursor: pointer;
+}
+
+.font-poppins {
+  font-family: 'Poppins', sans-serif;
+}
+
