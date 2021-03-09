@@ -6,7 +6,13 @@ import {LoginComponent} from './login/login.component';
 import {AppComponent} from './app.component';
 import {ProblemListComponent} from './problem-list/problem-list.component';
 import {ExamListComponent} from './exam-list/exam-list.component';
+import { ExamIndexComponent } from './exam-index/exam-index.component';
+import { ExamScoreboardComponent } from './exam-scoreboard/exam-scoreboard.component';
+import { ExamSubmissionsComponent } from './exam-submissions/exam-submissions.component';
+import {StubStudentService} from './services/impl/StubStudentService';
 import {ExamService, ProblemService, StudentService, SubmissionService} from './services/Services';
+import {StubProblemService} from './services/impl/StubProblemService';
+import {StubExamService} from './services/impl/StubExamService';
 import {MultiTabsPanelComponent} from './problem-submission-tab-panel/multi-tabs-panel.component';
 import {ProblemDescriptionComponent} from './problem-description/problem-description.component';
 import {CodeUploadPanelComponent} from './code-panel/code-upload-panel.component';
@@ -41,6 +47,10 @@ const HOST = 'http://api.judgegirl.beta.pdlab.csie.ntu.edu.tw';
     ProblemDescriptionComponent,
     CodeUploadPanelComponent,
     SubmissionsComponent,
+
+    ExamIndexComponent,
+    ExamSubmissionsComponent,
+    ExamScoreboardComponent,
 
     /*items*/
     LdCircleComponent,

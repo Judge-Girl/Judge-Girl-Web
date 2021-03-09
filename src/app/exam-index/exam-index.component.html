@@ -1,0 +1,29 @@
+<div class="my-container">
+  <div id="tab-panel" class="shadow flex-column">
+    <ul [style.width]="'100%'" [style.marginBottom]="'10px'" class="nav nav-tabs">
+      <li class="nav-item">
+        <a class="nav-link active" href="#" (click)="switchTab(TAB_PROBLEMS)" #problemsTab>Problem</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#" (click)="switchTab(TAB_SUBMISSIONS)" #submissionsTab>Submissions</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#" (click)="switchTab(TAB_SCOREBOARD)" #scoreboardTab>Scordboard</a>
+      </li>
+    </ul>
+    <div class="my-panel justify-content-start" [style.height]="'100%'">
+        <as-split unit="percent" [direction]="'horizontal'" #splitter>
+          <as-split-area size="66">
+            <div class="side-by-side-scroll">
+              <router-outlet></router-outlet>
+            </div>
+          </as-split-area>
+          <as-split-area size="34">
+            <div class="side-by-side-scroll">
+            </div>
+          </as-split-area>
+        </as-split>
+    </div>
+
+  </div>
+</div>
