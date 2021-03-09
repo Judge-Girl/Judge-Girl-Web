@@ -22,7 +22,6 @@ export class ExamListComponent implements OnInit {
   ngOnInit(): void {
     this.examItems = [];
     this.loadingExams = true;
-    // Currently we do not support 'Pagination', therefore use the 0th page as default.
     // TODO: get current student id
     this.examService.getExamsByStudentId(0)
       .subscribe(items => {
@@ -32,7 +31,7 @@ export class ExamListComponent implements OnInit {
   }
 
   routeToExam(examId: number) {
-    this.router.navigateByUrl(`exams/${examId}`);
+    this.router.navigateByUrl(`exam/${examId}`);
   }
 
   getTimeString(date: Date) {
