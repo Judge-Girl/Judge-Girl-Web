@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import dateFormat from 'dateformat';
-import humanizeDuration from 'humanize-duration';
+import * as moment from 'moment';
 import {ExamService} from '../services/Services';
 import {ExamItem} from '../models';
 import {Router} from '@angular/router';
@@ -35,10 +34,6 @@ export class ExamListComponent implements OnInit {
   }
 
   getTimeString(date: Date) {
-    return dateFormat(date, "yyyy/mm/dd h:MM TT");
-  }
-
-  getDurationString(duration: number) {
-    return humanizeDuration(duration, { units: ["m"], round: true });
+    return moment(date).format('YYYY/MM/DD h:mm A')
   }
 }
