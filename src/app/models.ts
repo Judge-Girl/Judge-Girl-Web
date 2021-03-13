@@ -26,6 +26,14 @@ export class ProblemItem {
   }
 }
 
+export class ExamItem {
+  constructor(public id: number,
+              public title: string, 
+              public startTime: Date,
+              public endTime: Date) {
+  }
+}
+
 export class JudgeSpec {
   constructor(public language: string,
               public environment: string,
