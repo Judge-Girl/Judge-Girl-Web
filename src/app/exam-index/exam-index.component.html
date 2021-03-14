@@ -1,12 +1,14 @@
 <div class="font-poppins">
-  <div class="navbar navbar-light bg-light">
+  <div class="navbar navbar-light bg-light fw-600">
     <div class="navbar-brand pl-4">
       <span (click)="routeToExamList()" class="fake-link">
         Exams
       </span>
-      /
-      <span [hidden]="isLoading" class="fake-link">
-        {{ exam?.title }}
+      <span class="text-color-gray">
+        /
+      </span>
+      <span *ngIf="!isLoading" class="fake-link">
+        {{ exam.title }}
       </span>
     </div>
   </div>

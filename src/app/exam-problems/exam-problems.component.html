@@ -1,9 +1,22 @@
 
 <!-- Spinner -->
 <div [hidden]="exam" class="row w-100 h-100 align-items-center justify-content-center">
-  LD-CIRCLE
+  <ld-circle></ld-circle>
 </div>
 
-<div [hidden]="!exam" class="my-panel" id="problem-description-panel" #problemDescriptionPanel>
-  PROBLEM CONTENT
+<div *ngIf="exam" class="container pt-4 font-poppins" id="problem-description-panel">
+  <div class="row content-title-font">
+    Problems
+  </div>
+  <div>
+    table of problems {{ exam.problems }}
+  </div>
+  <div class="row content-title-font">
+    Question Announce
+  </div>
+  <div class="markdown-panel" #questionMDPanel></div>
+  <div class="row content-title-font">
+    Note
+  </div>
+  <div class="markdown-panel" #noteMDPanel></div>
 </div>

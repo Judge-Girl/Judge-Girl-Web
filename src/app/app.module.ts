@@ -7,6 +7,7 @@ import {AppComponent} from './app.component';
 import {ProblemListComponent} from './problem-list/problem-list.component';
 import {ExamListComponent} from './exam-list/exam-list.component';
 import { ExamIndexComponent } from './exam-index/exam-index.component';
+import { ExamProblemsComponent } from './exam-problems/exam-problems.component';
 import { ExamScoreboardComponent } from './exam-scoreboard/exam-scoreboard.component';
 import { ExamSubmissionsComponent } from './exam-submissions/exam-submissions.component';
 import {StubStudentService} from './services/impl/StubStudentService';
@@ -49,6 +50,7 @@ const HOST = 'http://api.judgegirl.beta.pdlab.csie.ntu.edu.tw';
     SubmissionsComponent,
 
     ExamIndexComponent,
+    ExamProblemsComponent,
     ExamSubmissionsComponent,
     ExamScoreboardComponent,
 
