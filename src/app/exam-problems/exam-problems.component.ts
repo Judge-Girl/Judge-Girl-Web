@@ -23,18 +23,9 @@ export class ExamProblemsComponent implements OnInit, AfterViewInit {
   private exam$: Observable<Exam>;
   public exam: Exam;
 
-  @ViewChild('questionMDPanel') set test2(content: ElementRef) {
-    console.log('content: ', content);
+  @ViewChild('examDescriptionPanel') set content(content: ElementRef) {
     if (content) { 
-      console.log(this.exam.announce);
-      this.renderMarkdown(content, this.exam.announce);
-    }
-  }
-  @ViewChild('noteMDPanel') set test1(content: ElementRef) {
-    console.log('content: ', content);
-    if (content) { 
-      console.log(this.exam.note);
-      this.renderMarkdown(content, this.exam.note);
+      this.renderMarkdown(content, this.exam.description);
     }
   }
 
@@ -78,7 +69,6 @@ export class ExamProblemsComponent implements OnInit, AfterViewInit {
     markdownIt.renderer.rules.table_open = () => {
       return '<table class="table">';
     };
-    console.log(markdownIt.render(mdString));
     this.renderer.setProperty(element.nativeElement, 'innerHTML',
       markdownIt.render(mdString));
   }

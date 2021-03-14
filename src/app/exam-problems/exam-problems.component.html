@@ -6,17 +6,26 @@
 
 <div *ngIf="exam" class="container pt-4 font-poppins" id="problem-description-panel">
   <div class="row content-title-font">
-    Problems
+    <div class="col"> Problems </div>
   </div>
-  <div>
-    table of problems {{ exam.problems }}
+  <div class="row">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col"> # </th>
+          <th scope="col"> Problem Title </th>
+          <th scope="col"> Score </th>
+          <th scope="col"> Verdict </th>
+          <th scope="col"> Submission Quota </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let problem of exam.problems">
+          <th scope="row"> {{ problem.id }} </th>
+          <th> {{ problem.title }} </th>
+        </tr>
+      </tbody>
+    </table>
   </div>
-  <div class="row content-title-font">
-    Question Announce
-  </div>
-  <div class="markdown-panel" #questionMDPanel></div>
-  <div class="row content-title-font">
-    Note
-  </div>
-  <div class="markdown-panel" #noteMDPanel></div>
+  <div class="markdown-panel pt-4" #examDescriptionPanel></div>
 </div>

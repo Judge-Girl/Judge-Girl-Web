@@ -95,8 +95,7 @@ export class Exam extends ExamItem {
               public startTime: Date,
               public endTime: Date,
               public problems: Problem[],
-              public announce: string,
-              public note: string) {
+              public description: string) {
     super(id, title, startTime, endTime);
   }
 

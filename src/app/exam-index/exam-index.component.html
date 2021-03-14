@@ -2,25 +2,25 @@
   <div class="navbar navbar-light bg-light fw-600">
     <div class="navbar-brand pl-4">
       <span (click)="routeToExamList()" class="fake-link">
-        Exams
+        Exam
       </span>
       <span class="text-color-gray">
         /
       </span>
-      <span *ngIf="!isLoading" class="fake-link">
+      <span *ngIf="!isLoading" (click)="routeToCurrentExamIndex()" class="fake-link">
         {{ exam.title }}
       </span>
     </div>
   </div>
   <div>
     <div class="w-100 bg-light px-4 pb-2">
-      <span class="my-item px-3 pb-2 cursor-pointer" (click)="switchTab(TAB_PROBLEMS)" #problemsTab>
+      <span class="my-item px-3 pb-2 cursor-pointer" (click)="routeToTab(TAB_PROBLEMS)" #problemsTab>
         Problem
       </span>
-      <span class="my-item px-3 pb-2 cursor-pointer" (click)="switchTab(TAB_SUBMISSIONS)" #submissionsTab>
+      <span class="my-item px-3 pb-2 cursor-pointer" (click)="routeToTab(TAB_SUBMISSIONS)" #submissionsTab>
         Submissions
       </span>
-      <span class="my-item px-3 pb-2 cursor-pointer" (click)="switchTab(TAB_SCOREBOARD)" #scoreboardTab>
+      <span class="my-item px-3 pb-2 cursor-pointer" (click)="routeToTab(TAB_SCOREBOARD)" #scoreboardTab>
         Scoreboard
       </span>
     </div>

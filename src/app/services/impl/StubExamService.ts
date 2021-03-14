@@ -16,11 +16,11 @@ export class StubExamService extends ExamService {
 
     this.exams = [
       new Exam(1, 'TEST1', new Date(2021, 0, 1), new Date(2021, 0, 1, 14), 
-               [this.problems[0]], '* anno\n1. `Markdown` test\n2. meow', '## note\nnote'),
+               [this.problems[0]], '* anno\n1. `Markdown` test\n2. meow\n## Title 2\n### Title 3\n#### Title 4\n'),
       new Exam(2, 'TEST2', new Date(2021, 0, 10, 15), new Date(2021, 0, 10, 21), 
-               [this.problems[0], this.problems[1]], 'anno2', 'note2'),
+               [this.problems[0], this.problems[1]], 'anno2'),
       new Exam(3, 'TEST3', new Date(2021, 0, 20, 11, 22, 33), new Date(2021, 0, 20, 22, 33, 44), 
-               [this.problems[0], this.problems[1], this.problems[2]], 'anno3', 'note3'),
+               [this.problems[0], this.problems[1], this.problems[2]], 'anno3'),
     ];
   }
 

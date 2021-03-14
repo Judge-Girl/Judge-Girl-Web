@@ -39,34 +39,41 @@ export class ExamIndexComponent implements OnInit, AfterViewInit {
 	this.isLoading = true;
     this.examService.getExam(this.examId)
       .subscribe(e => {
-		this.exam = e;
-		this.isLoading = false;
-      });
+        this.exam = e;
+        this.isLoading = false;
+    });
   }
 
   ngAfterViewInit(): void {
     this.allTabs = [this.problemsTab, this.submissionsTab, this.scoreboardTab];
     this.router.events.subscribe(e => {
       if (e instanceof NavigationEnd) {
-        this.refreshTabState();
+        this.refreshTabElementsState();
       }
     });
-    this.refreshTabState();
+    this.routeToTabByCurrentUrl();
+    this.refreshTabElementsState();
   }
 
 
-  switchTab(tab: Tab): boolean {
+  routeToTab(tab: Tab): void {
     if (tab === Tab.PROBLEMS) {
       this.router.navigate([`exam/${this.examId}`]);
-      this.activateTabAndDeactivateOthers(this.problemsTab);
     } else if (tab === Tab.SUBMISSIONS) {
       this.router.navigate([`exam/${this.examId}/submissions`]);
-      this.activateTabAndDeactivateOthers(this.submissionsTab);
     } else if (tab === Tab.SCOREBOARD) {
       this.router.navigate([`exam/${this.examId}/scoreboard`]);
-      this.activateTabAndDeactivateOthers(this.scoreboardTab);
     }
-    return false;  // avoid <a>'s changing page
+  }
+
+  private refreshTabElementsState() {
+    if (window.location.pathname.endsWith('scoreboard')) {
+      this.activateTabAndDeactivateOthers(this.scoreboardTab);
+    } else if (window.location.pathname.endsWith('submissions')) {
+      this.activateTabAndDeactivateOthers(this.submissionsTab);
+    } else {
+      this.activateTabAndDeactivateOthers(this.problemsTab);
+    }
   }
 
   private activateTabAndDeactivateOthers(tab: ElementRef) {
@@ -81,16 +88,23 @@ export class ExamIndexComponent implements OnInit, AfterViewInit {
     }
   }
 
-  private refreshTabState() {
+  private routeToTabByCurrentUrl() {
     if (window.location.pathname.endsWith('scoreboard')) {
-      this.switchTab(Tab.SCOREBOARD);
+      this.routeToTab(Tab.SCOREBOARD);
     } else if (window.location.pathname.endsWith('submissions')) {
-	  this.switchTab(Tab.SUBMISSIONS);
+      this.routeToTab(Tab.SUBMISSIONS);
+    } else {
+      this.routeToTab(Tab.PROBLEMS);
     }
   }
 
   routeToExamList() {
-	this.router.navigateByUrl('exams');
+    this.router.navigateByUrl('/exams');
+  }
+
+  routeToCurrentExamIndex() {
+    this.router.navigateByUrl(`/exam/${this.exam.id}`);
+    this.refreshTabElementsState();
   }
 }
 
