@@ -7,6 +7,9 @@ import {catchError, map, switchMap} from 'rxjs/operators';
 import {unzipCodesArrayBuffer} from '../../utils';
 import {HttpRequestCache} from './HttpRequestCache';
 
+// Currently, we only support 'C' langEnv,
+// which should be extended to many languageEnvs in the future
+const DEFAULT_LANG_ENV = 'C';
 
 /**
  * TODO (1) Currently, this service use polling trick to listen to the judge responses, which should be removed in the future version.
@@ -16,7 +19,7 @@ import {HttpRequestCache} from './HttpRequestCache';
 })
 export class HttpSubmissionService extends SubmissionService {
   httpRequestCache: HttpRequestCache;
-  host: string;
+  baseUrl: string;
   verdictIssuedEvent$ = new Subject<VerdictIssuedEvent>();
   private readonly submissionMap = new Map<number, Array<Submission>>();
   private submissions$ = new Subject<Submission[]>();
@@ -29,19 +32,18 @@ export class HttpSubmissionService extends SubmissionService {
   constructor(protected http: HttpClient,
               private studentService: StudentService,
               private problemService: ProblemService,
-              @Inject('BASE_URL') baseUrl: string,
-              @Inject('PORT_SUBMISSION_SERVICE') port: number) {
+              @Inject('SUBMISSION_SERVICE_BASE_URL') baseUrl: string) {
     super();
     this.httpRequestCache = new HttpRequestCache(http);
-    this.host = `${baseUrl}:${port}`;
+    this.baseUrl = baseUrl;
   }
 
   getSubmissions(problemId: number): Observable<Submission[]> {
     this.studentService.authenticate();
     this.http.get<Submission[]>(
-      `${this.host}/api/problems/${problemId}/students/${this.studentService.currentStudent.id}/submissions`, {
+      `${this.baseUrl}/api/problems/${problemId}/${DEFAULT_LANG_ENV}/students/${this.studentService.currentStudent.id}/submissions`, {
         headers: {
-          Authorization: `bearer ${this.studentService.currentStudent.token}`
+          Authorization: `Bearer ${this.studentService.currentStudent.token}`
         }
       }).toPromise()
       .then(submissions => {
@@ -65,7 +67,7 @@ export class HttpSubmissionService extends SubmissionService {
   getSubmission(problemId: number, submissionId: string): Observable<Submission> {
     this.studentService.authenticate();
     return this.http.get<Submission>(
-      `${this.host}/api/problems/${problemId}/students/${this.studentService.currentStudent.id}/submissions/${submissionId}`, {
+      `${this.baseUrl}/api/problems/${problemId}/${DEFAULT_LANG_ENV}/students/${this.studentService.currentStudent.id}/submissions/${submissionId}`, {
         headers: {
           Authorization: `bearer ${this.studentService.currentStudent.token}`
         }
@@ -102,7 +104,7 @@ export class HttpSubmissionService extends SubmissionService {
     for (let i = 0; i < p.submittedCodeSpecs.length; i++) {
       formData.append('submittedCodes', files[i], p.submittedCodeSpecs[i].fileName);
     }
-    return this.http.post<Submission>(`${this.host}/api/problems/${problemId}/students/` +
+    return this.http.post<Submission>(`${this.baseUrl}/api/problems/${problemId}/${DEFAULT_LANG_ENV}/students/` +
       `${this.studentService.currentStudent.id}/submissions`,
       formData, {
         headers: {
@@ -148,7 +150,7 @@ export class HttpSubmissionService extends SubmissionService {
   getSubmittedCodes(problemId: number, submissionId: string, submittedCodesFileId: string): Observable<CodeFile[]> {
     return this.problemService.getProblem(problemId)
       .pipe(switchMap(p => {
-        return this.http.get(`${this.host}/api/problems/${problemId}/students/${this.studentService.currentStudent.id}` +
+        return this.http.get(`${this.baseUrl}/api/problems/${problemId}/${DEFAULT_LANG_ENV}/students/${this.studentService.currentStudent.id}` +
           `/submissions/${submissionId}/submittedCodes/${submittedCodesFileId}`, {
           headers: {
             'Content-Type': 'application/zip',

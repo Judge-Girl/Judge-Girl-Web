@@ -28,7 +28,7 @@ export class ProblemItem {
 
 export class ExamItem {
   constructor(public id: number,
-              public title: string, 
+              public title: string,
               public startTime: Date,
               public endTime: Date) {
   }
@@ -43,7 +43,9 @@ export class JudgeSpec {
 }
 
 export class SubmittedCodeSpec {
-  constructor(public language: string, public fileName: string) {
+  constructor(public format: string,
+              public fileName: string,
+              public fileExtension: string) {
   }
 }
 
@@ -53,13 +55,37 @@ export class Compilation {
 }
 
 export class Problem extends ProblemItem {
+  private C: LanguageEnv;
+
   constructor(id: number, title: string,
-              public markdownDescription: string,
-              public problemTags: string[],
-              public submittedCodeSpecs: SubmittedCodeSpec[],
-              public zippedProvidedCodesFileId: string,
-              public compilation: Compilation) {
+              public description: string,
+              public tags: string[],
+              public languageEnvs: LanguageEnv[],
+              public testcases: TestCase[]) {
     super(id, title);
+    this.C = languageEnvs.filter(lang => lang.name === 'C')[0];
+  }
+
+  public get compilation() {
+    return this.C.compilation;
+  }
+
+  public get submittedCodeSpecs() {
+    return this.C.submittedCodeSpecs;
+  }
+
+  public get providedCodesFileId() {
+    return this.C.providedCodesFileId;
+  }
+}
+
+export class LanguageEnv {
+  constructor(public name: string,
+              public language: string,
+              public compilation: Compilation,
+              public submittedCodeSpecs: SubmittedCodeSpec[],
+              public providedCodesFileId: string,
+              public compiledLanguage: boolean) {
   }
 }
 
@@ -156,7 +182,7 @@ export class CodeFile {
 
 
 export function getCodeFileExtension(codeSpec: SubmittedCodeSpec): string {
-  const lang = codeSpec.language.toLowerCase();
+  const lang = codeSpec.format.toLowerCase();
   switch (lang) {
     case 'c':
       return '.c';

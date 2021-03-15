@@ -40,6 +40,7 @@ export class ProblemDescriptionComponent implements OnInit, AfterViewInit {
     setTimeout(() => {
       this.problem$.subscribe(p => {
         this.problem = p;
+        console.log(p);
         this.renderMarkdown();
       });
     });
@@ -70,7 +71,7 @@ export class ProblemDescriptionComponent implements OnInit, AfterViewInit {
       return '<table class="table">';
     };
     this.renderer.setProperty(this.markdownPanel.nativeElement, 'innerHTML',
-      markdownIt.render(this.problem.markdownDescription));
+      markdownIt.render(this.problem.description));
     this.renderer.setProperty(this.compilationScriptPanel.nativeElement, 'innerHTML',
       markdownIt.render('## Compilation \n' +
         '```sh\n' +

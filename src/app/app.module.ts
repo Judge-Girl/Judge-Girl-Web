@@ -8,7 +8,6 @@ import {ProblemListComponent} from './problem-list/problem-list.component';
 import {ExamListComponent} from './exam-list/exam-list.component';
 import {StubStudentService} from './services/impl/StubStudentService';
 import {StudentService, ProblemService, ExamService, SubmissionService} from './services/Services';
-import {StubProblemService} from './services/impl/StubProblemService';
 import {StubExamService} from './services/impl/StubExamService';
 import {MultiTabsPanelComponent} from './problem-submission-tab-panel/multi-tabs-panel.component';
 import {ProblemDescriptionComponent} from './problem-description/problem-description.component';
@@ -31,6 +30,8 @@ import {CookieService} from './services/cookie/cookie.service';
 import {TestcasesComponent} from './testcases/testcases.component';
 import {AngularSplitModule} from 'angular-split';
 
+
+const HOST = 'http://localhost';
 
 @NgModule({
   declarations: [
@@ -73,11 +74,11 @@ import {AngularSplitModule} from 'angular-split';
     {provide: ProblemService, useClass: HttpProblemService},
     {provide: ExamService, useClass: HttpExamService},
     {provide: SubmissionService, useClass: HttpSubmissionService},
-    {provide: 'BASE_URL', useValue: 'http://localhost'},
-    {provide: 'PORT_STUDENT_SERVICE', useValue: 80},
-    {provide: 'PORT_PROBLEM_SERVICE', useValue: 80},
-    {provide: 'PORT_EXAM_SERVICE', useValue: 80},
-    {provide: 'PORT_SUBMISSION_SERVICE', useValue: 80}
+    {provide: 'HOST', useValue: HOST},
+    {provide: 'STUDENT_SERVICE_BASE_URL', useValue: `${HOST}:33000`},
+    {provide: 'PROBLEM_SERVICE_BASE_URL', useValue: `${HOST}:33001`},
+    {provide: 'SUBMISSION_SERVICE_BASE_URL', useValue: `${HOST}:33002`},
+    {provide: 'EXAM_SERVICE_BASE_URL', useValue: `${HOST}`}
   ],
   bootstrap: [AppComponent]
 })
