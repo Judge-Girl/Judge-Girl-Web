@@ -23,11 +23,9 @@ export class HttpStudentService extends StudentService {
     this.baseUrl = baseUrl;
   }
 
-  login(account: string, password: string): Observable<Student> {
-    const formData = new FormData();
-    formData.set('account', account);
-    formData.set('password', password);
-    return this.http.post<Student>(`${this.baseUrl}/api/students/login`, formData)
+  login(email: string, password: string): Observable<Student> {
+    return this.http.post<Student>(`${this.baseUrl}/api/students/login`,
+      {email, password})
       .pipe(map(student => {
         this.currentStudent = student;
         return this.currentStudent;
