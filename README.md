@@ -25,3 +25,14 @@ Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protrac
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+
+
+## Contributing
+
+Thanks to all the people who already contributed!
+
+
+
+<a href="https://github.com/Judge-Girl/Judge-Girl-Web/graphs/contributors">
+  <img src="https://contributors-img.web.app/image?repo=Judge-Girl/Judge-Girl-Web" />
+</a>
