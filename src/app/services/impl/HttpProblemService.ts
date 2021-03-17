@@ -3,7 +3,7 @@ import {merge, Observable, ReplaySubject, Subject} from 'rxjs';
 import {Problem, ProblemItem, TestCase} from '../../models';
 import {HttpClient} from '@angular/common/http';
 import {Inject, Injectable} from '@angular/core';
-import {shareReplay, switchMap} from 'rxjs/operators';
+import {map, shareReplay, switchMap} from 'rxjs/operators';
 import {HttpRequestCache} from './HttpRequestCache';
 
 @Injectable({
@@ -11,34 +11,40 @@ import {HttpRequestCache} from './HttpRequestCache';
 })
 export class HttpProblemService extends ProblemService {
   httpRequestCache: HttpRequestCache;
-  host: string;
+  baseUrl: string;
 
   constructor(protected http: HttpClient,
-              @Inject('BASE_URL') baseUrl: string,
-              @Inject('PORT_PROBLEM_SERVICE') port: number) {
+              @Inject('PROBLEM_SERVICE_BASE_URL') baseUrl: string) {
     super();
     this.httpRequestCache = new HttpRequestCache(http);
-    this.host = `${baseUrl}:${port}`;
+    this.baseUrl = baseUrl;
   }
 
   getProblem(problemId: number): Observable<Problem> {
-    return this.httpRequestCache.get(`${this.host}/api/problems/${problemId}`);
+    return this.httpRequestCache.get(`${this.baseUrl}/api/problems/${problemId}`)
+      .pipe(map(body => this.toProblem(body)));
   }
 
   getProblemItemsByTag(problemTag: string): Observable<ProblemItem[]> {
-    return this.httpRequestCache.get(`${this.host}/api/problems?tags=${problemTag}`);
+    return this.httpRequestCache.get(`${this.baseUrl}/api/problems?tags=${problemTag}`);
   }
 
   getProblemItemsInPage(page: number): Observable<ProblemItem[]> {
-    return this.httpRequestCache.get(`${this.host}/api/problems`);
+    return this.httpRequestCache.get(`${this.baseUrl}/api/problems`);
   }
 
   getProblemTags(): Observable<string[]> {
-    return this.httpRequestCache.get(`${this.host}/api/problems/tags`);
+    return this.httpRequestCache.get(`${this.baseUrl}/api/problems/tags`);
   }
 
   getTestCases(problemId: number): Observable<TestCase[]> {
-    return this.httpRequestCache.get(`${this.host}/api/problems/${problemId}/testcases`);
+    return this.getProblem(problemId)
+      .pipe(map(problem => problem.testcases));
+  }
+
+  toProblem(body): Problem {
+    return new Problem(body.id, body.title, body.description, body.tags, body.languageEnvs,
+      body.testcases);
   }
 
 }

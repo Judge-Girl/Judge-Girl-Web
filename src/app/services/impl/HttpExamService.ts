@@ -11,21 +11,20 @@ import {HttpRequestCache} from './HttpRequestCache';
 })
 export class HttpExamService extends ExamService {
   httpRequestCache: HttpRequestCache;
-  host: string;
+  baseUrl: string;
 
   constructor(protected http: HttpClient,
-              @Inject('BASE_URL') baseUrl: string,
-              @Inject('PORT_EXAM_SERVICE') port: number) {
+              @Inject('EXAM_SERVICE_BASE_URL') baseUrl: string) {
     super();
     this.httpRequestCache = new HttpRequestCache(http);
-    this.host = `${baseUrl}:${port}`;
+    this.baseUrl = baseUrl;
   }
 
   getExam(examId: number): Observable<ExamItem> {
-    return this.httpRequestCache.get(`${this.host}/api/exams/${examId}`);
+    return this.httpRequestCache.get(`${this.baseUrl}/api/exams/${examId}`);
   }
 
   getExamsByStudentId(studentId: number, examType?: string): Observable<ExamItem[]> {
-    return this.httpRequestCache.get(`${this.host}/api/students/${studentId}/exams?type=${examType}`);
+    return this.httpRequestCache.get(`${this.baseUrl}/api/students/${studentId}/exams?type=${examType}`);
   }
 }

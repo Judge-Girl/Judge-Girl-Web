@@ -9,15 +9,15 @@
 
     <!-- Login Form -->
     <form>
-      <input type="text" id="login" class="input-field fade-in second" name="studentId" placeholder="Student Id"
-             #studentIdInput>
+      <input type="text" id="login" class="input-field fade-in second" name="email" placeholder="Email"
+             #emailInput>
       <input type="password" id="password" class=" input-field fade-in third" name="password" placeholder="Password"
              #passwordInput>
       <p id="error-message">{{errorMessage}}</p>
       <div class="d-flex align-items-center justify-content-center"
            [style.padding]="'13px 0 35px 0'">
         <input type="submit" id="login-btn" class="fade-in fourth"
-               (click)="login(studentIdInput.value, passwordInput.value)" value="Log In">
+               (click)="login(emailInput.value, passwordInput.value)" value="Log In">
         <div class="spinner-border text-primary" role="status" id="spinner">
           <span class="sr-only">Loading...</span>
         </div>

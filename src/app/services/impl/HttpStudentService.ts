@@ -12,23 +12,20 @@ import {HttpRequestCache} from './HttpRequestCache';
   providedIn: 'root'
 })
 export class HttpStudentService extends StudentService {
-  host: string;
+  baseUrl: string;
   httpRequestCache: HttpRequestCache;
 
   constructor(private http: HttpClient,
-              @Inject('BASE_URL') baseUrl: string,
-              @Inject('PORT_STUDENT_SERVICE') port: number,
+              @Inject('STUDENT_SERVICE_BASE_URL') baseUrl: string,
               router: Router, cookieService: CookieService) {
     super(router, cookieService);
     this.httpRequestCache = new HttpRequestCache(http);
-    this.host = `${baseUrl}:${port}`;
+    this.baseUrl = baseUrl;
   }
 
-  login(account: string, password: string): Observable<Student> {
-    const formData = new FormData();
-    formData.set('account', account);
-    formData.set('password', password);
-    return this.http.post<Student>(`${this.host}/api/students/login`, formData)
+  login(email: string, password: string): Observable<Student> {
+    return this.http.post<Student>(`${this.baseUrl}/api/students/login`,
+      {email, password})
       .pipe(map(student => {
         this.currentStudent = student;
         return this.currentStudent;
@@ -55,7 +52,7 @@ export class HttpStudentService extends StudentService {
 
   auth(token: string): Observable<Student> {
     if (token && token.length > 0) {
-      return this.http.post<Student>(`${this.host}/api/students/auth`, null,
+      return this.http.post<Student>(`${this.baseUrl}/api/students/auth`, null,
         {
           headers: {
             Authorization: `Bearer ${token}`

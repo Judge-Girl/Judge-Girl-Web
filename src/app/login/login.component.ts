@@ -39,11 +39,11 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  login(studentId: string, password: string): boolean {
-    console.log(`Login with studentId: ${studentId}, password: ${'*'.repeat(password.length)}`);
+  login(email: string, password: string): boolean {
+    console.log(`Login with studentId: ${email}, password: ${'*'.repeat(password.length)}`);
     const spinner = document.getElementById('spinner');
     spinner.style.display = 'inline';
-    this.studentService.login(studentId, password)
+    this.studentService.login(email, password)
       .subscribe({
         complete: () => {
           spinner.style.display = 'none';
@@ -52,7 +52,7 @@ export class LoginComponent implements OnInit {
         error: (err) => {
           spinner.style.display = 'none';
           if (err instanceof AccountNotFoundError) {
-            this.errorMessage = 'The account is not found.';
+            this.errorMessage = 'The email is not found.';
           } else if (err instanceof IncorrectPasswordFoundError) {
             this.errorMessage = 'The password is incorrect';
           } else {

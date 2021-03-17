@@ -6,15 +6,11 @@ import {LoginComponent} from './login/login.component';
 import {AppComponent} from './app.component';
 import {ProblemListComponent} from './problem-list/problem-list.component';
 import {ExamListComponent} from './exam-list/exam-list.component';
-import {StubStudentService} from './services/impl/StubStudentService';
-import {StudentService, ProblemService, ExamService, SubmissionService} from './services/Services';
-import {StubProblemService} from './services/impl/StubProblemService';
-import {StubExamService} from './services/impl/StubExamService';
+import {ExamService, ProblemService, StudentService, SubmissionService} from './services/Services';
 import {MultiTabsPanelComponent} from './problem-submission-tab-panel/multi-tabs-panel.component';
 import {ProblemDescriptionComponent} from './problem-description/problem-description.component';
 import {CodeUploadPanelComponent} from './code-panel/code-upload-panel.component';
 import {SubmissionsComponent} from './submissions/submissions.component';
-import {StubSubmissionService} from './services/impl/StubSubmissionService';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {LdCircleComponent} from './items/id-circle/ld-circle.component';
 import {FileUploadModule} from 'primeng/fileupload';
@@ -31,6 +27,8 @@ import {CookieService} from './services/cookie/cookie.service';
 import {TestcasesComponent} from './testcases/testcases.component';
 import {AngularSplitModule} from 'angular-split';
 
+
+const HOST = 'http://localhost';
 
 @NgModule({
   declarations: [
@@ -73,11 +71,11 @@ import {AngularSplitModule} from 'angular-split';
     {provide: ProblemService, useClass: HttpProblemService},
     {provide: ExamService, useClass: HttpExamService},
     {provide: SubmissionService, useClass: HttpSubmissionService},
-    {provide: 'BASE_URL', useValue: 'http://localhost'},
-    {provide: 'PORT_STUDENT_SERVICE', useValue: 80},
-    {provide: 'PORT_PROBLEM_SERVICE', useValue: 80},
-    {provide: 'PORT_EXAM_SERVICE', useValue: 80},
-    {provide: 'PORT_SUBMISSION_SERVICE', useValue: 80}
+    {provide: 'HOST', useValue: HOST},
+    {provide: 'STUDENT_SERVICE_BASE_URL', useValue: `${HOST}`},
+    {provide: 'PROBLEM_SERVICE_BASE_URL', useValue: `${HOST}`},
+    {provide: 'SUBMISSION_SERVICE_BASE_URL', useValue: `${HOST}`},
+    {provide: 'EXAM_SERVICE_BASE_URL', useValue: `${HOST}`}
   ],
   bootstrap: [AppComponent]
 })
