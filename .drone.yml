@@ -17,7 +17,7 @@ steps:
         - push
   - name: Deploy
     commands:
-      - docker stop judge-girl-web | echo "Judge-Girl-Web doesn't exist, start launching..."
+      - docker stop judge-girl-web || echo "Judge-Girl-Web doesn't exist, start launching..."
       - docker run --rm -d -p 4200:80 judge-girl-web
     when:
       branch:
