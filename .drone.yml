@@ -1,0 +1,25 @@
+kind: pipeline
+type: exec
+name: Judge-Girl/Judge-Girl-Web
+
+steps:
+  - name: Build
+    commands:
+      - npm install
+      - npm run build
+  - name: Build Docker Image
+    commands:
+      - docker build . -t judge-girl-web
+    when:
+      branch:
+        - master
+      event:
+        - push
+  - name: Deploy
+    commands:
+      - docker run --rm -d -p 4200:80 judge-girl-web
+    when:
+      branch:
+        - master
+      event:
+        - push
