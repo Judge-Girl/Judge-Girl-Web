@@ -12,7 +12,7 @@ steps:
       - docker build . -t judge-girl-web
     when:
       branch:
-        - master
+        - drone
       event:
         - push
   - name: Deploy
@@ -20,6 +20,6 @@ steps:
       - docker run --rm -d -p 4200:80 judge-girl-web
     when:
       branch:
-        - master
+        - drone
       event:
         - push
