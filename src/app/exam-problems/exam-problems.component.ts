@@ -72,4 +72,16 @@ export class ExamProblemsComponent implements OnInit, AfterViewInit {
     this.renderer.setProperty(element.nativeElement, 'innerHTML',
       markdownIt.render(mdString));
   }
+
+  public getProblemOrder(i: number) {
+    return String.fromCharCode(i + 65);
+  }
+  
+  public getTotalScore() {
+    return this.exam.problems.reduce((p, e) => p + e.score, 0);
+  }
+
+  public getTotalMaxScore() {
+    return this.exam.problems.reduce((p, e) => p + e.maxScore, 0);
+  }
 }

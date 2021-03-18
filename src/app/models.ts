@@ -89,12 +89,22 @@ export class ExamItem {
   }
 }
 
+export class ExamProblem extends ProblemItem {
+  constructor(id: number, title: string,
+              public score: number,
+              public maxScore: number,
+              public verdict: string,
+              public quota: number) {
+    super(id, title);
+  }
+}
+
 export class Exam extends ExamItem {
   constructor(public id: number,
               public title: string,
               public startTime: Date,
               public endTime: Date,
-              public problems: Problem[],
+              public problems: ExamProblem[],
               public description: string) {
     super(id, title, startTime, endTime);
   }

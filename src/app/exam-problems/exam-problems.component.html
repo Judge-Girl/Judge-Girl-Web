@@ -13,16 +13,27 @@
       <thead>
         <tr>
           <th scope="col"> # </th>
-          <th scope="col"> Problem Title </th>
+          <th scope="col" class="text-left"> Problem Title </th>
           <th scope="col"> Score </th>
           <th scope="col"> Verdict </th>
           <th scope="col"> Submission Quota </th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let problem of exam.problems">
-          <th scope="row"> {{ problem.id }} </th>
-          <th> {{ problem.title }} </th>
+        <tr *ngFor="let problem of exam.problems; let i = index">
+          <td> {{ getProblemOrder(i) }} </td>
+          <td class="text-left"> {{ problem.id }} {{ problem.title  }} </td>
+          <td> {{ problem.score }} / {{ problem.maxScore }} </td>
+          <td> {{ problem.verdict }} </td>
+          <td> {{ problem.quota }} </td>
+        </tr>
+        <!-- TODO: table footer -->
+        <tr>
+          <th></th>
+          <td> Total </td>
+          <td> {{ getTotalScore() }} / {{ getTotalMaxScore() }} </td>
+          <td></td>
+          <td></td>
         </tr>
       </tbody>
     </table>

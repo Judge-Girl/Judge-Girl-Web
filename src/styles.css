@@ -154,6 +154,10 @@ table tr:nth-child(even) {
   font-weight: 600;
 }
 
+.fsz-30 {
+  font-size: 30px;
+}
+
 .text-color-gray {
   color: #676877;
 }
