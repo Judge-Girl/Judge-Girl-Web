@@ -28,7 +28,7 @@ import {TestcasesComponent} from './testcases/testcases.component';
 import {AngularSplitModule} from 'angular-split';
 
 
-const HOST = 'http://localhost';
+const HOST = 'http://140.112.31.199';
 
 @NgModule({
   declarations: [
