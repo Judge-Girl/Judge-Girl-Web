@@ -22,7 +22,7 @@
       <tbody>
         <tr *ngFor="let problem of exam.problems; let i = index">
           <td> {{ getProblemOrder(i) }} </td>
-          <td class="text-left"> {{ problem.id }} {{ problem.title  }} </td>
+          <td class="text-left fake-link" (click)="routeToProblem(problem.id)"> {{ problem.id }} {{ problem.title  }} </td>
           <td> {{ problem.score }} / {{ problem.maxScore }} </td>
           <td> {{ problem.verdict }} </td>
           <td> {{ problem.quota }} </td>

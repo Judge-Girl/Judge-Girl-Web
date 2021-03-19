@@ -1,7 +1,7 @@
 import {AfterViewInit, Component, ElementRef, OnInit, Renderer2, ViewChild} from '@angular/core';
 import { Exam } from '../models';
 import { ExamService } from '../services/Services';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {switchMap} from 'rxjs/operators';
 import {Observable} from 'rxjs';
 import * as MarkdownIt from 'markdown-it';
@@ -17,6 +17,7 @@ export class ExamProblemsComponent implements OnInit, AfterViewInit {
 
   constructor(private examService: ExamService,
               private route: ActivatedRoute,
+              private router: Router,
               private renderer: Renderer2) {
   }
 
@@ -83,5 +84,9 @@ export class ExamProblemsComponent implements OnInit, AfterViewInit {
 
   public getTotalMaxScore() {
     return this.exam.problems.reduce((p, e) => p + e.maxScore, 0);
+  }
+
+  public routeToProblem(problemId: number) {
+    this.router.navigateByUrl(`problems/${problemId}`);
   }
 }
