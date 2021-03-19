@@ -13,6 +13,8 @@ import {Router} from '@angular/router';
 export class AppComponent implements OnInit {
   readonly MESSAGE_KEY_SUBMISSION_TOAST = 'submission-toast-key';
 
+  isLoggedIn: boolean = false;
+
   constructor(private submissionService: SubmissionService,
               public studentService: StudentService,
               private cookieService: CookieService,
@@ -23,6 +25,8 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     this.submissionService.verdictIssuedEventObservable.subscribe(
       (verdictIssuedEvent) => this.onVerdictIssued(verdictIssuedEvent));
+    
+    this.studentService.tryAuthWithCurrentToken().subscribe(e => this.isLoggedIn = e);
   }
 
 

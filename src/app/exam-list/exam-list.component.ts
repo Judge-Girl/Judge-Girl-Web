@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import * as moment from 'moment';
-import {ExamService} from '../services/Services';
+import {ExamService, StudentService} from '../services/Services';
 import {ExamItem} from '../models';
 import {Router} from '@angular/router';
 
@@ -15,6 +15,7 @@ export class ExamListComponent implements OnInit {
   loadingExams = false;
 
   constructor(private examService: ExamService,
+              private studentService: StudentService,
               private router: Router) {
   }
 
@@ -22,11 +23,15 @@ export class ExamListComponent implements OnInit {
     this.examItems = [];
     this.loadingExams = true;
     // TODO: get current student id
-    this.examService.getExamsByStudentId(0)
-      .subscribe(items => {
-        this.loadingExams = false;
-        this.examItems = items;
-      });
+    this.studentService.tryAuthWithCurrentToken().subscribe(success => {
+      if (!success) return this.router.navigateByUrl('/');
+
+      this.examService.getExamsByStudentId(this.studentService.currentStudent.id)
+        .subscribe(items => {
+          this.loadingExams = false;
+          this.examItems = items;
+        });
+    })
   }
 
   routeToExam(examId: number) {
