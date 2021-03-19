@@ -80,7 +80,7 @@ const HOST = 'http://api.judgegirl.beta.pdlab.csie.ntu.edu.tw';
     CookieService,
     {provide: StudentService, useClass: HttpStudentService},
     {provide: ProblemService, useClass: HttpProblemService},
-    {provide: ExamService, useClass: HttpExamService},
+    {provide: ExamService, useClass: StubExamService},
     {provide: SubmissionService, useClass: HttpSubmissionService},
     {provide: 'HOST', useValue: HOST},
     {provide: 'STUDENT_SERVICE_BASE_URL', useValue: `${HOST}`},

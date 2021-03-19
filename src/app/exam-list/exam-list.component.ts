@@ -22,7 +22,6 @@ export class ExamListComponent implements OnInit {
   ngOnInit(): void {
     this.examItems = [];
     this.loadingExams = true;
-    // TODO: get current student id
     this.studentService.tryAuthWithCurrentToken().subscribe(success => {
       if (!success) return this.router.navigateByUrl('/');
 
