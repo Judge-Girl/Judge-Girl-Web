@@ -58,11 +58,11 @@ export class ExamHomeComponent implements OnInit, AfterViewInit {
 
   routeToTab(tab: Tab): void {
     if (tab === Tab.PROBLEMS) {
-      this.router.navigate([`exam/${this.examId}`]);
+      this.router.navigate([`exams/${this.examId}`]);
     } else if (tab === Tab.SUBMISSIONS) {
-      this.router.navigate([`exam/${this.examId}/submissions`]);
+      this.router.navigate([`exams/${this.examId}/submissions`]);
     } else if (tab === Tab.SCOREBOARD) {
-      this.router.navigate([`exam/${this.examId}/scoreboard`]);
+      this.router.navigate([`exams/${this.examId}/scoreboard`]);
     }
   }
 
