@@ -1,12 +1,10 @@
 import {AfterViewInit, Component, ElementRef, OnInit, Renderer2, ViewChild} from '@angular/core';
-import { Exam } from '../models';
-import { ExamService } from '../services/Services';
+import { Exam } from '../../models';
+import { ExamService } from '../../services/Services';
 import {ActivatedRoute, Router} from '@angular/router';
 import {switchMap} from 'rxjs/operators';
 import {Observable} from 'rxjs';
-import * as MarkdownIt from 'markdown-it';
-import MarkdownItKatex from 'markdown-it-katex';
-import * as hljs from 'highlight.js';
+import { initHighlight, parseMarkdown } from 'src/utils/mardownUtils';
 
 @Component({
   selector: 'app-exam-problems',
@@ -31,7 +29,7 @@ export class ExamProblemsComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    hljs.initHighlightingOnLoad();
+    initHighlight();
     this.exam$ = this.route.parent.params.pipe(switchMap(params =>
       this.examService.getExam(+params.examId)
     ));
@@ -47,31 +45,8 @@ export class ExamProblemsComponent implements OnInit, AfterViewInit {
   }
 
   private renderMarkdown(element: ElementRef, mdString: string) {
-    const markdownIt = new MarkdownIt(
-      {
-        html: true,
-        linkify: true,
-        typographer: true,
-        highlight(str, lang) {  // TODO: highlight currently not work
-          const langModule = hljs.getLanguage(lang);
-          if (lang && langModule) {
-            try {
-              const res = hljs.highlight(lang, str);
-              console.log(`Render language ${lang} to markdown: ${res.value}`);
-              return res.value;
-            } catch (err) {
-              console.log(err);
-            }
-          }
-          return ''; // use external default escaping
-        }
-      }
-    ).use(MarkdownItKatex);
-    markdownIt.renderer.rules.table_open = () => {
-      return '<table class="table">';
-    };
     this.renderer.setProperty(element.nativeElement, 'innerHTML',
-      markdownIt.render(mdString));
+      parseMarkdown(mdString));
   }
 
   public getProblemOrder(i: number) {

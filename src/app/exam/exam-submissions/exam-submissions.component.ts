@@ -1,6 +1,6 @@
-import {AfterViewInit, Component, ElementRef, OnInit, Renderer2, ViewChild} from '@angular/core';
-import { Exam } from '../models';
-import { ExamService } from '../services/Services';
+import {AfterViewInit, Component, OnInit, Renderer2} from '@angular/core';
+import { Exam } from '../../models';
+import { ExamService } from '../../services/Services';
 import {ActivatedRoute} from '@angular/router';
 import {switchMap} from 'rxjs/operators';
 import {Observable} from 'rxjs';

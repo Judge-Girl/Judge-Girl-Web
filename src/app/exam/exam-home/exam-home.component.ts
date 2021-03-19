@@ -1,19 +1,19 @@
 import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
-import { ExamService } from '../services/Services';
-import { Exam } from '../models';
-import {SplitAreaDirective, SplitComponent} from 'angular-split';
+import { ExamService } from '../../services/Services';
+import { Exam } from '../../models';
+import {SplitComponent} from 'angular-split';
 
 export enum Tab {
   PROBLEMS, SUBMISSIONS, SCOREBOARD,
 }
 
 @Component({
-  selector: 'app-exam-index',
-  templateUrl: './exam-index.component.html',
-  styleUrls: ['./exam-index.component.css']
+  selector: 'app-exam-home',
+  templateUrl: './exam-home.component.html',
+  styleUrls: ['./exam-home.component.css']
 })
-export class ExamIndexComponent implements OnInit, AfterViewInit {
+export class ExamHomeComponent implements OnInit, AfterViewInit {
 
   constructor(private elementRef: ElementRef, public examService: ExamService,
               private router: Router, private route: ActivatedRoute) {
@@ -103,7 +103,7 @@ export class ExamIndexComponent implements OnInit, AfterViewInit {
   }
 
   routeToCurrentExamIndex() {
-    this.router.navigateByUrl(`/exam/${this.exam.id}`);
+    this.router.navigateByUrl(`/exams/${this.exam.id}`);
     this.refreshTabElementsState();
   }
 }

@@ -34,7 +34,7 @@ export class ExamListComponent implements OnInit {
   }
 
   routeToExam(examId: number) {
-    this.router.navigateByUrl(`exam/${examId}`);
+    this.router.navigateByUrl(`exams/${examId}`);
   }
 
   getTimeString(date: Date) {
