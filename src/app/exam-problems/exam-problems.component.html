@@ -5,8 +5,11 @@
 </div>
 
 <div *ngIf="exam" class="container pt-4 font-poppins" id="problem-description-panel">
-  <div class="row content-title-font">
+  <div class="row content-title-font pb-2">
     <div class="col"> Problems </div>
+  </div>
+  <div class="row pb-2">
+    <div style="width: 98%; position: relative; left: 1%; border: 1px solid #e4e1e1;"></div>
   </div>
   <div class="row">
     <table class="table table-striped">
@@ -15,7 +18,7 @@
           <th scope="col"> # </th>
           <th scope="col" class="text-left"> Problem Title </th>
           <th scope="col"> Score </th>
-          <th scope="col"> Verdict </th>
+          <th scope="col" class="text-left"> Verdict </th>
           <th scope="col"> Submission Quota </th>
         </tr>
       </thead>
@@ -24,18 +27,20 @@
           <td> {{ getProblemOrder(i) }} </td>
           <td class="text-left fake-link" (click)="routeToProblem(problem.id)"> {{ problem.id }} {{ problem.title  }} </td>
           <td> {{ problem.score }} / {{ problem.maxScore }} </td>
-          <td> {{ problem.verdict }} </td>
+          <td class="text-left"> {{ problem.verdict }} </td>
           <td> {{ problem.quota }} </td>
         </tr>
+      </tbody>
         <!-- TODO: table footer -->
+      <tfoot>
         <tr>
-          <th></th>
+          <td></td>
           <td> Total </td>
           <td> {{ getTotalScore() }} / {{ getTotalMaxScore() }} </td>
           <td></td>
           <td></td>
         </tr>
-      </tbody>
+      </tfoot>
     </table>
   </div>
   <div class="markdown-panel pt-4" #examDescriptionPanel></div>

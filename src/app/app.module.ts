@@ -12,7 +12,6 @@ import { ExamScoreboardComponent } from './exam-scoreboard/exam-scoreboard.compo
 import { ExamSubmissionsComponent } from './exam-submissions/exam-submissions.component';
 import {StubStudentService} from './services/impl/StubStudentService';
 import {ExamService, ProblemService, StudentService, SubmissionService} from './services/Services';
-import {StubProblemService} from './services/impl/StubProblemService';
 import {StubExamService} from './services/impl/StubExamService';
 import {MultiTabsPanelComponent} from './problem-submission-tab-panel/multi-tabs-panel.component';
 import {ProblemDescriptionComponent} from './problem-description/problem-description.component';
