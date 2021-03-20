@@ -26,14 +26,6 @@ export class ProblemItem {
   }
 }
 
-export class ExamItem {
-  constructor(public id: number,
-              public title: string,
-              public startTime: Date,
-              public endTime: Date) {
-  }
-}
-
 export class JudgeSpec {
   constructor(public language: string,
               public environment: string,
@@ -88,6 +80,37 @@ export class LanguageEnv {
               public compiledLanguage: boolean) {
   }
 }
+
+export class ExamItem {
+  constructor(public id: number,
+              public title: string, 
+              public startTime: Date,
+              public endTime: Date) {
+  }
+}
+
+export class ExamProblem extends ProblemItem {
+  constructor(id: number, title: string,
+              public score: number,
+              public maxScore: number,
+              public verdict: string,
+              public quota: number) {
+    super(id, title);
+  }
+}
+
+export class Exam extends ExamItem {
+  constructor(public id: number,
+              public title: string,
+              public startTime: Date,
+              public endTime: Date,
+              public problems: ExamProblem[],
+              public description: string) {
+    super(id, title, startTime, endTime);
+  }
+
+}
+
 
 export enum JudgeStatus {
   AC = 'AC', RE = 'RE', TLE = 'TLE', MLE = 'MLE', CE = 'CE', WA = 'WA', SYSTEM_ERR = 'SYSTEM_ERR', NONE = 'NONE'

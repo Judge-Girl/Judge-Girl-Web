@@ -5,8 +5,14 @@ import {AppRoutingModule} from './app-routing.module';
 import {LoginComponent} from './login/login.component';
 import {AppComponent} from './app.component';
 import {ProblemListComponent} from './problem-list/problem-list.component';
-import {ExamListComponent} from './exam-list/exam-list.component';
+import {ExamListComponent} from './exam/exam-list/exam-list.component';
+import { ExamHomeComponent } from './exam/exam-home/exam-home.component';
+import { ExamProblemsComponent } from './exam/exam-problems/exam-problems.component';
+import { ExamScoreboardComponent } from './exam/exam-scoreboard/exam-scoreboard.component';
+import { ExamSubmissionsComponent } from './exam/exam-submissions/exam-submissions.component';
+import {StubStudentService} from './services/impl/StubStudentService';
 import {ExamService, ProblemService, StudentService, SubmissionService} from './services/Services';
+import {StubExamService} from './services/impl/StubExamService';
 import {MultiTabsPanelComponent} from './problem-submission-tab-panel/multi-tabs-panel.component';
 import {ProblemDescriptionComponent} from './problem-description/problem-description.component';
 import {CodeUploadPanelComponent} from './code-panel/code-upload-panel.component';
@@ -42,6 +48,11 @@ const HOST = 'http://api.judgegirl.beta.pdlab.csie.ntu.edu.tw';
     CodeUploadPanelComponent,
     SubmissionsComponent,
 
+    ExamHomeComponent,
+    ExamProblemsComponent,
+    ExamSubmissionsComponent,
+    ExamScoreboardComponent,
+
     /*items*/
     LdCircleComponent,
 
@@ -69,7 +80,7 @@ const HOST = 'http://api.judgegirl.beta.pdlab.csie.ntu.edu.tw';
     CookieService,
     {provide: StudentService, useClass: HttpStudentService},
     {provide: ProblemService, useClass: HttpProblemService},
-    {provide: ExamService, useClass: HttpExamService},
+    {provide: ExamService, useClass: StubExamService},
     {provide: SubmissionService, useClass: HttpSubmissionService},
     {provide: 'HOST', useValue: HOST},
     {provide: 'STUDENT_SERVICE_BASE_URL', useValue: `${HOST}`},

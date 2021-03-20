@@ -1,0 +1,13 @@
+
+#spinner {
+  margin-right: auto;
+  margin-left: auto;
+  width: 90px;
+  height: 90px;
+}
+
+.example-card .card-title {
+  padding: 5px 5px 5px 15px;
+  font-weight: bold;
+  background: rgb(246, 246, 246);
+}

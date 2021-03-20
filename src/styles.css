@@ -138,3 +138,40 @@ table tr:nth-child(even) {
 .cursor-pointer {
   cursor: pointer;
 }
+
+/* */
+
+.fake-link {
+  color: #1273BA;
+  cursor: pointer;
+}
+
+.font-poppins {
+  font-family: 'Poppins', sans-serif;
+}
+
+.fw-600 {
+  font-weight: 600;
+}
+
+.fsz-30 {
+  font-size: 30px;
+}
+
+.text-color-gray {
+  color: #676877;
+}
+
+.title-font {
+  font-size: 35px;
+  font-weight: 800;
+  color: #374550;
+  text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.25);
+}
+
+.content-title-font {
+  font-size: 30px;
+  font-weight: 700;
+  color: #374550;
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.25);
+}

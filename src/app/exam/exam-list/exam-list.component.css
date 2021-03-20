@@ -1,10 +1,4 @@
 
-.custom-title-font {
-  font-size: 35px;
-  font-weight: bold;
-  color: #374550;
-  text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.25);
-}
 
 .my-btn-text {
   font-weight: 600;
@@ -19,10 +13,6 @@
   text-align: left;
 }
 
-.font-poppins {
-  font-family: 'Poppins', sans-serif;
-}
-
 .my-exam-table thead {
   border-bottom: 2px solid #6D6E7D;
   text: #676877;
@@ -31,10 +21,4 @@
 .my-exam-table tr {
   color: #6D6E7D;
 }
-
-.fake-link {
-  color: #1273BA;
-  cursor: pointer;
-}
-
 
