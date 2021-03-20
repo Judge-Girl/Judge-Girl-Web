@@ -2,7 +2,7 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {LoginComponent} from './login/login.component';
 import {ProblemListComponent} from './problem-list/problem-list.component';
-import { ExamListComponent } from './exam-list/exam-list.component';
+import { ExamListComponent } from './exam/exam-list/exam-list.component';
 import { ExamHomeComponent } from './exam/exam-home/exam-home.component';
 import { ExamProblemsComponent } from './exam/exam-problems/exam-problems.component';
 import { ExamSubmissionsComponent } from './exam/exam-submissions/exam-submissions.component';

@@ -4,7 +4,7 @@ import {ProblemService} from '../services/Services';
 import {ActivatedRoute} from '@angular/router';
 import {switchMap} from 'rxjs/operators';
 import {Observable} from 'rxjs';
-import { initHighlight, parseMarkdown } from 'src/utils/mardownUtils';
+import { initHighlight, parseMarkdown } from 'src/utils/markdownUtils';
 
 @Component({
   selector: 'app-problem-description',

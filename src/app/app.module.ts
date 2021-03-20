@@ -5,7 +5,7 @@ import {AppRoutingModule} from './app-routing.module';
 import {LoginComponent} from './login/login.component';
 import {AppComponent} from './app.component';
 import {ProblemListComponent} from './problem-list/problem-list.component';
-import {ExamListComponent} from './exam-list/exam-list.component';
+import {ExamListComponent} from './exam/exam-list/exam-list.component';
 import { ExamHomeComponent } from './exam/exam-home/exam-home.component';
 import { ExamProblemsComponent } from './exam/exam-problems/exam-problems.component';
 import { ExamScoreboardComponent } from './exam/exam-scoreboard/exam-scoreboard.component';

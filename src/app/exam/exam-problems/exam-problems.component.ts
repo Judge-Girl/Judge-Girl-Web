@@ -4,7 +4,7 @@ import { ExamService } from '../../services/Services';
 import {ActivatedRoute, Router} from '@angular/router';
 import {switchMap} from 'rxjs/operators';
 import {Observable} from 'rxjs';
-import { initHighlight, parseMarkdown } from 'src/utils/mardownUtils';
+import { initHighlight, parseMarkdown } from 'src/utils/markdownUtils';
 
 @Component({
   selector: 'app-exam-problems',

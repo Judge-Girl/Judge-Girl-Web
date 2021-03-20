@@ -1,14 +1,14 @@
 import {Component, OnInit} from '@angular/core';
 import * as moment from 'moment';
-import {ExamService, StudentService} from '../services/Services';
-import {ExamItem} from '../models';
+import {ExamService, StudentService} from '../../services/Services';
+import {ExamItem} from '../../models';
 import {Router} from '@angular/router';
 
 
 @Component({
   selector: 'app-exam-list',
   templateUrl: './exam-list.component.html',
-  styleUrls: ['../../animations.css', './exam-list.component.css']
+  styleUrls: ['../../../animations.css', './exam-list.component.css']
 })
 export class ExamListComponent implements OnInit {
   examItems: ExamItem[];
