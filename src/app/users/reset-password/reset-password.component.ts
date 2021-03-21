@@ -1,14 +1,14 @@
-import {Component, OnInit} from '@angular/core';
-import {AccountNotFoundError, IncorrectPasswordFoundError, StudentService} from '../services/Services';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {AccountNotFoundError, IncorrectPasswordFoundError, StudentService} from '../../services/Services';
 import {Router} from '@angular/router';
-import {CookieService} from '../services/cookie/cookie.service';
+import {CookieService} from '../../services/cookie/cookie.service';
 
 @Component({
   selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['../../animations.css', './login.component.css']
+  templateUrl: './reset-password.component.html',
+  styleUrls: ['../../../animations.css', './reset-password.component.css']
 })
-export class LoginComponent implements OnInit {
+export class ResetPasswordComponent implements OnInit {
   title = 'appName';
 
   errorMessage = '';
@@ -18,10 +18,11 @@ export class LoginComponent implements OnInit {
               private cookieService: CookieService) {
   }
 
+  @ViewChild('oldPassword') oldPasswordField: ElementRef;
+  @ViewChild('newPassword') newPasswordField: ElementRef;
+
   ngOnInit(): void {
     if (this.studentService.hasLogin()) {
-      this.router.navigateByUrl('problems');
-    } else {
       this.authenticateWithCookie();
     }
   }
@@ -30,13 +31,16 @@ export class LoginComponent implements OnInit {
     const token = this.cookieService.get(StudentService.KEY_TOKEN);
     if (token) {
       this.studentService.auth(token).toPromise()
-        .then(s => {
-          this.router.navigateByUrl('problems');
-        })
+        .then(s => { })
         .catch(err => {
           console.error(err);
         });
     }
+  }
+
+  resetPassword(oldPassword: string = this.oldPasswordField.nativeElement.value,
+                newPassword: string = this.newPasswordField.nativeElement.value): void {
+    console.log(oldPassword, newPassword);
   }
 
   login(email: string, password: string): boolean {

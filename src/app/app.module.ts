@@ -2,7 +2,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 
 import {AppRoutingModule} from './app-routing.module';
-import {LoginComponent} from './login/login.component';
+import {LoginComponent} from './users/login/login.component';
 import {AppComponent} from './app.component';
 import {ProblemListComponent} from './problem-list/problem-list.component';
 import {ExamListComponent} from './exam/exam-list/exam-list.component';
@@ -32,6 +32,7 @@ import {CookieModule} from './services/cookie/cookie.module';
 import {CookieService} from './services/cookie/cookie.service';
 import {TestcasesComponent} from './testcases/testcases.component';
 import {AngularSplitModule} from 'angular-split';
+import { ResetPasswordComponent } from './users/reset-password/reset-password.component';
 
 
 const HOST = 'http://api.judgegirl.beta.pdlab.csie.ntu.edu.tw';
@@ -41,6 +42,7 @@ const HOST = 'http://api.judgegirl.beta.pdlab.csie.ntu.edu.tw';
     /*Pages*/
     AppComponent,
     LoginComponent,
+    ResetPasswordComponent,
     ProblemListComponent,
     ExamListComponent,
     MultiTabsPanelComponent,
