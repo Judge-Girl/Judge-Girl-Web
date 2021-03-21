@@ -52,4 +52,8 @@ export class AppComponent implements OnInit {
   routeToResetPassword(): void {
     this.router.navigateByUrl('users/reset-password');
   }
+
+  routeToHome(): void {
+    this.router.navigateByUrl('/');
+  }
 }

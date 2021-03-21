@@ -54,6 +54,8 @@ export abstract class StudentService {
 
   abstract login(account: string, password: string): Observable<Student>;
 
+  abstract resetPassword(oldPassword: string, newPassword: string): Observable<boolean>;
+
   public logout() {
     this.currentStudent = undefined;
   }

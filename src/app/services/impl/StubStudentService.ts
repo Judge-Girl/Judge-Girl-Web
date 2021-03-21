@@ -51,4 +51,10 @@ export class StubStudentService extends StudentService {
       return login$;
     }
   }
+
+  resetPassword(oldPassword: string, newPassword: string): Observable<boolean> {
+    const $ = new Subject<boolean>();
+    setTimeout(() => $.next(true), 123);
+    return $;
+  }
 }
