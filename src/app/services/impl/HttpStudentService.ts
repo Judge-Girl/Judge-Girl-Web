@@ -76,7 +76,7 @@ export class HttpStudentService extends StudentService {
   }
 
   resetPassword(oldPassword: string, newPassword: string): Observable<boolean> {
-    if (!oldPassword || !newPassword) return;
+    if (!oldPassword || !newPassword) return of(false);
     console.log(oldPassword, newPassword);
     if (!this.hasLogin()) {
       return of(false);
@@ -84,7 +84,13 @@ export class HttpStudentService extends StudentService {
     return this.http.patch<boolean>(`${this.baseUrl}/api/students/${this.currentStudent.id}/password`, {
       currentPassword: oldPassword,
       newPassword,
-    }, this.getAuthHeaders());
+    }, this.getAuthHeaders()).pipe(catchError(err => {
+      if (err.status === 400) {
+        return throwError(new IncorrectPasswordFoundError());
+      } else {
+        throw throwError(`Catch unknown error from the server: ${err.status}, ${err.toString()}`);
+      }
+    }));
   }
 
 }

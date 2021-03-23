@@ -2,6 +2,7 @@ import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {AccountNotFoundError, IncorrectPasswordFoundError, StudentService} from '../../services/Services';
 import {Router} from '@angular/router';
 import {CookieService} from '../../services/cookie/cookie.service';
+import { MessageService } from 'primeng';
 
 @Component({
   selector: 'app-login',
@@ -9,13 +10,15 @@ import {CookieService} from '../../services/cookie/cookie.service';
   styleUrls: ['../../../animations.css', './reset-password.component.css']
 })
 export class ResetPasswordComponent implements OnInit {
+  CHANGE_NOTIFY_KEY = 'password-change-notify';
   title = 'appName';
 
   errorMessage = '';
 
   constructor(private studentService: StudentService,
               private router: Router,
-              private cookieService: CookieService) {
+              private cookieService: CookieService,
+              private messageService: MessageService) {
   }
 
   @ViewChild('oldPassword') oldPasswordField: ElementRef;
@@ -40,7 +43,39 @@ export class ResetPasswordComponent implements OnInit {
 
   resetPassword(oldPassword: string = this.oldPasswordField.nativeElement.value,
                 newPassword: string = this.newPasswordField.nativeElement.value): void {
-    console.log(oldPassword, newPassword);
+    if (!oldPassword || !newPassword) {
+      this.messageService.add({
+        key: this.CHANGE_NOTIFY_KEY,
+        life: 2500,
+        severity: 'warn',
+        detail: 'Some field is blank',
+      });
+    }
+    this.studentService.resetPassword(oldPassword, newPassword)
+      .subscribe({
+        complete: () => {
+          this.messageService.add({
+            key: this.CHANGE_NOTIFY_KEY,
+            life: 2500,
+            severity: 'success',
+            detail: 'Success!',
+          });
+
+          setTimeout(() => this.router.navigateByUrl("/"), 3000);
+        },
+        error: err => {
+          if (err instanceof IncorrectPasswordFoundError) {
+            this.messageService.add({
+              key: this.CHANGE_NOTIFY_KEY,
+              life: 2500,
+              severity: 'error',
+              detail: 'The password is incorrect',
+            });
+          } else {
+            throw err;
+          }
+        },
+      });
   }
 
   login(email: string, password: string): boolean {
