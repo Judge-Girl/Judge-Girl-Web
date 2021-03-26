@@ -33,6 +33,7 @@ import {CookieService} from './services/cookie/cookie.service';
 import {TestcasesComponent} from './testcases/testcases.component';
 import {AngularSplitModule} from 'angular-split';
 import { ResetPasswordComponent } from './users/reset-password/reset-password.component';
+import { FormsModule } from '@angular/forms';
 
 
 const HOST = 'http://api.judgegirl.beta.pdlab.csie.ntu.edu.tw';
@@ -72,6 +73,7 @@ const HOST = 'http://api.judgegirl.beta.pdlab.csie.ntu.edu.tw';
     AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,
+    FormsModule,
 
     /*primeNG*/
     BlockUIModule, ToastModule, FileUploadModule, MessagesModule,

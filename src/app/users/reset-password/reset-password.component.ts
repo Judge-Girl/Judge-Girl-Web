@@ -1,8 +1,15 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, NgModule, OnInit, ViewChild} from '@angular/core';
 import {AccountNotFoundError, IncorrectPasswordFoundError, StudentService} from '../../services/Services';
 import {Router} from '@angular/router';
 import {CookieService} from '../../services/cookie/cookie.service';
 import { MessageService } from 'primeng';
+import { NgModel } from '@angular/forms';
+
+
+  interface bruh {
+    current: string;
+    new: string;
+  }
 
 @Component({
   selector: 'app-login',
@@ -21,8 +28,14 @@ export class ResetPasswordComponent implements OnInit {
               private messageService: MessageService) {
   }
 
-  @ViewChild('oldPassword') oldPasswordField: ElementRef;
-  @ViewChild('newPassword') newPasswordField: ElementRef;
+  @ViewChild('spinner') spinner: ElementRef;
+  @ViewChild('currentPasswordField') currentPasswordField: NgModel;
+  @ViewChild('newPasswordField') newPasswordField: NgModel;
+
+  currentPassword: string;
+  newPassword: string;
+
+  showErrorMessage: boolean;
 
   ngOnInit(): void {
     if (this.studentService.hasLogin()) {
@@ -41,17 +54,18 @@ export class ResetPasswordComponent implements OnInit {
     }
   }
 
-  resetPassword(oldPassword: string = this.oldPasswordField.nativeElement.value,
-                newPassword: string = this.newPasswordField.nativeElement.value): void {
-    if (!oldPassword || !newPassword) {
-      this.messageService.add({
-        key: this.CHANGE_NOTIFY_KEY,
-        life: 2500,
-        severity: 'warn',
-        detail: 'Some field is blank',
-      });
-    }
-    this.studentService.resetPassword(oldPassword, newPassword)
+  keyPress(e: KeyboardEvent) {
+    if (e.key === 'Enter') this.resetPassword();
+  }
+
+  resetPassword(): void {
+    this.showErrorMessage = true;
+    this.errorMessage = '';
+
+    if (this.newPasswordField.invalid || this.currentPasswordField.invalid) return;
+
+    this.spinner.nativeElement.style.display = 'inline-block';
+    this.studentService.resetPassword(this.currentPassword, this.newPassword)
       .subscribe({
         complete: () => {
           this.messageService.add({
@@ -60,47 +74,18 @@ export class ResetPasswordComponent implements OnInit {
             severity: 'success',
             detail: 'Success!',
           });
+          this.spinner.nativeElement.style.display = 'none';
 
           setTimeout(() => this.router.navigateByUrl("/"), 3000);
         },
         error: err => {
+          this.spinner.nativeElement.style.display = 'none';
           if (err instanceof IncorrectPasswordFoundError) {
-            this.messageService.add({
-              key: this.CHANGE_NOTIFY_KEY,
-              life: 2500,
-              severity: 'error',
-              detail: 'The password is incorrect',
-            });
+            this.errorMessage = 'The password is incorrect'
           } else {
             throw err;
           }
         },
       });
   }
-
-  login(email: string, password: string): boolean {
-    console.log(`Login with studentId: ${email}, password: ${'*'.repeat(password.length)}`);
-    const spinner = document.getElementById('spinner');
-    spinner.style.display = 'inline';
-    this.studentService.login(email, password)
-      .subscribe({
-        complete: () => {
-          spinner.style.display = 'none';
-          this.router.navigateByUrl('problems');
-        },
-        error: (err) => {
-          spinner.style.display = 'none';
-          if (err instanceof AccountNotFoundError) {
-            this.errorMessage = 'The email is not found.';
-          } else if (err instanceof IncorrectPasswordFoundError) {
-            this.errorMessage = 'The password is incorrect';
-          } else {
-            throw err;
-          }
-        }
-      });
-
-    return false;  // consume the submit button
-  }
-
 }
