@@ -34,6 +34,7 @@ import {TestcasesComponent} from './testcases/testcases.component';
 import {AngularSplitModule} from 'angular-split';
 import { ResetPasswordComponent } from './users/reset-password/reset-password.component';
 import { FormsModule } from '@angular/forms';
+import { AuthenticationProcedure } from './AuthenticationProcedure';
 
 
 const HOST = 'http://api.judgegirl.beta.pdlab.csie.ntu.edu.tw';
@@ -64,7 +65,9 @@ const HOST = 'http://api.judgegirl.beta.pdlab.csie.ntu.edu.tw';
     /*directives*/
     AuthenticatedDirective,
 
-    TestcasesComponent
+    TestcasesComponent,
+
+    AuthenticationProcedure,
   ],
   imports: [
     CookieModule.forRoot(),

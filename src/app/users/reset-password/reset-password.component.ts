@@ -4,6 +4,7 @@ import {Router} from '@angular/router';
 import {CookieService} from '../../services/cookie/cookie.service';
 import { MessageService } from 'primeng';
 import { NgModel } from '@angular/forms';
+import { AuthenticationProcedure } from 'src/app/AuthenticationProcedure';
 
 
   interface bruh {
@@ -24,7 +25,7 @@ export class ResetPasswordComponent implements OnInit {
 
   constructor(private studentService: StudentService,
               private router: Router,
-              private cookieService: CookieService,
+              private authenticationProcedure: AuthenticationProcedure,
               private messageService: MessageService) {
   }
 
@@ -38,20 +39,7 @@ export class ResetPasswordComponent implements OnInit {
   showErrorMessage: boolean;
 
   ngOnInit(): void {
-    if (this.studentService.hasLogin()) {
-      this.authenticateWithCookie();
-    }
-  }
-
-  private authenticateWithCookie() {
-    const token = this.cookieService.get(StudentService.KEY_TOKEN);
-    if (token) {
-      this.studentService.auth(token).toPromise()
-        .then(s => { })
-        .catch(err => {
-          console.error(err);
-        });
-    }
+    this.authenticationProcedure.authenticateWithCookieIfHasLogin();
   }
 
   keyPress(e: KeyboardEvent) {
@@ -72,7 +60,7 @@ export class ResetPasswordComponent implements OnInit {
             key: this.CHANGE_NOTIFY_KEY,
             life: 2500,
             severity: 'success',
-            detail: 'Success!',
+            detail: 'Your password has been changed',
           });
           this.spinner.nativeElement.style.display = 'none';
 

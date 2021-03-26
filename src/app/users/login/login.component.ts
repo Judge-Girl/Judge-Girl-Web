@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {AccountNotFoundError, IncorrectPasswordFoundError, StudentService} from '../../services/Services';
 import {Router} from '@angular/router';
 import {CookieService} from '../../services/cookie/cookie.service';
+import { AuthenticationProcedure } from 'src/app/AuthenticationProcedure';
 
 @Component({
   selector: 'app-login',
@@ -15,27 +16,14 @@ export class LoginComponent implements OnInit {
 
   constructor(private studentService: StudentService,
               private router: Router,
-              private cookieService: CookieService) {
+              private authenticationProcedure: AuthenticationProcedure) {
   }
 
   ngOnInit(): void {
     if (this.studentService.hasLogin()) {
       this.router.navigateByUrl('problems');
     } else {
-      this.authenticateWithCookie();
-    }
-  }
-
-  private authenticateWithCookie() {
-    const token = this.cookieService.get(StudentService.KEY_TOKEN);
-    if (token) {
-      this.studentService.auth(token).toPromise()
-        .then(s => {
-          this.router.navigateByUrl('problems');
-        })
-        .catch(err => {
-          console.error(err);
-        });
+      this.authenticationProcedure.authenticateWithCookie();
     }
   }
 
