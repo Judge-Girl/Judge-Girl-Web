@@ -32,7 +32,7 @@ import {CookieModule} from './services/cookie/cookie.module';
 import {CookieService} from './services/cookie/cookie.service';
 import {TestcasesComponent} from './testcases/testcases.component';
 import {AngularSplitModule} from 'angular-split';
-import { ResetPasswordComponent } from './users/reset-password/reset-password.component';
+import { ChangePasswordComponent } from './users/change-password/change-password.component';
 import { FormsModule } from '@angular/forms';
 import { AuthenticationProcedure } from './AuthenticationProcedure';
 
@@ -44,7 +44,7 @@ const HOST = 'http://api.judgegirl.beta.pdlab.csie.ntu.edu.tw';
     /*Pages*/
     AppComponent,
     LoginComponent,
-    ResetPasswordComponent,
+    ChangePasswordComponent,
     ProblemListComponent,
     ExamListComponent,
     MultiTabsPanelComponent,

@@ -75,12 +75,7 @@ export class HttpStudentService extends StudentService {
     }
   }
 
-  resetPassword(oldPassword: string, newPassword: string): Observable<boolean> {
-    if (!oldPassword || !newPassword) return of(false);
-    console.log(oldPassword, newPassword);
-    if (!this.hasLogin()) {
-      return of(false);
-    }
+  changePassword(oldPassword: string, newPassword: string): Observable<boolean> {
     return this.http.patch<boolean>(`${this.baseUrl}/api/students/${this.currentStudent.id}/password`, {
       currentPassword: oldPassword,
       newPassword,

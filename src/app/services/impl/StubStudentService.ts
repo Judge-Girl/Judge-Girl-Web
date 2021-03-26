@@ -52,7 +52,7 @@ export class StubStudentService extends StudentService {
     }
   }
 
-  resetPassword(oldPassword: string, newPassword: string): Observable<boolean> {
+  changePassword(oldPassword: string, newPassword: string): Observable<boolean> {
     const $ = new Subject<boolean>();
     setTimeout(() => $.next(true), 123);
     return $;

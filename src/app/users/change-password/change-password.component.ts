@@ -14,10 +14,10 @@ import { AuthenticationProcedure } from 'src/app/AuthenticationProcedure';
 
 @Component({
   selector: 'app-login',
-  templateUrl: './reset-password.component.html',
-  styleUrls: ['../../../animations.css', './reset-password.component.css']
+  templateUrl: './change-password.component.html',
+  styleUrls: ['../../../animations.css', './change-password.component.css']
 })
-export class ResetPasswordComponent implements OnInit {
+export class ChangePasswordComponent implements OnInit {
   CHANGE_NOTIFY_KEY = 'password-change-notify';
   title = 'appName';
 
@@ -43,17 +43,17 @@ export class ResetPasswordComponent implements OnInit {
   }
 
   keyPress(e: KeyboardEvent) {
-    if (e.key === 'Enter') this.resetPassword();
+    if (e.key === 'Enter') this.changePassword();
   }
 
-  resetPassword(): void {
+  changePassword(): void {
     this.showErrorMessage = true;
     this.errorMessage = '';
 
     if (this.newPasswordField.invalid || this.currentPasswordField.invalid) return;
 
     this.spinner.nativeElement.style.display = 'inline-block';
-    this.studentService.resetPassword(this.currentPassword, this.newPassword)
+    this.studentService.changePassword(this.currentPassword, this.newPassword)
       .subscribe({
         complete: () => {
           this.messageService.add({

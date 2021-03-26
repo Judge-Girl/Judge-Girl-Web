@@ -27,7 +27,7 @@
     </ul>
     <ul *ngIf="studentService.hasLogin(); else notLogin" class="navbar-nav mr-2">
       <li class="nav-item cursor-pointer">
-        <a class="nav-link" (click)="routeToResetPassword()" [routerLink]="''">Reset Password</a>
+        <a class="nav-link" (click)="routeToChangePassword()" [routerLink]="''">Change Password</a>
       </li>
       <li class="nav-item">
         <a class="nav-link">/</a>

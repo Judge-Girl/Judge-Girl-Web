@@ -11,11 +11,11 @@ import {MultiTabsPanelComponent} from './problem-submission-tab-panel/multi-tabs
 import {SubmissionsComponent} from './submissions/submissions.component';
 import {ProblemDescriptionComponent} from './problem-description/problem-description.component';
 import {TestcasesComponent} from './testcases/testcases.component';
-import { ResetPasswordComponent } from './users/reset-password/reset-password.component';
+import { ChangePasswordComponent } from './users/change-password/change-password.component';
 
 const routes: Routes = [
   {path: '', component: LoginComponent},
-  { path: 'users/reset-password', component: ResetPasswordComponent },
+  { path: 'users/change-password', component: ChangePasswordComponent },
   {path: 'problems', component: ProblemListComponent},
   { path: 'exams', component: ExamListComponent, },
   {

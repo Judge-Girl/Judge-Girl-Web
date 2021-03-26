@@ -49,8 +49,8 @@ export class AppComponent implements OnInit {
     return true; // propagate click event
   }
 
-  routeToResetPassword(): void {
-    this.router.navigateByUrl('users/reset-password');
+  routeToChangePassword(): void {
+    this.router.navigateByUrl('users/change-password');
   }
 
   routeToHome(): void {
