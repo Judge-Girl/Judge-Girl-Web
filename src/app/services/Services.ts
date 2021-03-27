@@ -107,7 +107,6 @@ export abstract class ProblemService {
 export abstract class ExamService {
 
   abstract getExam(examId: number): Observable<Exam>;
-  // should be Exam, but not defined yet
 
   abstract getExamsByStudentId(studentId: number, examType?: string): Observable<ExamItem[]>;
 }

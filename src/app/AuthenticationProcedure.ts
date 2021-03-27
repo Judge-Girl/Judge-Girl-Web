@@ -1,7 +1,11 @@
 
+import { Injectable } from "@angular/core";
 import { CookieService } from "./services/cookie/cookie.service";
 import { StudentService } from "./services/Services";
 
+@Injectable({
+  providedIn: 'root'
+})
 export class AuthenticationProcedure {
   constructor(private studentService: StudentService,
     private cookieService: CookieService) {
