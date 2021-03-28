@@ -83,7 +83,7 @@ export class HttpStudentService extends StudentService {
       if (err.status === 400) {
         return throwError(new IncorrectPasswordFoundError());
       } else {
-        throw throwError(`Catch unknown error from the server: ${err.status}, ${err.toString()}`);
+        return throwError(new Error(`Catch unknown error from the server: ${err.status}, ${err.toString()}`));
       }
     }));
   }

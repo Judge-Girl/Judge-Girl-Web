@@ -85,7 +85,7 @@ const HOST = 'http://api.judgegirl.beta.pdlab.csie.ntu.edu.tw';
     {provide: ProblemService, useClass: HttpProblemService},
     {provide: ExamService, useClass: StubExamService},
     {provide: SubmissionService, useClass: HttpSubmissionService},
-    { provide: AuthenticationProcedure, useClass: AuthenticationProcedure},
+    { provide: AuthenticationProcedure, useClass: AuthenticationProcedure },
     {provide: 'HOST', useValue: HOST},
     {provide: 'STUDENT_SERVICE_BASE_URL', useValue: `${HOST}`},
     {provide: 'PROBLEM_SERVICE_BASE_URL', useValue: `${HOST}`},
