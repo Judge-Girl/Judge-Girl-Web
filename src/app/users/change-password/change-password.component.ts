@@ -1,16 +1,9 @@
-import {Component, ElementRef, NgModule, OnInit, ViewChild} from '@angular/core';
-import {AccountNotFoundError, IncorrectPasswordFoundError, StudentService} from '../../services/Services';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import { IncorrectPasswordFoundError, StudentService } from '../../services/Services';
 import {Router} from '@angular/router';
-import {CookieService} from '../../services/cookie/cookie.service';
 import { MessageService } from 'primeng';
 import { NgModel } from '@angular/forms';
 import { AuthenticationProcedure } from 'src/app/AuthenticationProcedure';
-
-
-  interface bruh {
-    current: string;
-    new: string;
-  }
 
 @Component({
   selector: 'app-login',
@@ -19,7 +12,6 @@ import { AuthenticationProcedure } from 'src/app/AuthenticationProcedure';
 })
 export class ChangePasswordComponent implements OnInit {
   CHANGE_NOTIFY_KEY = 'password-change-notify';
-  title = 'appName';
 
   errorMessage = '';
 
@@ -56,13 +48,13 @@ export class ChangePasswordComponent implements OnInit {
     this.studentService.changePassword(this.currentPassword, this.newPassword)
       .subscribe({
         complete: () => {
+          this.spinner.nativeElement.style.display = 'none';
           this.messageService.add({
             key: this.CHANGE_NOTIFY_KEY,
             life: 2500,
             severity: 'success',
             detail: 'Your password has been changed',
           });
-          this.spinner.nativeElement.style.display = 'none';
 
           setTimeout(() => this.router.navigateByUrl("/"), 3000);
         },

@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {AccountNotFoundError, IncorrectPasswordFoundError, StudentService} from '../../services/Services';
 import {Router} from '@angular/router';
-import {CookieService} from '../../services/cookie/cookie.service';
 import { AuthenticationProcedure } from 'src/app/AuthenticationProcedure';
 
 @Component({
@@ -10,8 +9,6 @@ import { AuthenticationProcedure } from 'src/app/AuthenticationProcedure';
   styleUrls: ['../../../animations.css', './login.component.css']
 })
 export class LoginComponent implements OnInit {
-  title = 'appName';
-
   errorMessage = '';
 
   constructor(private studentService: StudentService,
