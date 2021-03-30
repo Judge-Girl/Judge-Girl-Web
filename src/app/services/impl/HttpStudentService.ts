@@ -23,6 +23,15 @@ export class HttpStudentService extends StudentService {
     this.baseUrl = baseUrl;
   }
 
+  getAuthHeaders(): Object {
+    const token = this.cookieService.get(StudentService.KEY_TOKEN);
+    return {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      }
+    };
+  }
+
   login(email: string, password: string): Observable<Student> {
     return this.http.post<Student>(`${this.baseUrl}/api/students/login`,
       {email, password})
@@ -52,12 +61,8 @@ export class HttpStudentService extends StudentService {
 
   auth(token: string): Observable<Student> {
     if (token && token.length > 0) {
-      return this.http.post<Student>(`${this.baseUrl}/api/students/auth`, null,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        }
+      return this.http.post<Student>(`${this.baseUrl}/api/students/auth`, null, 
+        this.getAuthHeaders(),
       ).pipe(switchMap(student => {
         this.currentStudent = student;
         return of(student);
@@ -68,7 +73,19 @@ export class HttpStudentService extends StudentService {
     } else {
       return throwError(new UnauthenticatedError());
     }
+  }
 
+  changePassword(oldPassword: string, newPassword: string): Observable<boolean> {
+    return this.http.patch<boolean>(`${this.baseUrl}/api/students/${this.currentStudent.id}/password`, {
+      currentPassword: oldPassword,
+      newPassword,
+    }, this.getAuthHeaders()).pipe(catchError(err => {
+      if (err.status === 400) {
+        return throwError(new IncorrectPasswordFoundError());
+      } else {
+        return throwError(new Error(`Catch unknown error from the server: ${err.status}, ${err.toString()}`));
+      }
+    }));
   }
 
 }

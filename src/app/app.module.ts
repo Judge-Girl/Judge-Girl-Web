@@ -2,7 +2,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 
 import {AppRoutingModule} from './app-routing.module';
-import {LoginComponent} from './login/login.component';
+import {LoginComponent} from './users/login/login.component';
 import {AppComponent} from './app.component';
 import {ProblemListComponent} from './problem-list/problem-list.component';
 import {ExamListComponent} from './exam/exam-list/exam-list.component';
@@ -32,6 +32,9 @@ import {CookieModule} from './services/cookie/cookie.module';
 import {CookieService} from './services/cookie/cookie.service';
 import {TestcasesComponent} from './testcases/testcases.component';
 import {AngularSplitModule} from 'angular-split';
+import { ChangePasswordComponent } from './users/change-password/change-password.component';
+import { FormsModule } from '@angular/forms';
+import { AuthenticationProcedure } from './AuthenticationProcedure';
 
 
 const HOST = 'http://api.judgegirl.beta.pdlab.csie.ntu.edu.tw';
@@ -41,6 +44,7 @@ const HOST = 'http://api.judgegirl.beta.pdlab.csie.ntu.edu.tw';
     /*Pages*/
     AppComponent,
     LoginComponent,
+    ChangePasswordComponent,
     ProblemListComponent,
     ExamListComponent,
     MultiTabsPanelComponent,
@@ -59,9 +63,7 @@ const HOST = 'http://api.judgegirl.beta.pdlab.csie.ntu.edu.tw';
     ProblemTagDropDownComponent,
 
     /*directives*/
-    AuthenticatedDirective,
-
-    TestcasesComponent
+    TestcasesComponent,
   ],
   imports: [
     CookieModule.forRoot(),
@@ -70,6 +72,7 @@ const HOST = 'http://api.judgegirl.beta.pdlab.csie.ntu.edu.tw';
     AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,
+    FormsModule,
 
     /*primeNG*/
     BlockUIModule, ToastModule, FileUploadModule, MessagesModule,
@@ -82,6 +85,7 @@ const HOST = 'http://api.judgegirl.beta.pdlab.csie.ntu.edu.tw';
     {provide: ProblemService, useClass: HttpProblemService},
     {provide: ExamService, useClass: StubExamService},
     {provide: SubmissionService, useClass: HttpSubmissionService},
+    { provide: AuthenticationProcedure, useClass: AuthenticationProcedure },
     {provide: 'HOST', useValue: HOST},
     {provide: 'STUDENT_SERVICE_BASE_URL', useValue: `${HOST}`},
     {provide: 'PROBLEM_SERVICE_BASE_URL', useValue: `${HOST}`},

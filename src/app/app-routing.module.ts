@@ -1,6 +1,6 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-import {LoginComponent} from './login/login.component';
+import {LoginComponent} from './users/login/login.component';
 import {ProblemListComponent} from './problem-list/problem-list.component';
 import { ExamListComponent } from './exam/exam-list/exam-list.component';
 import { ExamHomeComponent } from './exam/exam-home/exam-home.component';
@@ -11,9 +11,11 @@ import {MultiTabsPanelComponent} from './problem-submission-tab-panel/multi-tabs
 import {SubmissionsComponent} from './submissions/submissions.component';
 import {ProblemDescriptionComponent} from './problem-description/problem-description.component';
 import {TestcasesComponent} from './testcases/testcases.component';
+import { ChangePasswordComponent } from './users/change-password/change-password.component';
 
 const routes: Routes = [
   {path: '', component: LoginComponent},
+  { path: 'users/change-password', component: ChangePasswordComponent },
   {path: 'problems', component: ProblemListComponent},
   { path: 'exams', component: ExamListComponent, },
   {

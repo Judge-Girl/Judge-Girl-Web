@@ -25,11 +25,24 @@
         <a class="nav-link" [routerLinkActive]="['active']" [routerLink]="'exams'">Exams</a>
       </li>
     </ul>
-    <ul *ngIf="studentService.hasLogin()" class="navbar-nav mr-2">
+    <ul *ngIf="studentService.hasLogin(); else notLogin" class="navbar-nav mr-2">
+      <li class="nav-item cursor-pointer">
+        <a class="nav-link" (click)="routeToChangePassword()" [routerLink]="''">Change Password</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link">/</a>
+      </li>
       <li class="nav-item cursor-pointer">
         <a class="nav-link" (click)="onLogoutClick()" [routerLink]="''">Logout</a>
       </li>
     </ul>
+    <ng-template #notLogin>
+      <ul class="navbar-nav mr-2">
+        <li class="nav-item cursor-pointer">
+          <a class="nav-link" (click)="routeToHome()" [routerLink]="''">Login</a>
+        </li>
+      </ul>
+    </ng-template>
   </div>
 
 
@@ -39,7 +52,7 @@
 
 </div>
 
-<footer *ngIf="studentService.hasLogin()" class="footer" style="clear: both; position: relative; height: 30px; margin-top: -30px;"> 
+<footer class="footer" style="clear: both; position: relative; height: 30px; margin-top: -30px;"> 
   <div>The website was created by
     <a href="https://github.com/Johnny850807">水球潘</a>,
     <a href="https://github.com/edisonhello">陳冠宇</a>

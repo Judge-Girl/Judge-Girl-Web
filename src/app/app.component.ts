@@ -48,4 +48,12 @@ export class AppComponent implements OnInit {
     this.studentService.logout();
     return true; // propagate click event
   }
+
+  routeToChangePassword(): void {
+    this.router.navigateByUrl('users/change-password');
+  }
+
+  routeToHome(): void {
+    this.router.navigateByUrl('/');
+  }
 }
