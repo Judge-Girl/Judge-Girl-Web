@@ -20,11 +20,17 @@ export class HttpExamService extends ExamService {
     this.baseUrl = baseUrl;
   }
 
-  getExam(examId: number): Observable<Exam> {
-    return this.httpRequestCache.get(`${this.baseUrl}/api/exams/${examId}`);
+  getExamOverview(examId: number): Observable<Exam> {
+    return this.httpRequestCache.get(`${this.baseUrl}/api/exams/${examId}/overview`);
   }
 
-  getExamsByStudentId(studentId: number, examType?: string): Observable<ExamItem[]> {
-    return this.httpRequestCache.get(`${this.baseUrl}/api/students/${studentId}/exams?type=${examType}`);
+  getExamsByStudentId(studentId: number, examStatus: ExamStatus = ExamStatus.all,
+                      skip: number = 0, size: number = 50): Observable<ExamItem[]> {
+    return this.httpRequestCache.get(`${this.baseUrl}/api/students/${studentId}/exams?status=${examStatus}&&skip=${skip}&&size=${size}`);
   }
+}
+
+
+export enum ExamStatus {
+  all = 'all', upcoming = 'upcoming', past = 'past', current = 'current'
 }

@@ -23,7 +23,7 @@ export class ExamProblemsComponent implements OnInit, AfterViewInit {
   public exam: Exam;
 
   @ViewChild('examDescriptionPanel') set content(content: ElementRef) {
-    if (content) { 
+    if (content) {
       this.renderMarkdown(content, this.exam.description);
     }
   }
@@ -31,7 +31,7 @@ export class ExamProblemsComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     initHighlight();
     this.exam$ = this.route.parent.params.pipe(switchMap(params =>
-      this.examService.getExam(+params.examId)
+      this.examService.getExamOverview(+params.examId)
     ));
   }
 
@@ -52,13 +52,13 @@ export class ExamProblemsComponent implements OnInit, AfterViewInit {
   public getProblemOrder(i: number) {
     return String.fromCharCode(i + 65);
   }
-  
+
   public getTotalScore() {
-    return this.exam.problems.reduce((p, e) => p + e.score, 0);
+    return this.exam.questions.reduce((p, e) => p + e.score, 0);
   }
 
   public getTotalMaxScore() {
-    return this.exam.problems.reduce((p, e) => p + e.maxScore, 0);
+    return this.exam.questions.reduce((p, e) => p + e.maxScore, 0);
   }
 
   public routeToProblem(problemId: number) {
