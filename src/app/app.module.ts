@@ -10,9 +10,8 @@ import { ExamHomeComponent } from './exam/exam-home/exam-home.component';
 import { ExamProblemsComponent } from './exam/exam-problems/exam-problems.component';
 import { ExamScoreboardComponent } from './exam/exam-scoreboard/exam-scoreboard.component';
 import { ExamSubmissionsComponent } from './exam/exam-submissions/exam-submissions.component';
-import {StubStudentService} from './services/impl/StubStudentService';
 import {ExamService, ProblemService, StudentService, SubmissionService} from './services/Services';
-import {StubExamService} from './services/impl/StubExamService';
+// import {StubExamService} from './services/impl/StubExamService';
 import {MultiTabsPanelComponent} from './problem-submission-tab-panel/multi-tabs-panel.component';
 import {ProblemDescriptionComponent} from './problem-description/problem-description.component';
 import {CodeUploadPanelComponent} from './code-panel/code-upload-panel.component';
@@ -27,7 +26,6 @@ import {HttpProblemService} from './services/impl/HttpProblemService';
 import {HttpExamService} from './services/impl/HttpExamService';
 import {HttpStudentService} from './services/impl/HttpStudentService';
 import {HttpSubmissionService} from './services/impl/HttpSubmissionService';
-import {AuthenticatedDirective} from './directives/AuthenticatedDirective';
 import {CookieModule} from './services/cookie/cookie.module';
 import {CookieService} from './services/cookie/cookie.service';
 import {TestcasesComponent} from './testcases/testcases.component';
@@ -83,7 +81,7 @@ const HOST = 'http://api.judgegirl.beta.pdlab.csie.ntu.edu.tw';
     CookieService,
     {provide: StudentService, useClass: HttpStudentService},
     {provide: ProblemService, useClass: HttpProblemService},
-    {provide: ExamService, useClass: StubExamService},
+    {provide: ExamService, useClass: HttpExamService},
     {provide: SubmissionService, useClass: HttpSubmissionService},
     { provide: AuthenticationProcedure, useClass: AuthenticationProcedure },
     {provide: 'HOST', useValue: HOST},

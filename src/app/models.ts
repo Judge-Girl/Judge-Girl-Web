@@ -83,30 +83,32 @@ export class LanguageEnv {
 
 export class ExamItem {
   constructor(public id: number,
-              public title: string, 
+              public name: string,
               public startTime: Date,
               public endTime: Date) {
   }
 }
 
-export class ExamProblem extends ProblemItem {
-  constructor(id: number, title: string,
+export class Question {
+  constructor(public examId: number,
+              public problemTitle: string,
+              public problemId: number,
               public score: number,
               public maxScore: number,
+              public questionOrder: number,
               public verdict: string,
               public quota: number) {
-    super(id, title);
   }
 }
 
 export class Exam extends ExamItem {
   constructor(public id: number,
-              public title: string,
+              public name: string,
               public startTime: Date,
               public endTime: Date,
-              public problems: ExamProblem[],
+              public questions: Question[],
               public description: string) {
-    super(id, title, startTime, endTime);
+    super(id, name, startTime, endTime);
   }
 
 }

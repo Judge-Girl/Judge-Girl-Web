@@ -1,7 +1,7 @@
 import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
-import { ExamService } from '../../services/Services';
-import { Exam } from '../../models';
+import {ExamService} from '../../services/Services';
+import {Exam} from '../../models';
 import {SplitComponent} from 'angular-split';
 
 export enum Tab {
@@ -36,12 +36,12 @@ export class ExamHomeComponent implements OnInit, AfterViewInit {
   public exam: Exam;
 
   ngOnInit(): void {
-	this.isLoading = true;
-    this.examService.getExam(this.examId)
+    this.isLoading = true;
+    this.examService.getExamOverview(this.examId)
       .subscribe(e => {
         this.exam = e;
         this.isLoading = false;
-    });
+      });
   }
 
   ngAfterViewInit(): void {

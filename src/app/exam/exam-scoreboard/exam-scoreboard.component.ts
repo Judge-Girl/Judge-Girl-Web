@@ -23,7 +23,7 @@ export class ExamScoreboardComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.exam$ = this.route.parent.params.pipe(switchMap(params =>
-      this.examService.getExam(+params.examId)
+      this.examService.getExamOverview(+params.examId)
     ));
   }
 

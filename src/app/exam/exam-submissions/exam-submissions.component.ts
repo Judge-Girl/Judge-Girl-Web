@@ -14,7 +14,7 @@ export class ExamSubmissionsComponent implements OnInit, AfterViewInit {
 
   constructor(private examService: ExamService,
               private route: ActivatedRoute,
-              private renderer: Renderer2) {
+              /*private renderer: Renderer2*/) {
   }
 
   private exam$: Observable<Exam>;
@@ -23,7 +23,7 @@ export class ExamSubmissionsComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.exam$ = this.route.parent.params.pipe(switchMap(params =>
-      this.examService.getExam(+params.examId)
+      this.examService.getExamOverview(+params.examId)
     ));
   }
 

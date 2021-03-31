@@ -23,14 +23,16 @@ export class ExamListComponent implements OnInit {
     this.examItems = [];
     this.loadingExams = true;
     this.studentService.tryAuthWithCurrentToken().subscribe(success => {
-      if (!success) return this.router.navigateByUrl('/');
+      if (!success) {
+        return this.router.navigateByUrl('/');
+      }
 
       this.examService.getExamsByStudentId(this.studentService.currentStudent.id)
         .subscribe(items => {
           this.loadingExams = false;
           this.examItems = items;
         });
-    })
+    });
   }
 
   routeToExam(examId: number) {
@@ -38,6 +40,6 @@ export class ExamListComponent implements OnInit {
   }
 
   getTimeString(date: Date) {
-    return moment(date).format('YYYY/MM/DD h:mm A')
+    return moment(date).format('YYYY/MM/DD h:mm A');
   }
 }

@@ -23,12 +23,12 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let problem of exam.problems; let i = index">
+        <tr *ngFor="let question of exam.questions; let i = index">
           <td> {{ getProblemOrder(i) }} </td>
-          <td class="text-left fake-link" (click)="routeToProblem(problem.id)"> {{ problem.id }} {{ problem.title  }} </td>
-          <td> {{ problem.score }} / {{ problem.maxScore }} </td>
-          <td class="text-left"> {{ problem.verdict }} </td>
-          <td> {{ problem.quota }} </td>
+          <td class="text-left fake-link" (click)="routeToProblem(question.problemId)"> {{ question.questionOrder }} {{ question.problemTitle  }} </td>
+          <td> {{ question.score }} / {{ question.maxScore }} </td>
+          <td class="text-left"> {{ question.verdict }} </td>
+          <td> {{ question.quota }} </td>
         </tr>
       </tbody>
         <!-- TODO: table footer -->
