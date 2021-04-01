@@ -46,11 +46,13 @@ export abstract class StudentService {
   protected constructor(protected router: Router, protected cookieService: CookieService) {
   }
 
-  authenticate() {
+  authenticate(): boolean {
     if (!this.hasLogin()) {
       this.redirectToLoginPage();
       console.log(`The student has not authenticated.`);
+      return false;
     }
+    return true;
   }
 
   hasLogin(): boolean {
