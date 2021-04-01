@@ -13,7 +13,7 @@ import {Router} from '@angular/router';
 export class AppComponent implements OnInit {
   readonly MESSAGE_KEY_SUBMISSION_TOAST = 'submission-toast-key';
 
-  isLoggedIn: boolean = false;
+  isLoggedIn = false;
 
   constructor(private submissionService: SubmissionService,
               public studentService: StudentService,
@@ -25,12 +25,10 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     this.submissionService.verdictIssuedEventObservable.subscribe(
       (verdictIssuedEvent) => this.onVerdictIssued(verdictIssuedEvent));
-    
-    this.studentService.tryAuthWithCurrentToken().subscribe(e => this.isLoggedIn = e);
+
+    this.studentService.tryAuthWithCurrentToken().subscribe(isLoggedIn => this.isLoggedIn = isLoggedIn);
   }
 
-
-  // TODO migrate to M2
   private onVerdictIssued(event: VerdictIssuedEvent) {
     this.messageService.add({
       key: this.MESSAGE_KEY_SUBMISSION_TOAST,

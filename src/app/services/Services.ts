@@ -23,7 +23,6 @@ export class UnauthenticatedError extends Error {
   }
 }
 
-
 export class AccountNotFoundError extends Error {
 }
 
@@ -31,8 +30,8 @@ export class IncorrectPasswordFoundError extends Error {
 }
 
 export class SubmissionThrottlingError extends Error {
-  constructor(message: string) {
-    super(message);
+  constructor() {
+    super('You have attempted to run code too soon. Please try again in a few seconds');
   }
 }
 
@@ -50,11 +49,16 @@ export abstract class StudentService {
   authenticate() {
     if (!this.hasLogin()) {
       this.redirectToLoginPage();
-      throw new UnauthenticatedError();
+      console.log(`The student has not authenticated.`);
     }
   }
 
   hasLogin(): boolean {
+    if (!this.cookieService.get(StudentService.KEY_TOKEN)) {
+      // [Sync] if the token is removed, then the student should also be removed
+      this.currentStudent = null;
+      return false;
+    }
     return this.currentStudent && this.currentStudent.expiryTime && this.currentStudent.token &&
       new Date().getTime() < this.currentStudent.expiryTime;
   }
@@ -68,9 +72,7 @@ export abstract class StudentService {
 
   abstract changePassword(oldPassword: string, newPassword: string): Observable<boolean>;
 
-  public logout() {
-    this.currentStudent = undefined;
-  }
+  abstract logout();
 
   get currentStudent(): Student {
     return this._currentStudent;
@@ -84,10 +86,6 @@ export abstract class StudentService {
     } else {
       this.cookieService.remove(StudentService.KEY_TOKEN);
     }
-  }
-
-  public skipLoginPage() {
-    this.router.navigateByUrl('/problems');
   }
 
   public redirectToLoginPage() {

@@ -2,7 +2,7 @@ import {ProblemService, StudentService, SubmissionService, SubmissionThrottlingE
 import {Observable, Subject, throwError} from 'rxjs';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {Inject, Injectable} from '@angular/core';
-import {CodeFile, VerdictIssuedEvent, Problem, Submission} from '../../models';
+import {CodeFile, Problem, Submission, VerdictIssuedEvent} from '../../models';
 import {catchError, map, switchMap} from 'rxjs/operators';
 import {unzipCodesArrayBuffer} from '../../utils';
 import {HttpRequestCache} from './HttpRequestCache';
@@ -88,7 +88,7 @@ export class HttpSubmissionService extends SubmissionService {
         return this.requestSubmitCodes(p, formData, files, problemId);
       })).pipe(catchError((err: HttpErrorResponse) => {
         if (err.status === 400) {  // 400 --> throttling problem
-          return throwError(new SubmissionThrottlingError(err.error.message));
+          return throwError(new SubmissionThrottlingError());
         } else {
           return throwError(err);
         }
@@ -150,7 +150,8 @@ export class HttpSubmissionService extends SubmissionService {
   getSubmittedCodes(problemId: number, submissionId: string, submittedCodesFileId: string): Observable<CodeFile[]> {
     return this.problemService.getProblem(problemId)
       .pipe(switchMap(p => {
-        return this.http.get(`${this.baseUrl}/api/problems/${problemId}/${DEFAULT_LANG_ENV}/students/${this.studentService.currentStudent.id}` +
+        return this.http.get(`${this.baseUrl}/api/problems/${problemId}/${DEFAULT_LANG_ENV}
+        /students/${this.studentService.currentStudent.id}` +
           `/submissions/${submissionId}/submittedCodes/${submittedCodesFileId}`, {
           headers: {
             'Content-Type': 'application/zip',

@@ -31,7 +31,7 @@ export class CodeUploadPanelComponent implements OnInit {
 
   ngOnInit(): void {
     this.selectedFiles = undefined;
-    this.studentService.tryAuthWithCurrentToken().toPromise().then(hasLogin => this.hasLogin = hasLogin);
+    this.studentService.tryAuthWithCurrentToken().subscribe(hasLogin => this.hasLogin = hasLogin);
 
     // TODO understand why route.parent is not needed
     this.problem$ = this.route.params.pipe(switchMap(params =>
@@ -44,10 +44,8 @@ export class CodeUploadPanelComponent implements OnInit {
   }
 
   clearAndSelect(i: number, fileUpload: FileUpload) {
-    if (this.selectedFiles[i] === undefined) {
-      console.log('skip');
-    } else {
-      console.log('clear and select');
+    if (this.selectedFiles[i]) {
+      console.log('[FileUpload] clear and select');
       this.onFileSelectedCanceled(i, fileUpload);
 
       setTimeout(() => {
@@ -59,10 +57,10 @@ export class CodeUploadPanelComponent implements OnInit {
   }
 
   onFileInputChange(index: number, codeSpecRow: HTMLDivElement, fileInput: FileUpload) {
-    console.log('onchange');
+    console.log('[FileUpload] changed');
     const files = fileInput.files;
     this.selectedFiles[index] = files[0];
-    console.log(`File selected: ${this.selectedFiles[index].name}`);
+    console.log(`[FileUpload] File selected: ${this.selectedFiles[index].name}`);
   }
 
   submit(): boolean {

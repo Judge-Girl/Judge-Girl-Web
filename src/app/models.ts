@@ -47,7 +47,7 @@ export class Compilation {
 }
 
 export class Problem extends ProblemItem {
-  private C: LanguageEnv;
+  private C: LanguageEnv;  // Currently only supports C
 
   constructor(id: number, title: string,
               public description: string,
@@ -155,6 +155,7 @@ export class Verdict {
               public maximumMemoryUsage: number,
               public compileErrorMessage: string,
               public issueTime: number,
+              // TODO: report type should be declared in a recursive way
               public report: Map<string, any>) {
   }
 }
