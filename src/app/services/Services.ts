@@ -1,16 +1,16 @@
 import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs';
+import {Observable, Subject} from 'rxjs';
 import {
   CodeFile,
-  VerdictIssuedEvent,
-  Problem,
-  ProblemItem,
   Exam,
   ExamItem,
+  Problem,
+  ProblemItem,
   Student,
   studentToString,
   Submission,
-  TestCase
+  TestCase,
+  VerdictIssuedEvent
 } from '../models';
 import {Router} from '@angular/router';
 import {CookieService} from './cookie/cookie.service';
@@ -40,6 +40,7 @@ export class SubmissionThrottlingError extends Error {
 })
 export abstract class StudentService {
   public static readonly KEY_TOKEN = 'token';
+  private student$ = new Subject<Student>();
 
   _currentStudent: Student;
 
@@ -76,6 +77,10 @@ export abstract class StudentService {
 
   abstract logout();
 
+  get currentStudentObservable(): Observable<Student> {
+    return this.student$;
+  }
+
   get currentStudent(): Student {
     return this._currentStudent;
   }
@@ -84,6 +89,7 @@ export abstract class StudentService {
     this._currentStudent = student;
     if (student) {
       console.log(`Set current student to ${studentToString(student)}.`);
+      this.student$.next(student);
       this.cookieService.put(StudentService.KEY_TOKEN, student.token);
     } else {
       this.cookieService.remove(StudentService.KEY_TOKEN);
@@ -137,5 +143,24 @@ export abstract class SubmissionService {
   abstract getSubmittedCodes(problemId: number, submissionId: string,
                              submittedCodesFileId: string): Observable<CodeFile[]>;
 }
+
+@Injectable({
+  providedIn: 'root'
+})
+export abstract class BrokerService {
+  abstract connect();
+
+  abstract disconnect();
+
+  abstract subscribe(topic: string, subscriber: (message: BrokerMessage) => void): void;
+}
+
+export class BrokerMessage {
+  constructor(public command: string, public headers: Map<string, string>,
+              public body: string, public isBinaryBody: boolean, public binary: Uint8Array) {
+  }
+}
+
+
 
 

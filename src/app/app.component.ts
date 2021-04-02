@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {MessageService} from 'primeng';
-import {StudentService, SubmissionService} from './services/Services';
-import {VerdictIssuedEvent, JudgeStatus, Submission} from './models';
+import {BrokerService, StudentService, SubmissionService} from './services/Services';
+import {JudgeStatus, VerdictIssuedEvent} from './models';
 import {CookieService} from './services/cookie/cookie.service';
 import {Router} from '@angular/router';
 
@@ -19,6 +19,7 @@ export class AppComponent implements OnInit {
               public studentService: StudentService,
               private cookieService: CookieService,
               private messageService: MessageService,
+              private brokerService: BrokerService,
               private router: Router) {
   }
 
@@ -26,7 +27,14 @@ export class AppComponent implements OnInit {
     this.submissionService.verdictIssuedEventObservable.subscribe(
       (verdictIssuedEvent) => this.onVerdictIssued(verdictIssuedEvent));
 
-    this.studentService.tryAuthWithCurrentToken().subscribe(isLoggedIn => this.isLoggedIn = isLoggedIn);
+    this.studentService.tryAuthWithCurrentToken().subscribe(isLoggedIn => {
+      this.isLoggedIn = isLoggedIn;
+      if (isLoggedIn) {
+        this.brokerService.connect();
+      } else {
+        this.brokerService.disconnect();
+      }
+    });
   }
 
   private onVerdictIssued(event: VerdictIssuedEvent) {

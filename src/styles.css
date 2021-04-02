@@ -98,11 +98,13 @@ table tr:nth-child(even) {
 }
 
 .markdown-panel h1 {
-  font-size: 37px;
+  margin-bottom: 10px;
+  font-size: 25px;
 }
 
 .markdown-panel h2 {
-  font-size: 30px;
+  margin: 5px 10px 10px 0;
+  font-size: 20px;
 }
 
 .markdown-panel h1, h2, h3, h4, h5, h6 {
