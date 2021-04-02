@@ -95,7 +95,7 @@ export class HttpStudentService extends StudentService {
     const token = this.cookieService.get(StudentService.KEY_TOKEN);
     return {
       headers: new HttpHeaders({
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${token}`
       })
     };
   }

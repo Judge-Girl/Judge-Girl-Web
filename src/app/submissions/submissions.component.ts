@@ -86,7 +86,7 @@ export class SubmissionsComponent implements OnInit, AfterViewInit {
         ));
 
         this.submissions$.subscribe(submissions => {
-          this.submissions = SubmissionsComponent.sortSubmissionsByTime(submissions);
+          this.submissions = submissions;
           this.loadingSubmissions = false;
         });
       }

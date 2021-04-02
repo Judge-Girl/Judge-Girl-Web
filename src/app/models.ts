@@ -138,7 +138,6 @@ export class Submission {
   verdict: Verdict;
   isJudged: boolean;
   submissionTime: number;
-  judgeTime: number;
   submittedCodesFileId: string;
 
   constructor(public id: string,
@@ -189,6 +188,7 @@ export function describeTimeInSeconds(ms: number) {
 
 export class VerdictIssuedEvent {
   constructor(public problemId: number,
+              public studentId: number,
               public problemTitle: string,
               public submissionId: string,
               public verdict: Verdict) {
