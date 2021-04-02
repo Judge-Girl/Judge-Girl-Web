@@ -22,17 +22,13 @@ export class ExamListComponent implements OnInit {
   ngOnInit(): void {
     this.examItems = [];
     this.loadingExams = true;
-    this.studentService.tryAuthWithCurrentToken().subscribe(success => {
-      if (!success) {
-        return this.router.navigateByUrl('/');
-      }
-
+    if (this.studentService.authenticate()) {
       this.examService.getExamsByStudentId(this.studentService.currentStudent.id)
         .subscribe(items => {
           this.loadingExams = false;
           this.examItems = items;
         });
-    });
+    }
   }
 
   routeToExam(examId: number) {

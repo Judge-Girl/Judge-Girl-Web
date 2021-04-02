@@ -32,7 +32,6 @@ import {TestcasesComponent} from './testcases/testcases.component';
 import {AngularSplitModule} from 'angular-split';
 import { ChangePasswordComponent } from './users/change-password/change-password.component';
 import { FormsModule } from '@angular/forms';
-import { AuthenticationProcedure } from './AuthenticationProcedure';
 
 
 const HOST = 'http://api.judgegirl.beta.pdlab.csie.ntu.edu.tw';
@@ -83,7 +82,6 @@ const HOST = 'http://api.judgegirl.beta.pdlab.csie.ntu.edu.tw';
     {provide: ProblemService, useClass: HttpProblemService},
     {provide: ExamService, useClass: HttpExamService},
     {provide: SubmissionService, useClass: HttpSubmissionService},
-    { provide: AuthenticationProcedure, useClass: AuthenticationProcedure },
     {provide: 'HOST', useValue: HOST},
     {provide: 'STUDENT_SERVICE_BASE_URL', useValue: `${HOST}`},
     {provide: 'PROBLEM_SERVICE_BASE_URL', useValue: `${HOST}`},

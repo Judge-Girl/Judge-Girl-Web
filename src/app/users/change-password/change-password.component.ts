@@ -1,9 +1,8 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import { IncorrectPasswordFoundError, StudentService } from '../../services/Services';
+import {IncorrectPasswordFoundError, StudentService} from '../../services/Services';
 import {Router} from '@angular/router';
-import { MessageService } from 'primeng';
-import { NgModel } from '@angular/forms';
-import { AuthenticationProcedure } from 'src/app/AuthenticationProcedure';
+import {MessageService} from 'primeng';
+import {NgModel} from '@angular/forms';
 
 @Component({
   selector: 'app-login',
@@ -17,7 +16,6 @@ export class ChangePasswordComponent implements OnInit {
 
   constructor(private studentService: StudentService,
               private router: Router,
-              private authenticationProcedure: AuthenticationProcedure,
               private messageService: MessageService) {
   }
 
@@ -31,18 +29,22 @@ export class ChangePasswordComponent implements OnInit {
   showErrorMessage: boolean;
 
   ngOnInit(): void {
-    this.authenticationProcedure.authenticateWithCookieIfHasLogin();
+    this.studentService.authenticate();
   }
 
   keyPress(e: KeyboardEvent) {
-    if (e.key === 'Enter') this.changePassword();
+    if (e.key === 'Enter') {
+      this.changePassword();
+    }
   }
 
   changePassword(): void {
     this.showErrorMessage = true;
     this.errorMessage = '';
 
-    if (this.newPasswordField.invalid || this.currentPasswordField.invalid) return;
+    if (this.newPasswordField.invalid || this.currentPasswordField.invalid) {
+      return;
+    }
 
     this.spinner.nativeElement.style.display = 'inline-block';
     this.studentService.changePassword(this.currentPassword, this.newPassword)
@@ -56,12 +58,12 @@ export class ChangePasswordComponent implements OnInit {
             detail: 'Your password has been changed',
           });
 
-          setTimeout(() => this.router.navigateByUrl("/"), 3000);
+          setTimeout(() => this.router.navigateByUrl('/'), 3000);
         },
         error: err => {
           this.spinner.nativeElement.style.display = 'none';
           if (err instanceof IncorrectPasswordFoundError) {
-            this.errorMessage = 'The password is incorrect'
+            this.errorMessage = 'The password is incorrect';
           } else {
             throw err;
           }

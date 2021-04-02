@@ -1,27 +1,33 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AccountNotFoundError, IncorrectPasswordFoundError, StudentService} from '../../services/Services';
 import {Router} from '@angular/router';
-import { AuthenticationProcedure } from 'src/app/AuthenticationProcedure';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['../../../animations.css', './login.component.css']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
   errorMessage = '';
+  authSubscription: Subscription;
 
   constructor(private studentService: StudentService,
-              private router: Router,
-              private authenticationProcedure: AuthenticationProcedure) {
+              private router: Router) {
   }
 
   ngOnInit(): void {
-    if (this.studentService.hasLogin()) {
-      this.router.navigateByUrl('problems');
-    } else {
-      this.authenticationProcedure.authenticateWithCookie();
-    }
+    this.authSubscription = this.studentService.tryAuthWithCurrentToken()
+      .subscribe(hasLogin => {
+        if (hasLogin) {
+          this.router.navigateByUrl('problems');
+        }
+      });
+  }
+
+  ngOnDestroy(): void {
+    // it's necessary to unsubscribe it otherwise the subscriber will keep routing to /problems on every login event
+    this.authSubscription.unsubscribe();
   }
 
   login(email: string, password: string): boolean {

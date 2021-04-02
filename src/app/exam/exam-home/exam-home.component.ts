@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
-import {ExamService} from '../../services/Services';
+import {ExamService, StudentService} from '../../services/Services';
 import {Exam} from '../../models';
 import {SplitComponent} from 'angular-split';
 
@@ -15,7 +15,9 @@ export enum Tab {
 })
 export class ExamHomeComponent implements OnInit, AfterViewInit {
 
-  constructor(private elementRef: ElementRef, public examService: ExamService,
+  constructor(private elementRef: ElementRef,
+              public studentService: StudentService,
+              public examService: ExamService,
               private router: Router, private route: ActivatedRoute) {
     route.params.subscribe(params => this.examId = +params.examId);
 
@@ -37,11 +39,13 @@ export class ExamHomeComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.isLoading = true;
-    this.examService.getExamOverview(this.examId)
-      .subscribe(e => {
-        this.exam = e;
-        this.isLoading = false;
-      });
+    if (this.studentService.authenticate()) {
+      this.examService.getExamOverview(this.examId)
+        .subscribe(e => {
+          this.exam = e;
+          this.isLoading = false;
+        });
+    }
   }
 
   ngAfterViewInit(): void {
