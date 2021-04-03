@@ -49,7 +49,7 @@ export class ExamProblemsComponent implements OnInit, AfterViewInit {
       parseMarkdown(mdString));
   }
 
-  public getProblemOrder(i: number) {
+  public getProblemOrderChar(i: number) {
     return String.fromCharCode(i + 65);
   }
 
@@ -62,6 +62,6 @@ export class ExamProblemsComponent implements OnInit, AfterViewInit {
   }
 
   public routeToProblem(problemId: number) {
-    this.router.navigateByUrl(`problems/${problemId}`);
+    this.router.navigateByUrl(`exams/${this.exam.id}/problems/${problemId}`);
   }
 }
