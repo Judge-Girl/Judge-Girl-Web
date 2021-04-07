@@ -27,15 +27,26 @@ const routes: Routes = [
       { path: 'scoreboard', component: ExamScoreboardComponent, },
     ],
   },
-  ...['problems/:problemId', 'exams/:examId/problems/:problemId'].map(path => ({
-    path, component: MultiTabsPanelComponent,
+  {
+    path: 'problems/:problemId', component: MultiTabsPanelComponent,
     children: [
       { path: '', component: ProblemDescriptionComponent },
       { path: 'description', component: ProblemDescriptionComponent },
       { path: 'testcases', component: TestcasesComponent },
       { path: 'submissions', component: SubmissionsComponent }
     ],
-  })),
+    data: { submissionService: 'EXAM_QUESTION_SUBMISSION_SERVICE' }
+  },
+  {
+    path: 'exams/:examId/problems/:problemId', component: MultiTabsPanelComponent,
+    children: [
+      { path: '', component: ProblemDescriptionComponent },
+      { path: 'description', component: ProblemDescriptionComponent },
+      { path: 'testcases', component: TestcasesComponent },
+      { path: 'submissions', component: SubmissionsComponent }
+    ],
+    data: { submissionService: 'EXAM_QUESTION_SUBMISSION_SERVICE' }
+  },
 ];
 
 @NgModule({

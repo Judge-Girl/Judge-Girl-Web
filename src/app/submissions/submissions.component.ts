@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit, QueryList, ViewChildren} from '@angular/core';
+import {AfterViewInit, Component, InjectionToken, Injector, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {ProblemService, StudentService, SubmissionService} from '../services/Services';
 import {map, switchMap} from 'rxjs/operators';
@@ -164,7 +164,7 @@ export class SubmissionsComponent implements OnInit, AfterViewInit {
       .then(submittedCodes => {
         this.loadingSubmittedCodes = false;
         this.viewingSubmittedCodes = submittedCodes;
-        console.log(`Submitted codes downloaded.`);
+        // console.log(`Submitted codes downloaded.`);
       });
 
     return true;  // propagate the click event to the bootstrap's modal
@@ -191,7 +191,7 @@ export class SubmissionsComponent implements OnInit, AfterViewInit {
 
   renderCodeAreas() {
     if (this.codeAreas.toArray().length > 0) {
-      console.log('Rendering codes');
+      // console.log('Rendering codes');
       for (const codeArea of this.codeAreas.toArray()) {
         const editor = CodeMirror.fromTextArea(codeArea.nativeElement, {
           lineNumbers: true,

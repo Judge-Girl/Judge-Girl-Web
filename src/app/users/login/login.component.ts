@@ -31,7 +31,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   login(email: string, password: string): boolean {
-    console.log(`Login with studentId: ${email}, password: ${'*'.repeat(password.length)}`);
+    // console.log(`Login with studentId: ${email}, password: ${'*'.repeat(password.length)}`);
     const spinner = document.getElementById('spinner');
     spinner.style.display = 'inline';
     this.studentService.login(email, password)

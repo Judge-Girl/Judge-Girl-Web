@@ -11,7 +11,6 @@ import {ExamProblemsComponent} from './exam/exam-problems/exam-problems.componen
 import {ExamScoreboardComponent} from './exam/exam-scoreboard/exam-scoreboard.component';
 import {ExamSubmissionsComponent} from './exam/exam-submissions/exam-submissions.component';
 import {BrokerService, ExamService, ProblemService, StudentService, SubmissionService} from './services/Services';
-// import {StubExamService} from './services/impl/StubExamService';
 import {MultiTabsPanelComponent} from './problem-submission-tab-panel/multi-tabs-panel.component';
 import {ProblemDescriptionComponent} from './problem-description/problem-description.component';
 import {CodeUploadPanelComponent} from './code-panel/code-upload-panel.component';
@@ -34,6 +33,7 @@ import {ChangePasswordComponent} from './users/change-password/change-password.c
 import {FormsModule} from '@angular/forms';
 import {StompBrokerService} from './services/impl/StompBrokerService';
 import {RxStompConfig} from '@stomp/rx-stomp';
+import { HttpExamQuestionSubmissionService } from './services/impl/HttpExamQuestionSubmissionService';
 
 
 const DOMAIN = 'api.judgegirl.beta.pdlab.csie.ntu.edu.tw';
@@ -91,6 +91,8 @@ rxStompConfig.reconnectDelay = 200;
     {provide: SubmissionService, useClass: HttpSubmissionService},
     {provide: BrokerService, useClass: StompBrokerService},
     {provide: RxStompConfig, useValue: rxStompConfig},
+    { provide: 'SUBMISSION_SERVICE', useClass: HttpSubmissionService },
+    { provide: 'EXAM_QUESTION_SUBMISSION_SERVICE', useClass: HttpExamQuestionSubmissionService },
     {provide: 'STUDENT_SERVICE_BASE_URL', useValue: `${HTTP_HOST}`},
     {provide: 'PROBLEM_SERVICE_BASE_URL', useValue: `${HTTP_HOST}`},
     {provide: 'SUBMISSION_SERVICE_BASE_URL', useValue: `${HTTP_HOST}`},

@@ -12,10 +12,10 @@ const markdownIt = new MarkdownIt({
     if (lang && langModule) {
       try {
         const res = hljs.highlight(lang, str);
-        console.log(`Render language ${lang} to markdown: ${res.value}`);
+        // console.log(`Render language ${lang} to markdown: ${res.value}`);
         return res.value;
       } catch (err) {
-        console.log(err);
+        // console.error(err);
       }
     }
     return ''; // use external default escaping

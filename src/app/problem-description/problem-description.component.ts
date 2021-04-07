@@ -38,7 +38,7 @@ export class ProblemDescriptionComponent implements OnInit, AfterViewInit {
     setTimeout(() => {
       this.problem$.subscribe(p => {
         this.problem = p;
-        console.log(p);
+        // console.log(p);
         this.renderMarkdown();
       });
     });
