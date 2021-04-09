@@ -35,7 +35,7 @@ const routes: Routes = [
       { path: 'testcases', component: TestcasesComponent },
       { path: 'submissions', component: SubmissionsComponent }
     ],
-    data: { submissionService: 'EXAM_QUESTION_SUBMISSION_SERVICE' }
+    data: { submissionService: 'SUBMISSION_SERVICE' }
   },
   {
     path: 'exams/:examId/problems/:problemId', component: MultiTabsPanelComponent,

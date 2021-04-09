@@ -33,7 +33,7 @@ export class HttpExamQuestionSubmissionService extends SubmissionService {
     super();
     this.httpRequestCache = new HttpRequestCache(http);
     this.baseUrl = baseUrl;
-    this.examId = 3; // TODO
+    this.examId = 1; // TODO
     this.studentService.currentStudentObservable
       .subscribe(student => this.subscribeToVerdicts(student));
   }
