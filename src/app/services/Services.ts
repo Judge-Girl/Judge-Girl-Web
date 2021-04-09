@@ -7,7 +7,6 @@ import {
   Problem,
   ProblemItem,
   Student,
-  studentToString,
   Submission,
   TestCase,
   VerdictIssuedEvent

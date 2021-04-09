@@ -1,4 +1,4 @@
-import {Component, Injector, Input, OnInit, ViewChildren} from '@angular/core';
+import { Component, Injector, OnInit, ViewChildren } from '@angular/core';
 import {FileUpload, MessageService} from 'primeng';
 import {ProblemService, StudentService, SubmissionService, SubmissionThrottlingError} from '../services/Services';
 import {getCodeFileExtension, Problem, SubmittedCodeSpec} from '../models';
