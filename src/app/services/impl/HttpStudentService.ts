@@ -44,7 +44,6 @@ export class HttpStudentService extends StudentService {
 
   tryAuthWithCurrentToken(): Observable<boolean> {
     if (this.hasLogin()) {
-      // console.log('[Authentication]: has login.');
       this.hasLogin$.next(true);
     } else {
       this.hasLogin$.next(false);
@@ -58,7 +57,6 @@ export class HttpStudentService extends StudentService {
 
   auth(token: string): Observable<Student> {
     if (token && token.length > 0) {
-      // console.log('[Authentication]: authenticating...');
       return this.http.post<Student>(`${this.baseUrl}/api/students/auth`, null,
         this.getHttpOptions(),
       ).pipe(switchMap(student => {

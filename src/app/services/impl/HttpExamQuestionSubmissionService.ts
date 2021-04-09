@@ -34,6 +34,10 @@ export class HttpExamQuestionSubmissionService extends SubmissionService {
     this.httpRequestCache = new HttpRequestCache(http);
     this.baseUrl = baseUrl;
     this.examId = 1; // TODO
+    // These method can not get examId now :(
+    // route.params.subscribe(param => console.log('param', param));
+    // console.log('snap', route.snapshot.params['examId']);
+    // console.log('par', route.parent);
     this.studentService.currentStudentObservable
       .subscribe(student => this.subscribeToVerdicts(student));
   }

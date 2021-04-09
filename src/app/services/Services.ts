@@ -7,6 +7,7 @@ import {
   Problem,
   ProblemItem,
   Student,
+  studentToString,
   Submission,
   TestCase,
   VerdictIssuedEvent
@@ -49,7 +50,7 @@ export abstract class StudentService {
   authenticate(): boolean {
     if (!this.hasLogin()) {
       this.redirectToLoginPage();
-      // console.log(`The student has not authenticated.`);
+      console.log(`The student has not authenticated.`);
       return false;
     }
     return true;
@@ -87,7 +88,7 @@ export abstract class StudentService {
   set currentStudent(student: Student) {
     this._currentStudent = student;
     if (student) {
-      // console.log(`Set current student to ${studentToString(student)}.`);
+      console.log(`Set current student to ${studentToString(student)}.`);
       this.student$.next(student);
       this.cookieService.put(StudentService.KEY_TOKEN, student.token);
     } else {

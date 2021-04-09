@@ -29,8 +29,8 @@ export class CodeUploadPanelComponent implements OnInit {
               private messageService: MessageService,
               private injector: Injector,
               private router: Router) {
-    const submissionServiceToken = route.snapshot.data['submissionService'];;
-    this.submissionService = injector.get<SubmissionService>(submissionServiceToken)
+    const submissionServiceInstanceName = route.snapshot.data['submissionService'];
+    this.submissionService = injector.get<SubmissionService>(submissionServiceInstanceName);
   }
 
   ngOnInit(): void {
@@ -49,7 +49,6 @@ export class CodeUploadPanelComponent implements OnInit {
 
   clearAndSelect(i: number, fileUpload: FileUpload) {
     if (this.selectedFiles[i]) {
-      // console.log('[FileUpload] clear and select');
       this.onFileSelectedCanceled(i, fileUpload);
 
       setTimeout(() => {
@@ -61,19 +60,15 @@ export class CodeUploadPanelComponent implements OnInit {
   }
 
   onFileInputChange(index: number, codeSpecRow: HTMLDivElement, fileInput: FileUpload) {
-    // console.log('[FileUpload] changed');
     const files = fileInput.files;
     this.selectedFiles[index] = files[0];
-    // console.log(`[FileUpload] File selected: ${this.selectedFiles[index].name}`);
   }
 
   submit(): boolean {
     if (this.validateAllSpecifiedFileSelected()) {
       this.router.navigateByUrl(`/problems/${this.problem.id}/submissions`);
       this.submissionService.submitFromFile(this.problem.id, this.selectedFiles)
-        .toPromise().then(submission => {
-          // console.log(`Submit successfully, ${submission}`);
-        }).catch(err => this.handleSubmitError(err));
+        .toPromise().catch(err => this.handleSubmitError(err));
     }
     return false;
   }

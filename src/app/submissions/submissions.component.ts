@@ -164,7 +164,6 @@ export class SubmissionsComponent implements OnInit, AfterViewInit {
       .then(submittedCodes => {
         this.loadingSubmittedCodes = false;
         this.viewingSubmittedCodes = submittedCodes;
-        // console.log(`Submitted codes downloaded.`);
       });
 
     return true;  // propagate the click event to the bootstrap's modal
@@ -191,7 +190,6 @@ export class SubmissionsComponent implements OnInit, AfterViewInit {
 
   renderCodeAreas() {
     if (this.codeAreas.toArray().length > 0) {
-      // console.log('Rendering codes');
       for (const codeArea of this.codeAreas.toArray()) {
         const editor = CodeMirror.fromTextArea(codeArea.nativeElement, {
           lineNumbers: true,

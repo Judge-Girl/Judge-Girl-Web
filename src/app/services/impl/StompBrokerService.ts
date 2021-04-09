@@ -18,9 +18,7 @@ export class StompBrokerService extends BrokerService {
   }
 
   connect() {
-    if (this.stompClient.active) {
-      // console.log('Stomp client has been connected.');
-    } else {
+    if (!this.stompClient.active) {
       this.stompClient.configure(this.stompConfig);
       this.stompClient.activate();
       this.connect$.next();
@@ -32,7 +30,6 @@ export class StompBrokerService extends BrokerService {
       this.previousSubscriptions.map(sub => sub.unsubscribe());
       this.previousSubscriptions = [];
       this.stompClient.deactivate();
-      // console.log('Stomp client has been disconnected.');
     }
   }
 
@@ -42,7 +39,7 @@ export class StompBrokerService extends BrokerService {
     }
     this.connect$.subscribe(() => {
       const destination = `/topic${topic}`;
-      // console.log(`Subscribing destination: ${destination}...`);
+      console.log(`Subscribing destination: ${destination}...`);
       const subscription = this.stompClient.watch(destination)
         .pipe(switchMap(this.convertToBrokerMessage))
         .subscribe(subscriber);
@@ -51,7 +48,7 @@ export class StompBrokerService extends BrokerService {
   }
 
   convertToBrokerMessage(message): Observable<BrokerMessage> {
-    // console.log(`Received a STOMP Message: [${message.command}] ${message.body}`);
+    console.log(`Received a STOMP Message: [${message.command}] ${message.body}`);
     return of(new BrokerMessage(message.command,
       new Map(Object.entries(message.headers)), message.body, message.isBinaryBody, message.binaryBody));
   }
