@@ -49,7 +49,7 @@ export class ExamProblemsComponent implements OnInit, AfterViewInit {
       parseMarkdown(mdString));
   }
 
-  public getProblemOrderChar(i: number) {
+  public toCharactorIndex(i: number) {
     return String.fromCharCode(i + 65);
   }
 
