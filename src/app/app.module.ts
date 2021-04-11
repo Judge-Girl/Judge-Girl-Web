@@ -7,7 +7,7 @@ import {AppComponent} from './app.component';
 import {ProblemListComponent} from './problem-list/problem-list.component';
 import {ExamListComponent} from './exam/exam-list/exam-list.component';
 import {ExamHomeComponent} from './exam/exam-home/exam-home.component';
-import {ExamProblemsComponent} from './exam/exam-problems/exam-problems.component';
+import {ExamQuestionsComponent} from './exam/exam-questions/exam-questions.component';
 import {ExamScoreboardComponent} from './exam/exam-scoreboard/exam-scoreboard.component';
 import {ExamSubmissionsComponent} from './exam/exam-submissions/exam-submissions.component';
 import {BrokerService, ExamService, ProblemService, StudentService, SubmissionService} from './services/Services';
@@ -33,7 +33,8 @@ import {ChangePasswordComponent} from './users/change-password/change-password.c
 import {FormsModule} from '@angular/forms';
 import {StompBrokerService} from './services/impl/StompBrokerService';
 import {RxStompConfig} from '@stomp/rx-stomp';
-import { HttpExamQuestionSubmissionService } from './services/impl/HttpExamQuestionSubmissionService';
+import {HttpExamQuestionSubmissionService} from './services/impl/HttpExamQuestionSubmissionService';
+import {EventBus} from './services/EventBus';
 
 
 const DOMAIN = 'api.judgegirl.beta.pdlab.csie.ntu.edu.tw';
@@ -57,7 +58,7 @@ rxStompConfig.reconnectDelay = 200;
     SubmissionsComponent,
 
     ExamHomeComponent,
-    ExamProblemsComponent,
+    ExamQuestionsComponent,
     ExamSubmissionsComponent,
     ExamScoreboardComponent,
 
@@ -88,11 +89,11 @@ rxStompConfig.reconnectDelay = 200;
     {provide: StudentService, useClass: HttpStudentService},
     {provide: ProblemService, useClass: HttpProblemService},
     {provide: ExamService, useClass: HttpExamService},
-    {provide: SubmissionService, useClass: HttpSubmissionService},
     {provide: BrokerService, useClass: StompBrokerService},
     {provide: RxStompConfig, useValue: rxStompConfig},
-    { provide: 'SUBMISSION_SERVICE', useClass: HttpSubmissionService },
-    { provide: 'EXAM_QUESTION_SUBMISSION_SERVICE', useClass: HttpExamQuestionSubmissionService },
+    {provide: EventBus, useClass: EventBus},
+    {provide: 'SUBMISSION_SERVICE', useClass: HttpSubmissionService},
+    {provide: 'EXAM_QUESTION_SUBMISSION_SERVICE', useClass: HttpExamQuestionSubmissionService},
     {provide: 'STUDENT_SERVICE_BASE_URL', useValue: `${HTTP_HOST}`},
     {provide: 'PROBLEM_SERVICE_BASE_URL', useValue: `${HTTP_HOST}`},
     {provide: 'SUBMISSION_SERVICE_BASE_URL', useValue: `${HTTP_HOST}`},

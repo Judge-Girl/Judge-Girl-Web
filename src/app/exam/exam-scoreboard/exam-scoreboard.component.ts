@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, ElementRef, OnInit, Renderer2, ViewChild} from '@angular/core';
-import { Exam } from '../../models';
-import { ExamService } from '../../services/Services';
+import { ExamOverview } from '../../models';
+import {ExamService, StudentService} from '../../services/Services';
 import {ActivatedRoute} from '@angular/router';
 import {switchMap} from 'rxjs/operators';
 import {Observable} from 'rxjs';
@@ -13,17 +13,18 @@ import {Observable} from 'rxjs';
 export class ExamScoreboardComponent implements OnInit, AfterViewInit {
 
   constructor(private examService: ExamService,
+              private studentService: StudentService,
               private route: ActivatedRoute,
               private renderer: Renderer2) {
   }
 
-  private exam$: Observable<Exam>;
+  private exam$: Observable<ExamOverview>;
 
-  exam: Exam;
+  exam: ExamOverview;
 
   ngOnInit(): void {
     this.exam$ = this.route.parent.params.pipe(switchMap(params =>
-      this.examService.getExamOverview(+params.examId)
+      this.examService.getExamProgressOverview(this.studentService.currentStudent.id, +params.examId)
     ));
   }
 

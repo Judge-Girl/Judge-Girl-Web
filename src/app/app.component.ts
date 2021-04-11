@@ -1,32 +1,32 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {MessageService} from 'primeng';
 import {BrokerService, StudentService, SubmissionService} from './services/Services';
 import {JudgeStatus, VerdictIssuedEvent} from './models';
 import {CookieService} from './services/cookie/cookie.service';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
+import {EventBus, EventSubscriber} from './services/EventBus';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit {
+export class AppComponent extends MessageService implements OnInit, OnDestroy, EventSubscriber {
   readonly MESSAGE_KEY_SUBMISSION_TOAST = 'submission-toast-key';
 
   isLoggedIn = false;
 
-  constructor(private submissionService: SubmissionService,
-              public studentService: StudentService,
+  constructor(public studentService: StudentService,
               private cookieService: CookieService,
               private messageService: MessageService,
               private brokerService: BrokerService,
+              private eventBus: EventBus,
               private router: Router) {
+    super();
   }
 
   ngOnInit(): void {
-    this.submissionService.verdictIssuedEventObservable.subscribe(
-      (verdictIssuedEvent) => this.onVerdictIssued(verdictIssuedEvent));
-
+    this.eventBus.subscribe(this);
     this.studentService.tryAuthWithCurrentToken().subscribe(isLoggedIn => {
       this.isLoggedIn = isLoggedIn;
       if (isLoggedIn) {
@@ -37,7 +37,17 @@ export class AppComponent implements OnInit {
     });
   }
 
-  private onVerdictIssued(event: VerdictIssuedEvent) {
+  ngOnDestroy(): void {
+    this.eventBus.unsubscribe(this);
+  }
+
+  onEvent(event: any) {
+    if (event instanceof VerdictIssuedEvent) {
+      this.issueVerdict(event);
+    }
+  }
+
+  issueVerdict(event: VerdictIssuedEvent) {
     this.messageService.add({
       key: this.MESSAGE_KEY_SUBMISSION_TOAST,
       severity: event.verdict.summaryStatus === JudgeStatus.AC ? 'success' : 'error',

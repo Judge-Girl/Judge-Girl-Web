@@ -6,6 +6,7 @@ import {CodeFile, Problem, Student, Submission, VerdictIssuedEvent} from '../../
 import {catchError, switchMap} from 'rxjs/operators';
 import {unzipCodesArrayBuffer} from '../../utils';
 import {HttpRequestCache} from './HttpRequestCache';
+import {EventBus} from '../EventBus';
 
 // Currently, we only support 'C' langEnv,
 // we should extend this with other languageEnvs in the future
@@ -25,6 +26,7 @@ export class HttpSubmissionService extends SubmissionService {
               private studentService: StudentService,
               private problemService: ProblemService,
               private brokerService: BrokerService,
+              private eventBus: EventBus,
               @Inject('SUBMISSION_SERVICE_BASE_URL') baseUrl: string) {
     super();
     this.httpRequestCache = new HttpRequestCache(http);
@@ -46,11 +48,12 @@ export class HttpSubmissionService extends SubmissionService {
   }
 
   private updateVerdictInTheSubmission(event: VerdictIssuedEvent) {
+    this.eventBus.publish(event);
     this.currentSubmissions
       .filter(submission => submission.id === event.submissionId)
       .forEach(submission => {
         submission.verdict = event.verdict;
-        submission.isJudged = true;
+        submission.judged = true;
       });
     this.currentSubmissions$.next(this.currentSubmissions);
   }

@@ -4,7 +4,7 @@ import {LoginComponent} from './users/login/login.component';
 import {ProblemListComponent} from './problem-list/problem-list.component';
 import { ExamListComponent } from './exam/exam-list/exam-list.component';
 import { ExamHomeComponent } from './exam/exam-home/exam-home.component';
-import { ExamProblemsComponent } from './exam/exam-problems/exam-problems.component';
+import { ExamQuestionsComponent } from './exam/exam-questions/exam-questions.component';
 import { ExamSubmissionsComponent } from './exam/exam-submissions/exam-submissions.component';
 import { ExamScoreboardComponent } from './exam/exam-scoreboard/exam-scoreboard.component';
 import {MultiTabsPanelComponent} from './problem-submission-tab-panel/multi-tabs-panel.component';
@@ -22,7 +22,7 @@ const routes: Routes = [
   {
     path: 'exams/:examId', component: ExamHomeComponent,
     children: [
-      { path: '', component: ExamProblemsComponent, },
+      { path: '', component: ExamQuestionsComponent, },
       { path: 'submissions', component: ExamSubmissionsComponent, },
       { path: 'scoreboard', component: ExamScoreboardComponent, },
     ],

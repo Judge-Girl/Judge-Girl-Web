@@ -1,12 +1,13 @@
-import { BrokerMessage, BrokerService, ProblemService, StudentService, SubmissionService, SubmissionThrottlingError } from '../Services';
-import { Observable, of, ReplaySubject, Subject, throwError } from 'rxjs';
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { Inject, Injectable } from '@angular/core';
-import { CodeFile, Problem, Student, Submission, VerdictIssuedEvent } from '../../models';
-import { catchError, switchMap } from 'rxjs/operators';
-import { unzipCodesArrayBuffer } from '../../utils';
-import { HttpRequestCache } from './HttpRequestCache';
-import { ActivatedRoute, ActivationEnd, Router } from '@angular/router';
+import {BrokerMessage, BrokerService, ProblemService, StudentService, SubmissionService, SubmissionThrottlingError} from '../Services';
+import {Observable, of, ReplaySubject, Subject, throwError} from 'rxjs';
+import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
+import {Inject, Injectable} from '@angular/core';
+import {CodeFile, Problem, Student, Submission, VerdictIssuedEvent} from '../../models';
+import {catchError, switchMap} from 'rxjs/operators';
+import {unzipCodesArrayBuffer} from '../../utils';
+import {HttpRequestCache} from './HttpRequestCache';
+import {ActivatedRoute, ActivationEnd, Router} from '@angular/router';
+import {EventBus} from '../EventBus';
 
 // Currently, we only support 'C' langEnv,
 // we should extend this with other languageEnvs in the future
@@ -29,11 +30,13 @@ export class HttpExamQuestionSubmissionService extends SubmissionService {
               private problemService: ProblemService,
               private brokerService: BrokerService,
               private route: ActivatedRoute,
+              private eventBus: EventBus,
               @Inject('EXAM_SERVICE_BASE_URL') baseUrl: string) {
     super();
     this.httpRequestCache = new HttpRequestCache(http);
     this.baseUrl = baseUrl;
-    // Currently we can not find any method to get route param in this component. The following line use regex to parse `examId` (the number after `exams/`).
+    // Currently we can not find any method to get the route param from the url path.
+    // The following line use regex to parse `examId` (the number after `exams/`).
     this.examId = Number(/\/exams\/(?<examId>\d*)\//.exec(window.location.href).groups.examId);
     this.studentService.currentStudentObservable
       .subscribe(student => this.subscribeToVerdicts(student));
@@ -52,11 +55,12 @@ export class HttpExamQuestionSubmissionService extends SubmissionService {
   }
 
   private updateVerdictInTheSubmission(event: VerdictIssuedEvent) {
+    this.eventBus.publish(event);
     this.currentSubmissions
       .filter(submission => submission.id === event.submissionId)
       .forEach(submission => {
         submission.verdict = event.verdict;
-        submission.isJudged = true;
+        submission.judged = true;
       });
     this.currentSubmissions$.next(this.currentSubmissions);
   }
@@ -64,7 +68,7 @@ export class HttpExamQuestionSubmissionService extends SubmissionService {
   getSubmissions(problemId: number): Observable<Submission[]> {
     this.currentSubmissions$.next([]); // clear previous submissions
     this.studentService.authenticate();
-    const url = `${this.baseUrl}/api/problems/${problemId}/${DEFAULT_LANG_ENV}/students/${this.studentId}/submissions`;
+    const url = `${this.baseUrl}/api/problems/${problemId}/${DEFAULT_LANG_ENV}/students/${this.studentId}/submissions?exam-id=${this.examId}`;
     this.http.get<Submission[]>(url, this.httpOptions)
       .toPromise()
       .then(submissions => {
@@ -112,7 +116,7 @@ export class HttpExamQuestionSubmissionService extends SubmissionService {
   getSubmittedCodes(problemId: number, submissionId: string, submittedCodesFileId: string): Observable<CodeFile[]> {
     return this.problemService.getProblem(problemId)
       .pipe(switchMap(p => {
-        const url = `${this.baseUrl}/api/exams/${this.examId}/problems/${problemId}/${DEFAULT_LANG_ENV}/students/${this.studentId}/submissions/${submissionId}/submittedCodes/${submittedCodesFileId}`
+        const url = `${this.baseUrl}/api/exams/${this.examId}/problems/${problemId}/${DEFAULT_LANG_ENV}/students/${this.studentId}/submissions/${submissionId}/submittedCodes/${submittedCodesFileId}`;
         return this.http.get(url, {
           headers: this.httpHeaders,
           responseType: 'arraybuffer'

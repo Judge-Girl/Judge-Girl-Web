@@ -24,12 +24,11 @@ export class CodeUploadPanelComponent implements OnInit {
 
   constructor(public studentService: StudentService,
               private problemService: ProblemService,
-              // private submissionService: SubmissionService,
               private route: ActivatedRoute,
               private messageService: MessageService,
               private injector: Injector,
               private router: Router) {
-    const submissionServiceInstanceName = route.snapshot.data['submissionService'];
+    const submissionServiceInstanceName = route.snapshot.data.submissionService;
     this.submissionService = injector.get<SubmissionService>(submissionServiceInstanceName);
   }
 

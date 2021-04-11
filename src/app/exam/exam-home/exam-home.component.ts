@@ -1,7 +1,7 @@
 import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import {ExamService, StudentService} from '../../services/Services';
-import {Exam} from '../../models';
+import {ExamOverview} from '../../models';
 import {SplitComponent} from 'angular-split';
 
 export enum Tab {
@@ -15,8 +15,10 @@ export enum Tab {
 })
 export class ExamHomeComponent implements OnInit, AfterViewInit {
 
-  constructor(public studentService: StudentService,
-              public examService: ExamService,
+
+  constructor(private elementRef: ElementRef,
+              private studentService: StudentService,
+              private examService: ExamService,
               private router: Router, private route: ActivatedRoute) {
     route.params.subscribe(params => this.examId = +params.examId);
 
@@ -34,14 +36,14 @@ export class ExamHomeComponent implements OnInit, AfterViewInit {
 
   private examId: number;
   public isLoading: boolean;
-  public exam: Exam;
+  public examOverview: ExamOverview;
 
   ngOnInit(): void {
     this.isLoading = true;
     if (this.studentService.authenticate()) {
-      this.examService.getExamOverview(this.examId)
+      this.examService.getExamProgressOverview(this.studentService.currentStudent.id, this.examId)
         .subscribe(e => {
-          this.exam = e;
+          this.examOverview = e;
           this.isLoading = false;
         });
     }
@@ -106,7 +108,7 @@ export class ExamHomeComponent implements OnInit, AfterViewInit {
   }
 
   routeToCurrentExamIndex() {
-    this.router.navigateByUrl(`/exams/${this.exam.id}`);
+    this.router.navigateByUrl(`/exams/${this.examOverview.id}`);
     this.refreshTabElementsState();
   }
 }
