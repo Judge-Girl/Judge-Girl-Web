@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, ElementRef, OnInit, Renderer2, ViewChild} from '@angular/core';
-import { Exam } from '../../models';
+import { Exam, Question } from '../../models';
 import { ExamService } from '../../services/Services';
 import {ActivatedRoute, Router} from '@angular/router';
 import {switchMap} from 'rxjs/operators';
@@ -61,7 +61,7 @@ export class ExamProblemsComponent implements OnInit, AfterViewInit {
     return this.exam.questions.reduce((p, e) => p + e.maxScore, 0);
   }
 
-  public routeToProblem(problemId: number) {
-    this.router.navigateByUrl(`exams/${this.exam.id}/problems/${problemId}`);
+  public routeToQuestion(question: Question) {
+    this.router.navigateByUrl(`exams/${this.exam.id}/problems/${question.problemId}`);
   }
 }
