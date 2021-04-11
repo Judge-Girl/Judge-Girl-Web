@@ -33,6 +33,7 @@ export class HttpExamQuestionSubmissionService extends SubmissionService {
     super();
     this.httpRequestCache = new HttpRequestCache(http);
     this.baseUrl = baseUrl;
+    // Currently we can not find any method to get route param in this component. The following line use regex to parse `examId` (the number after `exams/`).
     this.examId = Number(/\/exams\/(?<examId>\d*)\//.exec(window.location.href).groups.examId);
     this.studentService.currentStudentObservable
       .subscribe(student => this.subscribeToVerdicts(student));
