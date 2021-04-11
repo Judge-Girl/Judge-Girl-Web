@@ -28,8 +28,8 @@
             (click)="routeToQuestion(question)"> {{ question.problemId }}. {{ question.problemTitle  }} </td>
         <td> {{ question.yourScore }} / {{ question.maxScore }} </td>
         <td class="text-left"> <span class="judge-status {{getQuestionStatus(question)}}">
-            {{getQuestionStatus(question) + " "}}</span>
-          <span></span>{{ getQuestionBestRecord(question) }} </td>
+            {{getQuestionStatus(question)}}</span>
+          <span class="ml-2">{{ getQuestionBestRecord(question) }}</span></td>
         <td> {{ question.remainingQuota }} </td>
       </tr>
       </tbody>
