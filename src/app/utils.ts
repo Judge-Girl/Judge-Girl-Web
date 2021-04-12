@@ -17,7 +17,6 @@ export async function unzipCodesArrayBuffer(arrayBuffer: ArrayBuffer) {
     const reader = new FileReader();  // TODO, could the reader can be shared?
     reader.addEventListener('loadend', (e) => {
       const codeContent = e.target.result as string;
-      console.log(`${fileName}: ${codeContent}`);
       submittedCodes.push(new CodeFile(codeIndex++, fileName, codeContent));
       if (submittedCodes.length === numberOfCodes) {
         waitForAllCodesUnzippedAndPushedIntoArray.complete();

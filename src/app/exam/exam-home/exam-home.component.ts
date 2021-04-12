@@ -15,8 +15,7 @@ export enum Tab {
 })
 export class ExamHomeComponent implements OnInit, AfterViewInit {
 
-  constructor(private elementRef: ElementRef,
-              public studentService: StudentService,
+  constructor(public studentService: StudentService,
               public examService: ExamService,
               private router: Router, private route: ActivatedRoute) {
     route.params.subscribe(params => this.examId = +params.examId);

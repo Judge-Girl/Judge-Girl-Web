@@ -18,9 +18,7 @@ export class StompBrokerService extends BrokerService {
   }
 
   connect() {
-    if (this.stompClient.active) {
-      console.log('Stomp client has been connected.');
-    } else {
+    if (!this.stompClient.active) {
       this.stompClient.configure(this.stompConfig);
       this.stompClient.activate();
       this.connect$.next();
@@ -32,7 +30,6 @@ export class StompBrokerService extends BrokerService {
       this.previousSubscriptions.map(sub => sub.unsubscribe());
       this.previousSubscriptions = [];
       this.stompClient.deactivate();
-      console.log('Stomp client has been disconnected.');
     }
   }
 

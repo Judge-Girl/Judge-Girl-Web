@@ -1,9 +1,8 @@
 import {ExamService} from '../Services';
-import {merge, Observable, ReplaySubject, Subject} from 'rxjs';
+import { Observable } from 'rxjs';
 import {Exam, ExamItem} from '../../models';
 import {HttpClient} from '@angular/common/http';
 import {Inject, Injectable} from '@angular/core';
-import {shareReplay, switchMap} from 'rxjs/operators';
 import {HttpRequestCache} from './HttpRequestCache';
 
 @Injectable({

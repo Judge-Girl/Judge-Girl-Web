@@ -17,6 +17,7 @@ const routes: Routes = [
   {path: '', component: LoginComponent},
   { path: 'users/change-password', component: ChangePasswordComponent },
   {path: 'problems', component: ProblemListComponent},
+  { path: 'exams/:examId/questions/:questionId', component: MultiTabsPanelComponent },
   { path: 'exams', component: ExamListComponent, },
   {
     path: 'exams/:examId', component: ExamHomeComponent,
@@ -29,11 +30,24 @@ const routes: Routes = [
   {
     path: 'problems/:problemId', component: MultiTabsPanelComponent,
     children: [
-      {path: '', component: ProblemDescriptionComponent},
-      {path: 'description', component: ProblemDescriptionComponent},
-      {path: 'testcases', component: TestcasesComponent},
-      {path: 'submissions', component: SubmissionsComponent}]
-  }];
+      { path: '', component: ProblemDescriptionComponent },
+      { path: 'description', component: ProblemDescriptionComponent },
+      { path: 'testcases', component: TestcasesComponent },
+      { path: 'submissions', component: SubmissionsComponent }
+    ],
+    data: { submissionService: 'SUBMISSION_SERVICE' }
+  },
+  {
+    path: 'exams/:examId/problems/:problemId', component: MultiTabsPanelComponent,
+    children: [
+      { path: '', component: ProblemDescriptionComponent },
+      { path: 'description', component: ProblemDescriptionComponent },
+      { path: 'testcases', component: TestcasesComponent },
+      { path: 'submissions', component: SubmissionsComponent }
+    ],
+    data: { submissionService: 'EXAM_QUESTION_SUBMISSION_SERVICE' }
+  },
+];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

@@ -88,12 +88,9 @@ export class MultiTabsPanelComponent implements OnInit, AfterViewInit {
 
   private effectResponsiveSplitter() {
     if (this.splitter) {
-      console.log(window.innerWidth);
       if (window.innerWidth <= 1000) {
-        console.log('vertical');
         this.splitter.direction = 'vertical';
       } else {
-        console.log('horizontal');
         this.splitter.direction = 'horizontal';
       }
     }
