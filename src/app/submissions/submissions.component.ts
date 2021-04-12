@@ -2,7 +2,7 @@ import {AfterViewInit, Component, Injector, OnDestroy, OnInit, QueryList, ViewCh
 import {ActivatedRoute} from '@angular/router';
 import {ProblemService, StudentService, SubmissionService} from '../services/Services';
 import {map, switchMap} from 'rxjs/operators';
-import {Observable} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {
   CodeFile,
   describeMemory,
@@ -32,10 +32,8 @@ export class SubmissionsComponent implements OnInit, OnDestroy, AfterViewInit {
   loadingSubmissions = false;
   hasLogin: boolean;
 
-  problem$: Observable<Problem>;
-
-
   submissions$: Observable<Submission[]>;
+  subscriptions: Subscription[] = [];
   problem: Problem;
 
   testCases: TestCase[] = [];
@@ -69,34 +67,48 @@ export class SubmissionsComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit() {
-    this.problem$ = this.route.parent.params.pipe(switchMap(params =>
+    this.fetchProblem();
+    this.subscriptions.push(
+      this.tryAuthWithCurrentToken(() =>
+        this.subscriptions.push(this.subscribeToSubmissions())
+      ));
+  }
+
+  private fetchProblem() {
+    this.route.parent.params.pipe(switchMap(params =>
       this.problemService.getProblem(+params.problemId)
+    )).toPromise()
+      .then(p => {
+        this.problem = p;
+        this.problemService.getTestCases(this.problem.id).toPromise()
+          .then(testCases => this.testCases = testCases);
+      });
+  }
+
+  private subscribeToSubmissions(): Subscription {
+    this.loadingSubmissions = true;
+    this.submissions$ = this.route.parent.params.pipe(switchMap(params =>
+      this.submissionService.getSubmissions(+params.problemId)
+        .pipe(map(SubmissionsComponent.sortSubmissionsByTime))
     ));
 
-    this.problem$.subscribe(p => {
-      this.problem = p;
-      this.problemService.getTestCases(this.problem.id).toPromise()
-        .then(testCases => this.testCases = testCases);
+    return this.submissions$.subscribe(submissions => {
+      this.submissions = submissions;
+      this.loadingSubmissions = false;
     });
+  }
 
-    this.studentService.tryAuthWithCurrentToken().subscribe(hasLogin => {
+  private tryAuthWithCurrentToken(ifHasLogin: () => void) {
+    return this.studentService.tryAuthWithCurrentToken().subscribe(hasLogin => {
       this.hasLogin = hasLogin;
       if (this.studentService.hasLogin()) {
-        this.loadingSubmissions = true;
-        this.submissions$ = this.route.parent.params.pipe(switchMap(params =>
-          this.submissionService.getSubmissions(+params.problemId)
-            .pipe(map(SubmissionsComponent.sortSubmissionsByTime))
-        ));
-
-        this.submissions$.subscribe(submissions => {
-          this.submissions = submissions;
-          this.loadingSubmissions = false;
-        });
+        ifHasLogin();
       }
     });
   }
 
   ngOnDestroy(): void {
+    this.subscriptions.forEach(s => s.unsubscribe());
   }
 
   get bestRecord(): Submission {

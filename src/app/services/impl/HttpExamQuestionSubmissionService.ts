@@ -2,7 +2,7 @@ import {BrokerMessage, BrokerService, ProblemService, StudentService, Submission
 import {Observable, of, ReplaySubject, Subject, throwError} from 'rxjs';
 import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 import {Inject, Injectable} from '@angular/core';
-import {CodeFile, Problem, Student, Submission, VerdictIssuedEvent} from '../../models';
+import {Answer, answerToSubmission, CodeFile, Problem, Student, Submission, VerdictIssuedEvent} from '../../models';
 import {catchError, switchMap} from 'rxjs/operators';
 import {unzipCodesArrayBuffer} from '../../utils';
 import {HttpRequestCache} from './HttpRequestCache';
@@ -105,8 +105,9 @@ export class HttpExamQuestionSubmissionService extends SubmissionService {
       formData.append('submittedCodes', files[i], problem.submittedCodeSpecs[i].fileName);
     }
     const url = `${this.baseUrl}/api/exams/${this.examId}/problems/${problem.id}/${DEFAULT_LANG_ENV}/students/${this.studentId}/answers`;
-    return this.http.post<Submission>(url, formData, this.httpOptions)
-      .pipe(switchMap(submission => {
+    return this.http.post<Answer>(url, formData, this.httpOptions)
+      .pipe(switchMap(answer => {
+        const submission = answerToSubmission(answer);
         this.currentSubmissions.push(submission);
         this.currentSubmissions$.next(this.currentSubmissions);
         return of(submission);

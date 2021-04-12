@@ -1,9 +1,9 @@
-import { Component, Injector, OnInit, ViewChildren } from '@angular/core';
+import {Component, Injector, OnInit, ViewChildren} from '@angular/core';
 import {FileUpload, MessageService} from 'primeng';
 import {ProblemService, StudentService, SubmissionService, SubmissionThrottlingError} from '../services/Services';
 import {getCodeFileExtension, Problem, SubmittedCodeSpec} from '../models';
 import {switchMap} from 'rxjs/operators';
-import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRoute, Params, Router} from '@angular/router';
 import {Observable} from 'rxjs';
 
 @Component({
@@ -21,6 +21,8 @@ export class CodeUploadPanelComponent implements OnInit {
   @ViewChildren('fileInput') private fileUploads: FileUpload[];
 
   submissionService: SubmissionService;
+  private routeParams: Params;
+  private routePrefixing: (routeParams: Params) => string;
 
   constructor(public studentService: StudentService,
               private problemService: ProblemService,
@@ -28,6 +30,11 @@ export class CodeUploadPanelComponent implements OnInit {
               private messageService: MessageService,
               private injector: Injector,
               private router: Router) {
+    route.params.subscribe(params => {
+      this.routeParams = params;
+    });
+    this.routePrefixing = route.snapshot.data.routePrefixing;
+
     const submissionServiceInstanceName = route.snapshot.data.submissionService;
     this.submissionService = injector.get<SubmissionService>(submissionServiceInstanceName);
   }
@@ -65,7 +72,7 @@ export class CodeUploadPanelComponent implements OnInit {
 
   submit(): boolean {
     if (this.validateAllSpecifiedFileSelected()) {
-      this.router.navigateByUrl(`/problems/${this.problem.id}/submissions`);
+      this.router.navigateByUrl(`${this.routePrefixing(this.routeParams)}problems/${this.problem.id}/submissions`);
       this.submissionService.submitFromFile(this.problem.id, this.selectedFiles)
         .toPromise().catch(err => this.handleSubmitError(err));
     }
