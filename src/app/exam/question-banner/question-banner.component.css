@@ -30,27 +30,5 @@ tfoot {
 }
 
 .table td, .table th {
-  border-top: 0;
-  vertical-align: middle;
-}
-
-.judge-status {
-  font-size: 20px;
-  font-weight: 600;
-}
-
-.judge-status.AC {
-  color: #91CB46;
-}
-
-.judge-status.WA, .judge-status.RE, .judge-status.SYSTEM_ERR {
-  color: #F82727;
-}
-
-.judge-status.TLE, .judge-status.MLE, .judge-status.OLE {
-  color: #1273BA;
-}
-
-.judge-status.CE {
-  color: #F2B311;
+  border-top: 0px;
 }

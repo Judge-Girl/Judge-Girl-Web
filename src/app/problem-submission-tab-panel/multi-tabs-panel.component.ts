@@ -1,7 +1,7 @@
 import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, NavigationEnd, Params, Router} from '@angular/router';
 import {StudentService} from '../services/Services';
-import {SplitComponent} from 'angular-split';
+import { SplitComponent } from 'angular-split';
 
 export enum Tab {
   TESTCASES,
@@ -50,6 +50,10 @@ export class MultiTabsPanelComponent implements OnInit, AfterViewInit {
     });
     this.refreshTabState();
     this.effectResponsiveSplitter();
+  }
+
+  get isInExam(): boolean {
+    return !!this.route.snapshot.params.examId;
   }
 
 

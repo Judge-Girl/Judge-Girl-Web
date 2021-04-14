@@ -33,8 +33,9 @@ import {ChangePasswordComponent} from './users/change-password/change-password.c
 import {FormsModule} from '@angular/forms';
 import {StompBrokerService} from './services/impl/StompBrokerService';
 import {RxStompConfig} from '@stomp/rx-stomp';
-import {HttpExamQuestionSubmissionService} from './services/impl/HttpExamQuestionSubmissionService';
-import {EventBus} from './services/EventBus';
+import { EventBus } from './services/EventBus';
+import { HttpExamQuestionSubmissionService } from './services/impl/HttpExamQuestionSubmissionService';
+import { QuestionBanner } from './exam/question-banner/question-banner.component';
 
 
 const DOMAIN = 'api.judgegirl.beta.pdlab.csie.ntu.edu.tw';
@@ -61,6 +62,8 @@ rxStompConfig.reconnectDelay = 200;
     ExamQuestionsComponent,
     ExamSubmissionsComponent,
     ExamScoreboardComponent,
+
+    QuestionBanner,
 
     /*items*/
     LdCircleComponent,
