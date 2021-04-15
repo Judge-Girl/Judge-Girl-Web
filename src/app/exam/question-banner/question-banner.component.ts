@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, ElementRef, OnInit, Renderer2, ViewChild} from '@angular/core';
-import { Exam, Question } from '../../models';
-import { ExamService } from '../../services/Services';
+import { Exam, Problem, Question } from '../../models';
+import { ExamService, ProblemService } from '../../services/Services';
 import {ActivatedRoute, Router} from '@angular/router';
 import {switchMap} from 'rxjs/operators';
 import {Observable} from 'rxjs';
@@ -11,31 +11,44 @@ import { initHighlight, parseMarkdown } from 'src/utils/markdownUtils';
   templateUrl: './question-banner.component.html',
   styleUrls: ['./question-banner.component.css']
 })
-export class QuestionBanner implements OnInit, AfterViewInit {
+export class QuestionBanner implements OnInit {
 
-  constructor(private examService: ExamService,
+  constructor(private problemService: ProblemService,
+              private examService: ExamService,
               private route: ActivatedRoute,
-              private router: Router,
-              private renderer: Renderer2) {
+              private router: Router) {
   }
 
   examId: number;
   problemId: number;
 
+  exam: Exam;
+  problem: Problem;
+
   ngOnInit(): void {
     initHighlight();
-    this.route.parent.params.subscribe(params => {
-      this.examId = Number(params.examId);
-      this.problemId = Number(params.problemId);
-    })
+
+    this.examId = this.route.snapshot.params.examId;
+    this.problemId = this.route.snapshot.params.problemId;
+
+    this.examService.getExamOverview(this.examId).subscribe(exam => {
+      this.exam = exam;
+    });
+
+    this.problemService.getProblem(this.problemId).subscribe(problem => {
+      this.problem = problem;
+    });
   }
 
-  ngAfterViewInit(): void {
-    // Use setTimeout(...) to run code asynchronously to avoid ExpressionChangedAfterItHasBeenCheckedError
-    // setTimeout(() => {
-    //   this.exam$.subscribe(e => {
-    //     this.exam = e;
-    //   });
-    // });
+  routeToExam() {
+    this.router.navigateByUrl(`exams/${this.examId}`);
+  }
+
+  getProblemName() {
+    return this.problem?.title || "";
+  }
+
+  getExamName() {
+    return this.exam?.name || "";
   }
 }
