@@ -1,26 +1,28 @@
 import {AfterViewInit, Component, ElementRef, OnInit, Renderer2, ViewChild} from '@angular/core';
-import { Exam, Question } from '../../models';
-import { ExamService } from '../../services/Services';
+
+import {describeMemory, describeTimeInSeconds, ExamOverview, JudgeStatus, QuestionItem} from '../../models';
+import {ExamService, StudentService} from '../../services/Services';
 import {ActivatedRoute, Router} from '@angular/router';
 import {switchMap} from 'rxjs/operators';
 import {Observable} from 'rxjs';
-import { initHighlight, parseMarkdown } from 'src/utils/markdownUtils';
+import {initHighlight, parseMarkdown} from 'src/utils/markdownUtils';
 
 @Component({
   selector: 'app-exam-problems',
-  templateUrl: './exam-problems.component.html',
-  styleUrls: ['./exam-problems.component.css']
+  templateUrl: './exam-questions.component.html',
+  styleUrls: ['./exam-questions.component.css']
 })
-export class ExamProblemsComponent implements OnInit, AfterViewInit {
+export class ExamQuestionsComponent implements OnInit, AfterViewInit {
 
   constructor(private examService: ExamService,
+              private studentService: StudentService,
               private route: ActivatedRoute,
               private router: Router,
               private renderer: Renderer2) {
   }
 
-  private exam$: Observable<Exam>;
-  public exam: Exam;
+  private exam$: Observable<ExamOverview>;
+  public exam: ExamOverview;
 
   @ViewChild('examDescriptionPanel') set content(content: ElementRef) {
     if (content) {
@@ -31,7 +33,7 @@ export class ExamProblemsComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     initHighlight();
     this.exam$ = this.route.parent.params.pipe(switchMap(params =>
-      this.examService.getExamOverview(+params.examId)
+      this.examService.getExamProgressOverview(this.studentService.currentStudent.id, +params.examId)
     ));
   }
 
@@ -54,14 +56,29 @@ export class ExamProblemsComponent implements OnInit, AfterViewInit {
   }
 
   public getTotalScore() {
-    return this.exam.questions.reduce((p, e) => p + e.score, 0);
+    return this.exam.questions.reduce((p, e) => p + e.yourScore, 0);
   }
 
   public getTotalMaxScore() {
     return this.exam.questions.reduce((p, e) => p + e.maxScore, 0);
   }
 
-  public routeToQuestion(question: Question) {
+  public routeToQuestion(question: QuestionItem) {
     this.router.navigateByUrl(`exams/${this.exam.id}/problems/${question.problemId}`);
+  }
+
+  getQuestionStatus(question: QuestionItem): string {
+    return question.bestRecord ? question.bestRecord.status : '';
+  }
+
+  getQuestionBestRecord(question: QuestionItem): string {
+    const bestRecord = question.bestRecord;
+    if (!bestRecord) {
+      return `--`;
+    }
+    if (bestRecord.status === JudgeStatus.AC) {
+      return `(${describeTimeInSeconds(bestRecord.maximumRuntime)}, ${describeMemory(bestRecord.maximumMemoryUsage)})`;
+    }
+    return `(score: ${bestRecord.score})`;
   }
 }

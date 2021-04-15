@@ -1,6 +1,7 @@
 import {ExamService} from '../Services';
-import { Observable } from 'rxjs';
-import {Exam, ExamItem} from '../../models';
+
+import {merge, Observable, ReplaySubject, Subject} from 'rxjs';
+import {ExamOverview, ExamItem} from '../../models';
 import {HttpClient} from '@angular/common/http';
 import {Inject, Injectable} from '@angular/core';
 import {HttpRequestCache} from './HttpRequestCache';
@@ -19,8 +20,8 @@ export class HttpExamService extends ExamService {
     this.baseUrl = baseUrl;
   }
 
-  getExamOverview(examId: number): Observable<Exam> {
-    return this.httpRequestCache.get(`${this.baseUrl}/api/exams/${examId}/overview`);
+  getExamProgressOverview(studentId: number, examId: number): Observable<ExamOverview> {
+    return this.httpRequestCache.get(`${this.baseUrl}/api/exams/${examId}/students/${studentId}/overview`);
   }
 
   getExamsByStudentId(studentId: number, examStatus: ExamStatus = ExamStatus.all,

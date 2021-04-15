@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {Observable, Subject} from 'rxjs';
 import {
   CodeFile,
-  Exam,
+  ExamOverview,
   ExamItem,
   Problem,
   ProblemItem,
@@ -124,7 +124,7 @@ export abstract class ProblemService {
 })
 export abstract class ExamService {
 
-  abstract getExamOverview(examId: number): Observable<Exam>;
+  abstract getExamProgressOverview(studentId: number, examId: number): Observable<ExamOverview>;
 
   abstract getExamsByStudentId(studentId: number, examStatus?: ExamStatus,
                                skip?: number, size?: number): Observable<ExamItem[]>;

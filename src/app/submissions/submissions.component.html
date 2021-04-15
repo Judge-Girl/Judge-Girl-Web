@@ -36,23 +36,23 @@
       <td>{{describeTimeFromNow(submission.submissionTime)}}</td>
 
       <td>
-        <span *ngIf="submission.isJudged" class="{{submission.verdict.summaryStatus}}">{{submission.verdict.summaryStatus}}</span>
-        <div *ngIf="!submission.isJudged" class="spinner-border text-primary" role="status" id="spinner">
+        <span *ngIf="submission.judged" class="{{submission.verdict.summaryStatus}}">{{submission.verdict.summaryStatus}}</span>
+        <div *ngIf="!submission.judged" class="spinner-border text-primary" role="status" id="spinner">
           <span class="sr-only">Loading...</span>
         </div>
       </td>
 
-      <td>{{submission.isJudged ? describeTimeInSeconds(submission.verdict.maximumRuntime) : ''}}</td>
-      <td>{{submission.isJudged ? describeMemory(submission.verdict.maximumMemoryUsage) : ''}}</td>
-      <td>{{submission.isJudged ? describeGrade(submission.verdict.totalGrade) : ''}}</td>
+      <td>{{submission.judged ? describeTimeInSeconds(submission.verdict.maximumRuntime) : ''}}</td>
+      <td>{{submission.judged ? describeMemory(submission.verdict.maximumMemoryUsage) : ''}}</td>
+      <td>{{submission.judged ? describeGrade(submission.verdict.totalGrade) : ''}}</td>
 
       <td>
-        <button *ngIf="submission.isJudged && isJudgeStatus(submission, CE)" type="button" class="btn btn-link see-details-btn" data-toggle="modal"
+        <button *ngIf="submission.judged && isJudgeStatus(submission, CE)" type="button" class="btn btn-link see-details-btn" data-toggle="modal"
                 (click)="onViewSubmissionJudgesBtnClick(submission)"
                 data-target="#submission-judges-modal-CE">
           View Compile Error
         </button>
-        <button *ngIf="submission.isJudged && !isJudgeStatus(submission, CE)" type="button" class="btn btn-link see-details-btn" data-toggle="modal"
+        <button *ngIf="submission.judged && !isJudgeStatus(submission, CE)" type="button" class="btn btn-link see-details-btn" data-toggle="modal"
                 (click)="onViewSubmissionJudgesBtnClick(submission)"
                 data-target="#submission-judges-modal">
           View Judges
@@ -68,7 +68,7 @@
         </button>
       </td>
       <td>
-        <button *ngIf="submission.isJudged" type="button" class="btn btn-link see-details-btn" data-toggle="modal"
+        <button *ngIf="submission.judged" type="button" class="btn btn-link see-details-btn" data-toggle="modal"
                 (click)="onViewReportBtnClick(submission)"
                 data-target="#report-modal">
           View Report

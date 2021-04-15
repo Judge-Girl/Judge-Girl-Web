@@ -89,28 +89,39 @@ export class ExamItem {
   }
 }
 
-export class Question {
+export class ExamOverview extends ExamItem {
+  constructor(public id: number,
+              public name: string,
+              public startTime: Date,
+              public endTime: Date,
+              public questions: QuestionItem[],
+              public description: string) {
+    super(id, name, startTime, endTime);
+  }
+
+}
+
+export class QuestionItem {
   constructor(public examId: number,
               public problemTitle: string,
               public problemId: number,
-              public score: number,
+              public yourScore: number,
               public maxScore: number,
+              public bestRecord: Record,
               public questionOrder: number,
+              public remainingQuota: number,
               public verdict: string,
               public quota: number) {
   }
 }
 
-export class Exam extends ExamItem {
-  constructor(public id: number,
-              public name: string,
-              public startTime: Date,
-              public endTime: Date,
-              public questions: Question[],
-              public description: string) {
-    super(id, name, startTime, endTime);
+export class Record {
+  constructor(public score: number,
+              public status: JudgeStatus,
+              public maximumRuntime: number,
+              public maximumMemoryUsage: number,
+              public submissionTime: number) {
   }
-
 }
 
 
@@ -136,14 +147,35 @@ export class ProgramProfile {
 
 export class Submission {
   verdict: Verdict;
-  isJudged: boolean;
+  judged: boolean;
   submissionTime: number;
   submittedCodesFileId: string;
 
   constructor(public id: string,
               public problemId: number) {
   }
+}
 
+export class Answer {
+
+  constructor(public examId: number,
+              public problemId: number, public studentId: number,
+              public submissionId: string, public answerTime: number) {
+  }
+
+  toSubmission(): Submission {
+    const submission =  new Submission(this.submissionId, this.problemId);
+    submission.submissionTime = this.answerTime;
+    submission.judged = false;
+    return submission;
+  }
+}
+
+export function answerToSubmission(answer: Answer) {
+  const submission =  new Submission(answer.submissionId, answer.problemId);
+  submission.submissionTime = answer.answerTime;
+  submission.judged = false;
+  return submission;
 }
 
 export class Verdict {

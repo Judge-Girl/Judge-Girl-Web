@@ -1,8 +1,8 @@
-import {AfterViewInit, Component, OnInit, QueryList, ViewChildren} from '@angular/core';
+import {AfterViewInit, Component, Injector, OnDestroy, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {ProblemService, StudentService, SubmissionService} from '../services/Services';
 import {map, switchMap} from 'rxjs/operators';
-import {Observable} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {
   CodeFile,
   describeMemory,
@@ -21,7 +21,8 @@ import * as CodeMirror from 'codemirror';
   templateUrl: './submissions.component.html',
   styleUrls: ['./submissions.component.css']
 })
-export class SubmissionsComponent implements OnInit, AfterViewInit {
+export class SubmissionsComponent implements OnInit, OnDestroy, AfterViewInit {
+  submissionService: SubmissionService;
   viewingJudgesSubmission: Submission;
   loadingSubmittedCodes = false;
   viewingSubmittedCodes: CodeFile[];
@@ -31,21 +32,14 @@ export class SubmissionsComponent implements OnInit, AfterViewInit {
   loadingSubmissions = false;
   hasLogin: boolean;
 
-  constructor(public studentService: StudentService,
-              private problemService: ProblemService,
-              private submissionService: SubmissionService,
-              private route: ActivatedRoute) {
-  }
-
-
-  problem$: Observable<Problem>;
   submissions$: Observable<Submission[]>;
-
+  subscriptions: Subscription[] = [];
   problem: Problem;
+
   testCases: TestCase[] = [];
   submissions: Submission[] = [];
-
   AC = JudgeStatus.AC;
+
   CE = JudgeStatus.CE;
   TLE = JudgeStatus.TLE;
   MLE = JudgeStatus.MLE;
@@ -53,8 +47,15 @@ export class SubmissionsComponent implements OnInit, AfterViewInit {
   RE = JudgeStatus.RE;
   SYSTEM_ERR = JudgeStatus.SYSTEM_ERR;
   NONE = JudgeStatus.NONE;
-
   @ViewChildren('codeArea') codeAreas: QueryList<any>;
+
+  constructor(public studentService: StudentService,
+              private problemService: ProblemService,
+              private injector: Injector,
+              private route: ActivatedRoute) {
+    const submissionServiceInstanceName = route.parent.snapshot.data.submissionService;
+    this.submissionService = injector.get<SubmissionService>(submissionServiceInstanceName);
+  }
 
 
   private static compareSubmissionsByTime(s1: Submission, s2: Submission): number {
@@ -66,31 +67,48 @@ export class SubmissionsComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    this.problem$ = this.route.parent.params.pipe(switchMap(params =>
+    this.fetchProblem();
+    this.subscriptions.push(
+      this.tryAuthWithCurrentToken(() =>
+        this.subscriptions.push(this.subscribeToSubmissions())
+      ));
+  }
+
+  private fetchProblem() {
+    this.route.parent.params.pipe(switchMap(params =>
       this.problemService.getProblem(+params.problemId)
+    )).toPromise()
+      .then(p => {
+        this.problem = p;
+        this.problemService.getTestCases(this.problem.id).toPromise()
+          .then(testCases => this.testCases = testCases);
+      });
+  }
+
+  private subscribeToSubmissions(): Subscription {
+    this.loadingSubmissions = true;
+    this.submissions$ = this.route.parent.params.pipe(switchMap(params =>
+      this.submissionService.getSubmissions(+params.problemId)
+        .pipe(map(SubmissionsComponent.sortSubmissionsByTime))
     ));
 
-    this.problem$.subscribe(p => {
-      this.problem = p;
-      this.problemService.getTestCases(this.problem.id).toPromise()
-        .then(testCases => this.testCases = testCases);
+    return this.submissions$.subscribe(submissions => {
+      this.submissions = submissions;
+      this.loadingSubmissions = false;
     });
+  }
 
-    this.studentService.tryAuthWithCurrentToken().subscribe(hasLogin => {
+  private tryAuthWithCurrentToken(ifHasLogin: () => void) {
+    return this.studentService.tryAuthWithCurrentToken().subscribe(hasLogin => {
       this.hasLogin = hasLogin;
       if (this.studentService.hasLogin()) {
-        this.loadingSubmissions = true;
-        this.submissions$ = this.route.parent.params.pipe(switchMap(params =>
-          this.submissionService.getSubmissions(+params.problemId)
-            .pipe(map(SubmissionsComponent.sortSubmissionsByTime))
-        ));
-
-        this.submissions$.subscribe(submissions => {
-          this.submissions = submissions;
-          this.loadingSubmissions = false;
-        });
+        ifHasLogin();
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(s => s.unsubscribe());
   }
 
   get bestRecord(): Submission {
@@ -100,7 +118,7 @@ export class SubmissionsComponent implements OnInit, AfterViewInit {
     let bestGrade = -1;
     let best: Submission;
     for (const submission of this.submissions) {
-      if (submission.isJudged &&
+      if (submission.judged &&
         submission.verdict.totalGrade > bestGrade) {
         bestGrade = submission.verdict.totalGrade;
         best = submission;
@@ -147,9 +165,11 @@ export class SubmissionsComponent implements OnInit, AfterViewInit {
   getCCScore(): string {
     return this.viewingReport['rawData']['CodeQualityInspectionReport']['CyclomaticComplexityReport'].ccScore;
   }
+
   getCsaScore(): string {
     return this.viewingReport['rawData']['CodeQualityInspectionReport']['CodingStyleAnalyzeReport'].csaScore;
   }
+
   getGlobalVariables(): string {
     return this.viewingReport['rawData']['CodeQualityInspectionReport']['CodingStyleAnalyzeReport'].globalVariables;
   }
@@ -188,6 +208,7 @@ export class SubmissionsComponent implements OnInit, AfterViewInit {
     });
   }
 
+
   renderCodeAreas() {
     if (this.codeAreas.toArray().length > 0) {
       for (const codeArea of this.codeAreas.toArray()) {
@@ -202,7 +223,6 @@ export class SubmissionsComponent implements OnInit, AfterViewInit {
       }
     }
   }
-
 
   describeGrade(totalGrade: number) {
     if (!totalGrade) {
