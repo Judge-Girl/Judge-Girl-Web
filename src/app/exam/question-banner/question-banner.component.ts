@@ -1,20 +1,19 @@
-import {AfterViewInit, Component, ElementRef, OnInit, Renderer2, ViewChild} from '@angular/core';
-import { Exam, Problem, Question } from '../../models';
-import { ExamService, ProblemService } from '../../services/Services';
-import {ActivatedRoute, Router} from '@angular/router';
-import {switchMap} from 'rxjs/operators';
-import {Observable} from 'rxjs';
-import { initHighlight, parseMarkdown } from 'src/utils/markdownUtils';
+import { Component, OnInit } from '@angular/core';
+import { ExamOverview, Problem, } from '../../models';
+import { ExamService, ProblemService, StudentService } from '../../services/Services';
+import { ActivatedRoute, Router } from '@angular/router';
+import { initHighlight } from 'src/utils/markdownUtils';
 
 @Component({
   selector: 'question-banner',
   templateUrl: './question-banner.component.html',
-  styleUrls: ['./question-banner.component.css']
+  styleUrls: ['./question-banner.component.css'],
 })
 export class QuestionBanner implements OnInit {
 
   constructor(private problemService: ProblemService,
               private examService: ExamService,
+              private studentService: StudentService,
               private route: ActivatedRoute,
               private router: Router) {
   }
@@ -22,7 +21,7 @@ export class QuestionBanner implements OnInit {
   examId: number;
   problemId: number;
 
-  exam: Exam;
+  exam: ExamOverview;
   problem: Problem;
 
   ngOnInit(): void {
@@ -31,7 +30,7 @@ export class QuestionBanner implements OnInit {
     this.examId = this.route.snapshot.params.examId;
     this.problemId = this.route.snapshot.params.problemId;
 
-    this.examService.getExamOverview(this.examId).subscribe(exam => {
+    this.examService.getExamProgressOverview(this.studentService.currentStudent.id, this.examId).subscribe(exam => {
       this.exam = exam;
     });
 
