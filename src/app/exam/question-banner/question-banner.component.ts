@@ -30,9 +30,13 @@ export class QuestionBanner implements OnInit {
     this.examId = this.route.snapshot.params.examId;
     this.problemId = this.route.snapshot.params.problemId;
 
-    this.examService.getExamProgressOverview(this.studentService.currentStudent.id, this.examId).subscribe(exam => {
-      this.exam = exam;
-    });
+    this.studentService.currentStudentObservable.subscribe(student => {
+      if (student) {
+        this.examService.getExamProgressOverview(student.id, this.examId).subscribe(exam => {
+          this.exam = exam;
+        });
+      }
+    })
 
     this.problemService.getProblem(this.problemId).subscribe(problem => {
       this.problem = problem;
