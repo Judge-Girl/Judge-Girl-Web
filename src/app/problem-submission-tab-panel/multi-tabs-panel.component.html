@@ -1,3 +1,6 @@
+
+<question-banner *ngIf="isInExam"></question-banner>
+
 <div class="my-container" (window:resize)="onResize($event)">
   <div id="tab-panel" class="shadow flex-column">
     <ul [style.width]="'100%'" [style.marginBottom]="'10px'" class="nav nav-tabs">
