@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ExamOverview, Problem, } from '../../models';
+import { ExamOverview, Problem, Student } from '../../models';
 import { ExamService, ProblemService, StudentService } from '../../services/Services';
 import { ActivatedRoute, Router } from '@angular/router';
 import { initHighlight } from 'src/utils/markdownUtils';
@@ -24,17 +24,26 @@ export class QuestionBanner implements OnInit {
   exam: ExamOverview;
   problem: Problem;
 
+  updateExamInformation(student: Student) {
+    this.examService.getExamProgressOverview(student.id, this.examId).subscribe(exam => {
+      this.exam = exam;
+    });
+  }
+
   ngOnInit(): void {
     initHighlight();
 
     this.examId = this.route.snapshot.params.examId;
     this.problemId = this.route.snapshot.params.problemId;
 
+    const currentStudent = this.studentService.currentStudent;
+    if (currentStudent) {
+      this.updateExamInformation(currentStudent);
+    }
+
     this.studentService.currentStudentObservable.subscribe(student => {
       if (student) {
-        this.examService.getExamProgressOverview(student.id, this.examId).subscribe(exam => {
-          this.exam = exam;
-        });
+        this.updateExamInformation(student);
       }
     })
 
