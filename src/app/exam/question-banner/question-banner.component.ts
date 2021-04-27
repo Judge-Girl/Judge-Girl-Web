@@ -24,7 +24,7 @@ export class QuestionBanner implements OnInit {
   exam: ExamOverview;
   problem: Problem;
 
-  updateExamInformation(student: Student) {
+  updateExamProgressOverview(student: Student) {
     this.examService.getExamProgressOverview(student.id, this.examId).subscribe(exam => {
       this.exam = exam;
     });
@@ -38,12 +38,12 @@ export class QuestionBanner implements OnInit {
 
     const currentStudent = this.studentService.currentStudent;
     if (currentStudent) {
-      this.updateExamInformation(currentStudent);
+      this.updateExamProgressOverview(currentStudent);
     }
 
     this.studentService.currentStudentObservable.subscribe(student => {
       if (student) {
-        this.updateExamInformation(student);
+        this.updateExamProgressOverview(student);
       }
     })
 
