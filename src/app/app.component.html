@@ -1,61 +1,63 @@
 
-<div style="height: 100%; min-height: 100%;">
+<div style="height: 100%; min-height: 100%; display: flex; flex-direction: column;">
 
-<!-- Toast Template -->
-<p-toast id="submission-toast" position="top-right" key="{{MESSAGE_KEY_SUBMISSION_TOAST}}" >
-  <ng-template let-message pTemplate="message">
-    <a [routerLink]="'/problems/'+message.data.problemId+'/submissions'">{{message.data.judgeStatus}}: {{message.data.problemTitle}}</a>
-  </ng-template>
-</p-toast>
+  <!-- Toast Template -->
+  <p-toast id="submission-toast" position="top-right" key="{{MESSAGE_KEY_SUBMISSION_TOAST}}" >
+    <ng-template let-message pTemplate="message">
+      <a [routerLink]="'/problems/'+message.data.problemId+'/submissions'">{{message.data.judgeStatus}}: {{message.data.problemTitle}}</a>
+    </ng-template>
+  </p-toast>
 
+  <nav class="navbar navbar-expand-sm navbar-dark bg-dark" [style.padding]="'3px 1px 3px 20px'">
 
-<nav class="navbar navbar-expand-sm navbar-dark bg-dark" [style.padding]="'3px 1px 3px 20px'">
+    <a class="navbar-brand" [routerLink]="''" [style.fontSize]="'16px'">Judge Girl</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-  <a class="navbar-brand" [routerLink]="''" [style.fontSize]="'16px'">Judge Girl</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-
-  <div class="collapse navbar-collapse" id="navbarSupportedContent" [style.fontSize]="'14px'">
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item" >
-        <a class="nav-link" [routerLinkActive]="['active']" [routerLink]="'problems'">Problems</a>
-      </li>
-      <li *ngIf="isLoggedIn" class="nav-item" >
-        <a class="nav-link" [routerLinkActive]="['active']" [routerLink]="'exams'">Exams</a>
-      </li>
-    </ul>
-    <ul *ngIf="studentService.hasLogin(); else notLogin" class="navbar-nav mr-2">
-      <li class="nav-item cursor-pointer">
-        <a class="nav-link" (click)="routeToChangePassword()" [routerLink]="''">Change Password</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link">/</a>
-      </li>
-      <li class="nav-item cursor-pointer">
-        <a class="nav-link" (click)="onLogoutClick()" [routerLink]="''">Logout</a>
-      </li>
-    </ul>
-    <ng-template #notLogin>
-      <ul class="navbar-nav mr-2">
-        <li class="nav-item cursor-pointer">
-          <a class="nav-link" (click)="routeToHome()" [routerLink]="''">Login</a>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent" [style.fontSize]="'14px'">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item" >
+          <a class="nav-link" [routerLinkActive]="['active']" [routerLink]="'problems'">Problems</a>
+        </li>
+        <li *ngIf="isLoggedIn" class="nav-item" >
+          <a class="nav-link" [routerLinkActive]="['active']" [routerLink]="'exams'">Exams</a>
         </li>
       </ul>
-    </ng-template>
+      <ul *ngIf="studentService.hasLogin(); else notLogin" class="navbar-nav mr-2">
+        <li class="nav-item cursor-pointer">
+          <a class="nav-link" (click)="routeToChangePassword()" [routerLink]="''">Change Password</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link">/</a>
+        </li>
+        <li class="nav-item cursor-pointer">
+          <a class="nav-link" (click)="onLogoutClick()" [routerLink]="''">Logout</a>
+        </li>
+      </ul>
+      <ng-template #notLogin>
+        <ul class="navbar-nav mr-2">
+          <li class="nav-item cursor-pointer">
+            <a class="nav-link" (click)="routeToHome()" [routerLink]="''">Login</a>
+          </li>
+        </ul>
+      </ng-template>
+    </div>
+
+
+  </nav>
+
+  <div style="flex-grow: 1">
+    <router-outlet></router-outlet>
   </div>
 
-
-</nav>
-
-<router-outlet></router-outlet>
+  <!-- <footer class="footer" style="clear: both; position: relative; height: 30px; margin-top: -30px;"> -->
+  <footer class="footer" style="height: 30px;">
+    <div>The website was created by
+      <a href="https://github.com/Johnny850807">水球潘</a>,
+      <a href="https://github.com/edisonhello">陳冠宇</a>
+      and this is an open source held <a href="https://github.com/Judge-Girl/Judge-K8S">on Github</a>.
+    </div>
+  </footer>
 
 </div>
-
-<footer class="footer" style="clear: both; position: relative; height: 30px; margin-top: -30px;">
-  <div>The website was created by
-    <a href="https://github.com/Johnny850807">水球潘</a>,
-    <a href="https://github.com/edisonhello">陳冠宇</a>
-    and this is an open source held <a href="https://github.com/Judge-Girl/Judge-K8S">on Github</a>.
-  </div>
-</footer>
