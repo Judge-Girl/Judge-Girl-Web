@@ -1,4 +1,5 @@
 import {Injectable} from '@angular/core';
+import {remove} from '../../utils/arrayUtils';
 
 
 @Injectable({
@@ -13,10 +14,7 @@ export class EventBus {
   }
 
   unsubscribe(subscriber: EventSubscriber) {
-    const index = this.subscribers.indexOf(subscriber, 0);
-    if (index > -1) {
-      this.subscribers.splice(index, 1);
-    }
+    remove(this.subscribers, subscriber);
   }
 
   publish(event: any) {

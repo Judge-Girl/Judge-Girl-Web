@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
-import {Observable, Subject} from 'rxjs';
+import {Observable, ReplaySubject} from 'rxjs';
 import {
   CodeFile,
-  ExamOverview,
   ExamItem,
+  ExamOverview,
   Problem,
   ProblemItem,
   Student,
@@ -40,7 +40,7 @@ export class SubmissionThrottlingError extends Error {
 })
 export abstract class StudentService {
   public static readonly KEY_TOKEN = 'token';
-  private student$ = new Subject<Student>();
+  private student$ = new ReplaySubject<Student>(1);
 
   _currentStudent: Student;
 
@@ -86,10 +86,13 @@ export abstract class StudentService {
   }
 
   set currentStudent(student: Student) {
+    const newStudent = this._currentStudent?.id !== student?.id;
     this._currentStudent = student;
     if (student) {
       console.log(`Set current student to ${studentToString(student)}.`);
-      this.student$.next(student);
+      if (newStudent) {
+        this.student$.next(student);
+      }
       this.cookieService.put(StudentService.KEY_TOKEN, student.token);
     } else {
       this.cookieService.remove(StudentService.KEY_TOKEN);
@@ -134,6 +137,10 @@ export abstract class ExamService {
   providedIn: 'root'
 })
 export abstract class SubmissionService {
+  abstract onInit();
+
+  abstract onDestroy();
+
   abstract get verdictIssuedEventObservable(): Observable<VerdictIssuedEvent>;
 
   abstract getSubmissions(problemId: number): Observable<Submission[]>;
@@ -152,8 +159,11 @@ export abstract class BrokerService {
 
   abstract disconnect();
 
-  abstract subscribe(topic: string, subscriber: (message: BrokerMessage) => void): void;
+  abstract subscribe(subscriberName: string, topic: string, subscriber: Subscriber): Unsubscribe;
 }
+
+export type Subscriber = (message: BrokerMessage) => void;
+export type Unsubscribe = () => void;
 
 export class BrokerMessage {
   constructor(public command: string, public headers: Map<string, string>,
