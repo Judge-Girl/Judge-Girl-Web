@@ -1,6 +1,6 @@
-import {BrokerMessage, BrokerService} from '../Services';
-import {Observable, of, Subject, Subscription} from 'rxjs';
-import {RxStomp, RxStompConfig} from '@stomp/rx-stomp';
+import {BrokerMessage, BrokerService, Subscriber, Unsubscribe} from '../Services';
+import {Observable, of, ReplaySubject} from 'rxjs';
+import {RxStomp, RxStompConfig, RxStompState} from '@stomp/rx-stomp';
 import {switchMap} from 'rxjs/operators';
 import {Injectable} from '@angular/core';
 
@@ -9,9 +9,10 @@ import {Injectable} from '@angular/core';
   providedIn: 'root'
 })
 export class StompBrokerService extends BrokerService {
-  connect$ = new Subject();
-  previousSubscriptions = new Array<Subscription>();
+  connect$ = new ReplaySubject<void>(1);
+  disconnect$ = new ReplaySubject<void>(1);
   stompClient: RxStomp = new RxStomp();
+  subscriptions = new Map<string, Subscription>();
 
   constructor(private stompConfig: RxStompConfig) {
     super();
@@ -21,30 +22,48 @@ export class StompBrokerService extends BrokerService {
     if (!this.stompClient.active) {
       this.stompClient.configure(this.stompConfig);
       this.stompClient.activate();
-      this.connect$.next();
+      this.stompClient.connectionState$.subscribe((state: RxStompState) => {
+        console.log(`RxStomp's state: ${RxStompState[state]}`);
+        if (state === RxStompState.OPEN) {
+          this.connect$.next();
+        }
+        if (state === RxStompState.CLOSED) {
+          this.disconnect$.next();
+          // TODO: reconnect every 2 seconds
+        }
+      });
     }
   }
 
   disconnect() {
     if (this.stompClient.active) {
-      this.previousSubscriptions.map(sub => sub.unsubscribe());
-      this.previousSubscriptions = [];
       this.stompClient.deactivate();
     }
   }
 
-  subscribe(topic: string, subscriber: (message: BrokerMessage) => void): void {
+  subscribe(subscriberName: string, topic: string, subscriber: Subscriber): Unsubscribe {
     if (!topic.startsWith('/')) {
       throw new Error('Topic should start with "/"');
     }
-    this.connect$.subscribe(() => {
-      const destination = `/topic${topic}`;
-      console.log(`Subscribing destination: ${destination}...`);
-      const subscription = this.stompClient.watch(destination)
-        .pipe(switchMap(this.convertToBrokerMessage))
-        .subscribe(subscriber);
-      this.previousSubscriptions.push(subscription);
-    });
+    const key = `${subscriberName}: ${topic}`;
+    if (!this.subscriptions.has(key)) {
+      const connectSub = this.connect$.subscribe(() => {
+        const destination = `/topic${topic}`;
+        console.log(`Subscribing destination: ${destination}...`);
+        const subscription = this.stompClient.watch(destination)
+          .pipe(switchMap(this.convertToBrokerMessage))
+          .subscribe(subscriber);
+        this.subscriptions.set(key, new Subscription(subscriberName, topic, subscriber,
+          () => {
+            connectSub.unsubscribe();
+            subscription.unsubscribe();
+            this.subscriptions.delete(key);
+          }));
+      });
+    }
+    return () => {
+      this.subscriptions.get(key)?.unsubscribe();
+    };
   }
 
   convertToBrokerMessage(message): Observable<BrokerMessage> {
@@ -55,3 +74,10 @@ export class StompBrokerService extends BrokerService {
 
 }
 
+class Subscription {
+  constructor(public subscriberName: string,
+              public topic: string,
+              public subscriber: Subscriber,
+              public unsubscribe: Unsubscribe) {
+  }
+}

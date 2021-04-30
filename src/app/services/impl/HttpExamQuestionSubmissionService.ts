@@ -1,12 +1,20 @@
-import {BrokerMessage, BrokerService, ProblemService, StudentService, SubmissionService, SubmissionThrottlingError} from '../Services';
+import {
+  BrokerMessage,
+  BrokerService,
+  ProblemService,
+  StudentService,
+  SubmissionService,
+  SubmissionThrottlingError,
+  Unsubscribe
+} from '../Services';
 import {Observable, of, ReplaySubject, Subject, throwError} from 'rxjs';
 import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 import {Inject, Injectable} from '@angular/core';
-import {Answer, answerToSubmission, CodeFile, Problem, Student, Submission, VerdictIssuedEvent} from '../../models';
+import {Answer, answerToSubmission, CodeFile, Problem, Submission, VerdictIssuedEvent} from '../../models';
 import {catchError, switchMap} from 'rxjs/operators';
 import {unzipCodesArrayBuffer} from '../../utils';
 import {HttpRequestCache} from './HttpRequestCache';
-import {ActivatedRoute, ActivationEnd, Router} from '@angular/router';
+import {ActivatedRoute} from '@angular/router';
 import {EventBus} from '../EventBus';
 
 // Currently, we only support 'C' langEnv,
@@ -22,6 +30,7 @@ export class HttpExamQuestionSubmissionService extends SubmissionService {
   currentSubmissions: Submission[] = [];
   currentSubmissions$ = new ReplaySubject<Submission[]>(1);
   verdictIssuedEvent$ = new Subject<VerdictIssuedEvent>();
+  unsubscribes: Unsubscribe[] = [];
 
   examId: number;
 
@@ -38,13 +47,21 @@ export class HttpExamQuestionSubmissionService extends SubmissionService {
     // Currently we can not find any method to get the route param from the url path.
     // The following line use regex to parse `examId` (the number after `exams/`).
     this.examId = Number(/\/exams\/(?<examId>\d*)\//.exec(window.location.href).groups.examId);
-    this.studentService.currentStudentObservable
-      .subscribe(student => this.subscribeToVerdicts(student));
   }
 
-  private subscribeToVerdicts(student: Student) {
-    this.brokerService.subscribe(`/students/${student.id}/verdicts`,
-      message => this.handleVerdictFromBrokerMessage(message));
+  public onInit() {
+    const subscription = this.studentService.currentStudentObservable.subscribe(student => {
+      this.unsubscribes.push(
+        this.brokerService.subscribe('ExamQuestSubmissionService: Subscribe-To-Verdict',
+          `/students/${student.id}/verdicts`, message => this.handleVerdictFromBrokerMessage(message)));
+    });
+    this.unsubscribes.push(() => subscription.unsubscribe());
+  }
+
+  public onDestroy() {
+    for (const unsubscribe of this.unsubscribes) {
+      unsubscribe();
+    }
   }
 
   private handleVerdictFromBrokerMessage(message: BrokerMessage) {
@@ -79,12 +96,6 @@ export class HttpExamQuestionSubmissionService extends SubmissionService {
     return this.currentSubmissions$;
   }
 
-  getSubmission(problemId: number, submissionId: string): Observable<Submission> {
-    this.studentService.authenticate();
-    const url = `${this.baseUrl}/api/exams/${this.examId}/problems/${problemId}/${DEFAULT_LANG_ENV}/students/${this.studentId}/submissions/${submissionId}`;
-    return this.http.get<Submission>(url, this.httpOptions);
-  }
-
   submitFromFile(problemId: number, files: File[]): Observable<Submission> {
     this.studentService.authenticate();
     const formData = new FormData();
@@ -116,7 +127,7 @@ export class HttpExamQuestionSubmissionService extends SubmissionService {
 
   getSubmittedCodes(problemId: number, submissionId: string, submittedCodesFileId: string): Observable<CodeFile[]> {
     return this.problemService.getProblem(problemId)
-      .pipe(switchMap(p => {
+      .pipe(switchMap(() => {
         const url = `${this.baseUrl}/api/exams/${this.examId}/problems/${problemId}/${DEFAULT_LANG_ENV}/students/${this.studentId}/submissions/${submissionId}/submittedCodes/${submittedCodesFileId}`;
         return this.http.get(url, {
           headers: this.httpHeaders,
@@ -147,5 +158,6 @@ export class HttpExamQuestionSubmissionService extends SubmissionService {
   private get studentId() {
     return this.studentService.currentStudent.id;
   }
+
 }
 

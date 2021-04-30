@@ -1,8 +1,16 @@
-import {BrokerMessage, BrokerService, ProblemService, StudentService, SubmissionService, SubmissionThrottlingError} from '../Services';
+import {
+  BrokerMessage,
+  BrokerService,
+  ProblemService,
+  StudentService,
+  SubmissionService,
+  SubmissionThrottlingError,
+  Unsubscribe
+} from '../Services';
 import {Observable, of, ReplaySubject, Subject, throwError} from 'rxjs';
 import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 import {Inject, Injectable} from '@angular/core';
-import {CodeFile, Problem, Student, Submission, VerdictIssuedEvent} from '../../models';
+import {CodeFile, Problem, Submission, VerdictIssuedEvent} from '../../models';
 import {catchError, switchMap} from 'rxjs/operators';
 import {unzipCodesArrayBuffer} from '../../utils';
 import {HttpRequestCache} from './HttpRequestCache';
@@ -21,6 +29,7 @@ export class HttpSubmissionService extends SubmissionService {
   currentSubmissions: Submission[] = [];
   currentSubmissions$ = new ReplaySubject<Submission[]>(1);
   verdictIssuedEvent$ = new Subject<VerdictIssuedEvent>();
+  unsubscribes: Unsubscribe[] = [];
 
   constructor(protected http: HttpClient,
               private studentService: StudentService,
@@ -31,13 +40,21 @@ export class HttpSubmissionService extends SubmissionService {
     super();
     this.httpRequestCache = new HttpRequestCache(http);
     this.baseUrl = baseUrl;
-    this.studentService.currentStudentObservable
-      .subscribe(student => this.subscribeToVerdicts(student));
   }
 
-  private subscribeToVerdicts(student: Student) {
-    this.brokerService.subscribe(`/students/${student.id}/verdicts`,
-      message => this.handleVerdictFromBrokerMessage(message));
+  public onInit() {
+    const subscription = this.studentService.currentStudentObservable.subscribe(student => {
+      this.unsubscribes.push(
+        this.brokerService.subscribe('SubmissionService: Subscribe-To-Verdict',
+          `/students/${student.id}/verdicts`, message => this.handleVerdictFromBrokerMessage(message)));
+    });
+    this.unsubscribes.push(() => subscription.unsubscribe());
+  }
+
+  public onDestroy() {
+    for (const unsubscribe of this.unsubscribes) {
+      unsubscribe();
+    }
   }
 
   private handleVerdictFromBrokerMessage(message: BrokerMessage) {
@@ -109,9 +126,9 @@ export class HttpSubmissionService extends SubmissionService {
 
   getSubmittedCodes(problemId: number, submissionId: string, submittedCodesFileId: string): Observable<CodeFile[]> {
     return this.problemService.getProblem(problemId)
-      .pipe(switchMap(p => {
-        return this.http.get(`${this.baseUrl}/api/problems/${problemId}/${DEFAULT_LANG_ENV}`+
-        `/students/${this.studentId}` +
+      .pipe(switchMap(() => {
+        return this.http.get(`${this.baseUrl}/api/problems/${problemId}/${DEFAULT_LANG_ENV}` +
+          `/students/${this.studentId}` +
           `/submissions/${submissionId}/submittedCodes/${submittedCodesFileId}`, {
           headers: this.httpHeaders,
           responseType: 'arraybuffer'
@@ -127,6 +144,7 @@ export class HttpSubmissionService extends SubmissionService {
       headers: this.httpHeaders
     };
   }
+
   private get httpHeaders(): HttpHeaders {
     return new HttpHeaders({
       Authorization: `Bearer ${this.studentService.currentStudent.token}`
