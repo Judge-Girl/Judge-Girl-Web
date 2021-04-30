@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, OnInit, Renderer2, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, Inject, OnInit, Renderer2, ViewChild} from '@angular/core';
 
 import {describeMemory, describeTimeInSeconds, ExamOverview, JudgeStatus, QuestionItem} from '../../models';
 import {ExamService, StudentService} from '../../services/Services';
@@ -6,6 +6,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {switchMap} from 'rxjs/operators';
 import {Observable} from 'rxjs';
 import {initHighlight, parseMarkdown} from 'src/utils/markdownUtils';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Component({
   selector: 'app-exam-problems',
@@ -14,11 +15,13 @@ import {initHighlight, parseMarkdown} from 'src/utils/markdownUtils';
 })
 export class ExamQuestionsComponent implements OnInit, AfterViewInit {
 
-  constructor(private examService: ExamService,
+  constructor(private http: HttpClient,
+              private examService: ExamService,
               private studentService: StudentService,
               private route: ActivatedRoute,
               private router: Router,
-              private renderer: Renderer2) {
+              private renderer: Renderer2,
+              @Inject('EXAM_SERVICE_BASE_URL') private baseUrl: string) {
   }
 
   private examId: number;
@@ -40,11 +43,11 @@ export class ExamQuestionsComponent implements OnInit, AfterViewInit {
   }
 
   private refetchExam() {
-    const exam$ = this.examService.getExamProgressOverview(this.studentService.currentStudent.id, this.examId);
+    const exam$ = this.http.get<ExamOverview>(`${this.baseUrl}/api/exams/${this.examId}/students/${this.studentService.currentStudent.id}/overview`);
 
-    // Use setTimeout(...) to run code asynchronously to avoid ExpressionChangedAfterItHasBeenCheckedError
     setTimeout(() => {
       exam$.subscribe(e => {
+        console.log('subscribe', e);
         this.exam = e;
       });
     })
