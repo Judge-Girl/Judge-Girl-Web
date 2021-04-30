@@ -3,10 +3,8 @@ import {AfterViewInit, Component, ElementRef, Inject, OnInit, Renderer2, ViewChi
 import {describeMemory, describeTimeInSeconds, ExamOverview, JudgeStatus, QuestionItem} from '../../models';
 import {ExamService, StudentService} from '../../services/Services';
 import {ActivatedRoute, Router} from '@angular/router';
-import {switchMap} from 'rxjs/operators';
-import {Observable} from 'rxjs';
 import {initHighlight, parseMarkdown} from 'src/utils/markdownUtils';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-exam-problems',
@@ -16,12 +14,11 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 export class ExamQuestionsComponent implements OnInit, AfterViewInit {
 
   constructor(private http: HttpClient,
-              private examService: ExamService,
-              private studentService: StudentService,
-              private route: ActivatedRoute,
-              private router: Router,
-              private renderer: Renderer2,
-              @Inject('EXAM_SERVICE_BASE_URL') private baseUrl: string) {
+    private studentService: StudentService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private renderer: Renderer2,
+    @Inject('EXAM_SERVICE_BASE_URL') private baseUrl: string) {
   }
 
   private examId: number;
