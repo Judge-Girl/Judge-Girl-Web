@@ -44,7 +44,6 @@ export class ExamQuestionsComponent implements OnInit, AfterViewInit {
 
     setTimeout(() => {
       exam$.subscribe(e => {
-        console.log('subscribe', e);
         this.exam = e;
       });
     })
