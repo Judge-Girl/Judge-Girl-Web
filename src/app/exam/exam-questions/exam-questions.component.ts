@@ -13,13 +13,11 @@ import { HttpClient } from '@angular/common/http';
 })
 export class ExamQuestionsComponent implements OnInit, AfterViewInit {
 
-  constructor(private http: HttpClient,
-              private examService: ExamService,
+  constructor(private examService: ExamService,
               private studentService: StudentService,
               private route: ActivatedRoute,
               private router: Router,
-              private renderer: Renderer2,
-              @Inject('EXAM_SERVICE_BASE_URL') private baseUrl: string) {
+              private renderer: Renderer2) {
   }
 
   private examId: number;
