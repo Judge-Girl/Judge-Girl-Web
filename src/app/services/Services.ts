@@ -124,7 +124,7 @@ export abstract class ProblemService {
 })
 export abstract class ExamService {
 
-  abstract getExamProgressOverview(studentId: number, examId: number): Observable<ExamOverview>;
+  abstract getExamProgressOverview(studentId: number, examId: number, cached?: boolean): Observable<ExamOverview>;
 
   abstract getExamsByStudentId(studentId: number, examStatus?: ExamStatus,
                                skip?: number, size?: number): Observable<ExamItem[]>;

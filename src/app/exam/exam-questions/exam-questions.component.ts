@@ -14,11 +14,12 @@ import { HttpClient } from '@angular/common/http';
 export class ExamQuestionsComponent implements OnInit, AfterViewInit {
 
   constructor(private http: HttpClient,
-    private studentService: StudentService,
-    private route: ActivatedRoute,
-    private router: Router,
-    private renderer: Renderer2,
-    @Inject('EXAM_SERVICE_BASE_URL') private baseUrl: string) {
+              private examService: ExamService,
+              private studentService: StudentService,
+              private route: ActivatedRoute,
+              private router: Router,
+              private renderer: Renderer2,
+              @Inject('EXAM_SERVICE_BASE_URL') private baseUrl: string) {
   }
 
   private examId: number;
@@ -40,7 +41,7 @@ export class ExamQuestionsComponent implements OnInit, AfterViewInit {
   }
 
   private refetchExam() {
-    const exam$ = this.http.get<ExamOverview>(`${this.baseUrl}/api/exams/${this.examId}/students/${this.studentService.currentStudent.id}/overview`);
+    const exam$ = this.examService.getExamProgressOverview(this.studentService.currentStudent.id, this.examId, false);
 
     setTimeout(() => {
       exam$.subscribe(e => {
