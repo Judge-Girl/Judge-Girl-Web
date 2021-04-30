@@ -21,7 +21,7 @@ export class ExamQuestionsComponent implements OnInit, AfterViewInit {
               private renderer: Renderer2) {
   }
 
-  private exam$: Observable<ExamOverview>;
+  private examId: number;
   public exam: ExamOverview;
 
   @ViewChild('examDescriptionPanel') set content(content: ElementRef) {
@@ -32,18 +32,22 @@ export class ExamQuestionsComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     initHighlight();
-    this.exam$ = this.route.parent.params.pipe(switchMap(params =>
-      this.examService.getExamProgressOverview(this.studentService.currentStudent.id, +params.examId)
-    ));
+    this.examId = Number(this.route.parent.snapshot.params.examId);
   }
 
   ngAfterViewInit(): void {
+    this.refetchExam();
+  }
+
+  private refetchExam() {
+    const exam$ = this.examService.getExamProgressOverview(this.studentService.currentStudent.id, this.examId);
+
     // Use setTimeout(...) to run code asynchronously to avoid ExpressionChangedAfterItHasBeenCheckedError
     setTimeout(() => {
-      this.exam$.subscribe(e => {
+      exam$.subscribe(e => {
         this.exam = e;
       });
-    });
+    })
   }
 
   private renderMarkdown(element: ElementRef, mdString: string) {
