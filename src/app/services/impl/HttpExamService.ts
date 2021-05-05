@@ -21,7 +21,7 @@ export class HttpExamService extends ExamService {
   }
 
   getExamProgressOverview(studentId: number, examId: number): Observable<ExamOverview> {
-    return this.httpRequestCache.get(`${this.baseUrl}/api/exams/${examId}/students/${studentId}/overview`);
+    return this.http.get<ExamOverview>(`${this.baseUrl}/api/exams/${examId}/students/${studentId}/overview`);
   }
 
   getExamsByStudentId(studentId: number, examStatus: ExamStatus = ExamStatus.all,

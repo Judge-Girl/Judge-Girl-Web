@@ -1,11 +1,10 @@
-import {AfterViewInit, Component, ElementRef, OnInit, Renderer2, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, Inject, OnInit, Renderer2, ViewChild} from '@angular/core';
 
 import {describeMemory, describeTimeInSeconds, ExamOverview, JudgeStatus, QuestionItem} from '../../models';
 import {ExamService, StudentService} from '../../services/Services';
 import {ActivatedRoute, Router} from '@angular/router';
-import {switchMap} from 'rxjs/operators';
-import {Observable} from 'rxjs';
 import {initHighlight, parseMarkdown} from 'src/utils/markdownUtils';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-exam-problems',
@@ -21,7 +20,7 @@ export class ExamQuestionsComponent implements OnInit, AfterViewInit {
               private renderer: Renderer2) {
   }
 
-  private exam$: Observable<ExamOverview>;
+  private examId: number;
   public exam: ExamOverview;
 
   @ViewChild('examDescriptionPanel') set content(content: ElementRef) {
@@ -32,18 +31,21 @@ export class ExamQuestionsComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     initHighlight();
-    this.exam$ = this.route.parent.params.pipe(switchMap(params =>
-      this.examService.getExamProgressOverview(this.studentService.currentStudent.id, +params.examId)
-    ));
+    this.examId = Number(this.route.parent.snapshot.params.examId);
   }
 
   ngAfterViewInit(): void {
-    // Use setTimeout(...) to run code asynchronously to avoid ExpressionChangedAfterItHasBeenCheckedError
+    this.refetchExam();
+  }
+
+  private refetchExam() {
+    const exam$ = this.examService.getExamProgressOverview(this.studentService.currentStudent.id, this.examId);
+
     setTimeout(() => {
-      this.exam$.subscribe(e => {
+      exam$.subscribe(e => {
         this.exam = e;
       });
-    });
+    })
   }
 
   private renderMarkdown(element: ElementRef, mdString: string) {
