@@ -20,12 +20,8 @@ export class HttpExamService extends ExamService {
     this.baseUrl = baseUrl;
   }
 
-  getExamProgressOverview(studentId: number, examId: number, cached: boolean = true): Observable<ExamOverview> {
-    if (cached) {
-      return this.httpRequestCache.get(`${this.baseUrl}/api/exams/${examId}/students/${studentId}/overview`);
-    } else {
-      return this.http.get<ExamOverview>(`${this.baseUrl}/api/exams/${examId}/students/${studentId}/overview`);
-    }
+  getExamProgressOverview(studentId: number, examId: number): Observable<ExamOverview> {
+    return this.http.get<ExamOverview>(`${this.baseUrl}/api/exams/${examId}/students/${studentId}/overview`);
   }
 
   getExamsByStudentId(studentId: number, examStatus: ExamStatus = ExamStatus.all,

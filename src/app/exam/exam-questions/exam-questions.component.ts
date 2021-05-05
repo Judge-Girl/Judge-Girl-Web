@@ -39,7 +39,7 @@ export class ExamQuestionsComponent implements OnInit, AfterViewInit {
   }
 
   private refetchExam() {
-    const exam$ = this.examService.getExamProgressOverview(this.studentService.currentStudent.id, this.examId, false);
+    const exam$ = this.examService.getExamProgressOverview(this.studentService.currentStudent.id, this.examId);
 
     setTimeout(() => {
       exam$.subscribe(e => {
