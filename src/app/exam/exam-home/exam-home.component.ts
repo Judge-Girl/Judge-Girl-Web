@@ -25,12 +25,12 @@ export class ExamHomeComponent implements OnInit, AfterViewInit {
   }
 
   readonly TAB_PROBLEMS = Tab.PROBLEMS;
-  readonly TAB_SUBMISSIONS = Tab.SUBMISSIONS;
-  readonly TAB_SCOREBOARD = Tab.SCOREBOARD;
+  // readonly TAB_SUBMISSIONS = Tab.SUBMISSIONS;
+  // readonly TAB_SCOREBOARD = Tab.SCOREBOARD;
 
   @ViewChild('problemsTab') problemsTab: ElementRef;
-  @ViewChild('submissionsTab') submissionsTab: ElementRef;
-  @ViewChild('scoreboardTab') scoreboardTab: ElementRef;
+  // @ViewChild('submissionsTab') submissionsTab: ElementRef;
+  // @ViewChild('scoreboardTab') scoreboardTab: ElementRef;
   @ViewChild('splitter') splitter: SplitComponent;
   private allTabs: ElementRef[];
 
@@ -50,7 +50,7 @@ export class ExamHomeComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.allTabs = [this.problemsTab, this.submissionsTab, this.scoreboardTab];
+    this.allTabs = [this.problemsTab /*, this.submissionsTab, this.scoreboardTab */];
     this.router.events.subscribe(e => {
       if (e instanceof NavigationEnd) {
         this.refreshTabElementsState();
@@ -64,21 +64,21 @@ export class ExamHomeComponent implements OnInit, AfterViewInit {
   routeToTab(tab: Tab): void {
     if (tab === Tab.PROBLEMS) {
       this.router.navigate([`exams/${this.examId}`]);
-    } else if (tab === Tab.SUBMISSIONS) {
+    } /* else if (tab === Tab.SUBMISSIONS) {
       this.router.navigate([`exams/${this.examId}/submissions`]);
     } else if (tab === Tab.SCOREBOARD) {
       this.router.navigate([`exams/${this.examId}/scoreboard`]);
-    }
+    } */
   }
 
   private refreshTabElementsState() {
-    if (window.location.pathname.endsWith('scoreboard')) {
-      this.activateTabAndDeactivateOthers(this.scoreboardTab);
-    } else if (window.location.pathname.endsWith('submissions')) {
-      this.activateTabAndDeactivateOthers(this.submissionsTab);
-    } else {
+    // if (window.location.pathname.endsWith('scoreboard')) {
+    //   this.activateTabAndDeactivateOthers(this.scoreboardTab);
+    // } else if (window.location.pathname.endsWith('submissions')) {
+    //   this.activateTabAndDeactivateOthers(this.submissionsTab);
+    // } else {
       this.activateTabAndDeactivateOthers(this.problemsTab);
-    }
+    // }
   }
 
   private activateTabAndDeactivateOthers(tab: ElementRef) {
@@ -94,13 +94,13 @@ export class ExamHomeComponent implements OnInit, AfterViewInit {
   }
 
   private routeToTabByCurrentUrl() {
-    if (window.location.pathname.endsWith('scoreboard')) {
-      this.routeToTab(Tab.SCOREBOARD);
-    } else if (window.location.pathname.endsWith('submissions')) {
-      this.routeToTab(Tab.SUBMISSIONS);
-    } else {
+    // if (window.location.pathname.endsWith('scoreboard')) {
+    //   this.routeToTab(Tab.SCOREBOARD);
+    // } else if (window.location.pathname.endsWith('submissions')) {
+    //   this.routeToTab(Tab.SUBMISSIONS);
+    // } else {
       this.routeToTab(Tab.PROBLEMS);
-    }
+    // } 
   }
 
   routeToExamList() {
