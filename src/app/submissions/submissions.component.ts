@@ -83,14 +83,11 @@ export class SubmissionsComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private fetchProblem() {
-    this.route.parent.params.pipe(switchMap(params =>
-      this.problemService.getProblem(+params.problemId)
-    )).toPromise()
-      .then(p => {
-        this.problem = p;
-        this.problemService.getTestCases(this.problem.id).toPromise()
-          .then(testCases => this.testCases = testCases);
-      });
+    this.problemService.getProblem(Number(this.route.parent.snapshot.params.problemId)).subscribe(p => {
+      this.problem = p;
+      this.problemService.getTestCases(this.problem.id).toPromise()
+        .then(testCases => this.testCases = testCases);
+    });
   }
 
   private subscribeToSubmissions(): Subscription {
