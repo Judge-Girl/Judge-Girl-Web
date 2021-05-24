@@ -32,7 +32,7 @@
     <tbody>
       <tr> </tr>
       <tr *ngFor="let examItem of examItems">
-        <th scope="row"> {{ examItem.id }} </th>
+        <td scope="row"> {{ examItem.id }} </td>
         <td><span class="fake-link" (click)="routeToExam(examItem.id)"> {{ examItem.name }} </span></td>
         <td> {{ getTimeString(examItem.startTime) }} </td>
         <td> {{ getTimeString(examItem.endTime) }} </td>

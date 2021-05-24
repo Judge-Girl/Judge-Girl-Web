@@ -8,14 +8,24 @@
     </ng-template>
   </p-toast>
 
-  <nav class="navbar navbar-expand-sm navbar-dark bg-dark" [style.padding]="'3px 1px 3px 20px'">
+  <nav class="navbar navbar-expand-sm navbar-dark" style=" padding:5px 1px 5px 20px; background-color: #252730;">
 
-    <a class="navbar-brand" [routerLink]="''" [style.fontSize]="'16px'">Judge Girl</a>
+    <a class="navbar-brand" [routerLink]="''" [style.fontSize]="'23px'">
+      <span style="color: #339BE7">J</span>
+      <span style="color: #6FBDF6">u</span>
+      <span style="color: #8DC6F0">d</span>
+      <span style="color: #B1D6F0">g</span>
+      <span style="color: #D3EAFB">e</span>
+      <span style="color: #339BE7"> G</span>
+      <span style="color: #6FBDF6">i</span>
+      <span style="color: #8DC6F0">r</span>
+      <span style="color: #D3EAFB">l</span>
+    </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div class="collapse navbar-collapse" id="navbarSupportedContent" [style.fontSize]="'14px'">
+    <div class="collapse navbar-collapse" id="navbarSupportedContent" style="fontSize:16px; font-weight: 300;">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item" >
           <a class="nav-link" [routerLinkActive]="['active']" [routerLink]="'problems'">Problems</a>
@@ -29,7 +39,7 @@
           <a class="nav-link" (click)="routeToChangePassword()" [routerLink]="''">Change Password</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link">/</a>
+          <a class="nav-link" style="padding: 8px 0px">/</a>
         </li>
         <li class="nav-item cursor-pointer">
           <a class="nav-link" (click)="onLogoutClick()" [routerLink]="''">Logout</a>
