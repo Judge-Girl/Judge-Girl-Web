@@ -1,8 +1,13 @@
 
 
 .my-btn-text {
-  font-weight: 600;
-  color: #676877;
+  font-weight: 500;
+  color: #6D6E7D;
+  border-color: #ced4da;
+}
+
+.my-btn-text:hover {
+  background-color: #F2F2F2;
 }
 
 .table th {

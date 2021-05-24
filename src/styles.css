@@ -62,21 +62,22 @@ html, body {
 
 body {
   margin: 0;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Poppins', Arial, sans-serif;
 }
 
 /* Override bootstrap's table */
 
 .table th {
   border-top: 0;
-}
-
-.table th, .table td {
+  font-weight: 600;
   text-align: center;
+  padding: .5rem;
 }
 
-.table td, .table th {
+.table td {
+  text-align: center;
   padding: .5rem;
+  font-weight: 300;
 }
 
 table tr:nth-child(even) {
@@ -144,7 +145,7 @@ table tr:nth-child(even) {
 /* */
 
 .fake-link {
-  color: #1273BA;
+  color: #0F7ED0;
   cursor: pointer;
 }
 
@@ -156,8 +157,8 @@ table tr:nth-child(even) {
   font-weight: 600;
 }
 
-.fsz-28 {
-  font-size: 28px;
+.fsz-25 {
+  font-size: 25px;
 }
 
 .fsz-30 {
