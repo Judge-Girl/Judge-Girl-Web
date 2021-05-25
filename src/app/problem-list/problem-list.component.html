@@ -1,25 +1,34 @@
-<div class="center-content-panel">
-  <div id="problems-panel" class="card shadow">
-    <div class="card-title">
-      <header>Problem List</header>
-    </div>
-    <hr>
-    <div class="card-body">
-
-      <div id="problem-tags-bar" >
-        <problem-tag-drop-down (tagSelect)="onProblemTagSelected($event)"></problem-tag-drop-down>
-      </div>
-
-      <!-- Spinner -->
-      <div  *ngIf="loadingProblems" class="row w-100 h-100 align-items-center justify-content-center">
-        <ld-circle></ld-circle>
-      </div>
-
-      <ul class="list-group" *ngFor="let problemItem of problemItems">
-        <li class="problem-item list-group-item fade-in" (click)="routeToProblem(problemItem.id)" >
-          <p class="problem-item-title"> {{problemItem.id + '. ' + problemItem.title}}</p>
-        </li>
-      </ul>
-    </div>
+<div class="container font-poppins pt-4">
+  <div class="title-font pt-4 px-1 text-left">
+    Problem List
   </div>
+  <hr>
+
+  <!-- Spinner -->
+  <div *ngIf="loadingProblems" class="row w-100 h-100 align-items-center justify-content-center">
+    <ld-circle></ld-circle>
+  </div>
+
+  <table *ngIf="!loadingProblems" class="w-100 table table-borderless table-hover my-problem-table fade-in">
+    <thead>
+    <tr>
+      <th scope="col"> #</th>
+      <th scope="col" class="text-left"> ProblemTitle</th>
+      <th scope="col" class="text-left"> Tags</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr></tr>
+    <tr *ngFor="let problemItem of problemItems">
+      <td scope="row"> {{ problemItem.id }} </td>
+      <td class="text-left fake-link" (click)="routeToProblem(problemItem.id)"> {{ problemItem.title }}</td>
+      <td class="text-left">
+        <span style="padding-right: 5px" *ngFor="let tag of problemItem.tags">
+          <p class="badge badge-pill badge-info m-0 problem-tag">{{tag}}</p>
+        </span>
+      </td>
+    </tr>
+    </tbody>
+  </table>
 </div>
+

@@ -20,12 +20,6 @@ export class TestCase {
   }
 }
 
-export class ProblemItem {
-  constructor(public id: number,
-              public title: string) {
-  }
-}
-
 export class JudgeSpec {
   constructor(public language: string,
               public environment: string,
@@ -46,6 +40,13 @@ export class Compilation {
   }
 }
 
+export class ProblemItem {
+  constructor(public id: number,
+              public title: string,
+              public tags: string[]) {
+  }
+}
+
 export class Problem extends ProblemItem {
   private C: LanguageEnv;  // Currently only supports C
 
@@ -54,7 +55,7 @@ export class Problem extends ProblemItem {
               public tags: string[],
               public languageEnvs: LanguageEnv[],
               public testcases: TestCase[]) {
-    super(id, title);
+    super(id, title, tags);
     this.C = languageEnvs.filter(lang => lang.name === 'C')[0];
   }
 
