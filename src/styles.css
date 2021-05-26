@@ -67,7 +67,7 @@ body {
 
 /* Override bootstrap's table */
 
-.table th {
+.my-table thead th {
   border-top: 0;
   font-weight: 600;
   text-align: center;
@@ -76,17 +76,21 @@ body {
   border-bottom: 2px solid #6D6E7D;
 }
 
-.table td {
+.my-table td {
   text-align: center;
-  padding: .5rem;
+  padding: .65rem;
   font-weight: 300;
+  vertical-align: middle;
+  border-top: 0px;
 }
 
-.table tr {
+.my-table tr:nth-child(odd) {
   color: #6D6E7D;
+  background-color: #FFFFFF;
 }
 
-table tr:nth-child(even) {
+.my-table tr:nth-child(even) {
+  color: #6D6E7D;
   background-color: #F8F8F8;
 }
 

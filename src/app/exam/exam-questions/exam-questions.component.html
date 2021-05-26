@@ -4,32 +4,32 @@
 </div>
 
 <div *ngIf="exam" class="container pt-4 font-poppins" id="problem-description-panel">
-  <div class="row content-title-font pb-2">
-    <div class="col"> Problems</div>
+  <div class="row content-title-font pt-4 px-1 text-left">
+    Problems
   </div>
-  <div class="row pb-2">
-    <div style="width: 98%; position: relative; left: 1%; border: 1px solid #e4e1e1;"></div>
-  </div>
+  <hr>
   <div class="row">
-    <table class="table table-striped">
+    <table class="w-100 my-table table-borderless table-hover fade-in">
       <thead>
-      <tr>
-        <th scope="col"> #</th>
-        <th scope="col" class="text-left"> Problem Title</th>
-        <th scope="col"> Score</th>
-        <th scope="col" class="text-left"> Verdict</th>
-        <th scope="col"> Submission Quota</th>
-      </tr>
+        <tr>
+          <th scope="col"> #</th>
+          <th scope="col" class="text-left"> Problem Title</th>
+          <th scope="col"> Score</th>
+          <th scope="col" class="text-left"> Verdict</th>
+          <th scope="col"> Submission Quota</th>
+        </tr>
       </thead>
       <tbody>
+      <tr></tr>
       <tr *ngFor="let question of exam.questions; let i = index">
-        <td> {{ toCharactorIndex(i) }} </td>
+        <td> {{ toCharactorIndex(i)}} </td>
         <td class="text-left fake-link"
-            (click)="routeToQuestion(question)"> {{ question.problemId }}. {{ question.problemTitle  }} </td>
+            (click)="routeToQuestion(question)"> {{ question.problemId }}. {{ question.problemTitle }} </td>
         <td> {{ question.yourScore }} / {{ question.maxScore }} </td>
-        <td class="text-left"> <span class="judge-status {{getQuestionStatus(question)}}">
-            {{getQuestionStatus(question)}}</span>
-          <span class="ml-2">{{ getQuestionBestRecord(question) }}</span></td>
+        <td class="text-left">
+          <span class="judge-status {{getQuestionStatus(question)}}">{{getQuestionStatus(question)}}</span>
+          <span class="ml-2">{{ getQuestionBestRecord(question) }}</span>
+        </td>
         <td> {{ question.remainingQuota }} </td>
       </tr>
       </tbody>
@@ -37,8 +37,8 @@
       <tfoot>
       <tr>
         <td></td>
-        <td style="color: #FB5D53; font-weight: 600;"> Total Score</td>
-        <td style="color: #FB5D53; font-weight: 600;"> {{ getTotalScore() }} / {{ getTotalMaxScore() }} </td>
+        <td class="text-right total-score"> Total Score</td>
+        <td class="total-score"> {{ getTotalScore() }} / {{ getTotalMaxScore() }} </td>
         <td></td>
         <td></td>
       </tr>

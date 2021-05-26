@@ -12,26 +12,9 @@
   background: rgb(246, 246, 246);
 }
 
-th {
+.total-score {
+  color: #FB5D53;
   font-weight: 600;
-  color: #676877;
-}
-
-td:not(.fake-link) {
-  color: #6D6E7D;
-}
-
-tfoot {
-  border-top: 2px #676877;
-}
-
-.table thead th {
-    border-bottom: 2px solid #6D6E7D;
-}
-
-.table td, .table th {
-  border-top: 0;
-  vertical-align: middle;
 }
 
 .judge-status {

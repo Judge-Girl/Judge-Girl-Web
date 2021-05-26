@@ -16,10 +16,6 @@
   text-align: left;
 }
 
-.my-problem-table th {
-  border-bottom: 2px solid #6D6E7D;
-}
-
 .my-problem-table td:nth-child(2) {
   width: 40%;
 }
