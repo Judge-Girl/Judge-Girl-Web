@@ -1,35 +1,19 @@
+.my-problem-table td:nth-child(2) {
+  width: 40%;
+}
 
-hr {
-  margin: 0;
+.my-problem-table td:nth-child(3) {
+  display: flex;
+  flex-flow: row wrap;
+}
+
+.problem-tag {
+  font-size: 13px;
+  font-weight: 600 !important;
+  background-color: #0F7ED0;
+  padding-top: 4px;
+  padding-bottom: 4px;
 }
 
 
-#problems-panel {
-  width: 80%;
-  text-align: center;
-}
-
-.problem-item {
-  text-align: left;
-  cursor: pointer;
-}
-
-.problem-item:hover {
-  background: #cccccc;
-}
-
-.problem-item-title {
-  text-align: left;
-  margin: 3px;
-}
-
-.problem-item-description {
-  text-align: left;
-}
-
-#problem-tags-bar {
-  width: 100%;
-  margin-bottom: 25px;
-  text-align: right;
-}
 

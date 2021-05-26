@@ -43,17 +43,17 @@ header {
 
 .fade-in {
   opacity: 0;
-  -webkit-animation: fadeIn ease-in 1;
-  -moz-animation: fadeIn ease-in 1;
-  animation: fadeIn ease-in 1;
+  -webkit-animation: fadeIn ease-in;
+  -moz-animation: fadeIn ease-in;
+  animation: fadeIn ease-in;
 
   -webkit-animation-fill-mode: forwards;
   -moz-animation-fill-mode: forwards;
   animation-fill-mode: forwards;
 
-  -webkit-animation-duration: 1s;
-  -moz-animation-duration: 1s;
-  animation-duration: 1s;
+  -webkit-animation-duration: 0.8s;
+  -moz-animation-duration: 0.8s;
+  animation-duration: 0.8s;
 }
 
 html, body {
@@ -67,21 +67,31 @@ body {
 
 /* Override bootstrap's table */
 
-.table th {
+.my-table thead th {
   border-top: 0;
   font-weight: 600;
   text-align: center;
   padding: .5rem;
+  color: #6D6E7D;
+  border-bottom: 2px solid #6D6E7D;
 }
 
-.table td {
+.my-table td {
   text-align: center;
-  padding: .5rem;
+  padding: .65rem;
   font-weight: 300;
+  vertical-align: middle;
+  border-top: 0px;
 }
 
-table tr:nth-child(even) {
-  background-color: #fafafa;
+.my-table tr:nth-child(odd) {
+  color: #6D6E7D;
+  background-color: #FFFFFF;
+}
+
+.my-table tr:nth-child(even) {
+  color: #6D6E7D;
+  background-color: #F8F8F8;
 }
 
 /* Auto Resize*/
