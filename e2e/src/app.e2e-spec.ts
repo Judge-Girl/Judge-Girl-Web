@@ -1,3 +1,5 @@
+import { resolve } from 'path';
+
 import { AppPage } from './app.po';
 import { browser, by, element, logging, ExpectedConditions } from 'protractor';
 import { ECANCELED } from 'constants';
@@ -32,7 +34,7 @@ describe('workspace-project App', () => {
     browser.sleep(1000);
     expect(element(by.css('h1')).getText()).toEqual(problemName);
 
-    element(by.css('form input[type=file]')).sendKeys(`/home/edison/a.c`);
+    element(by.css('form input[type=file]')).sendKeys(resolve(__dirname, '..', 'empty.c'));
     browser.sleep(1000);
     element(by.css('form input[type=submit]')).click();
     browser.sleep(1000);
@@ -47,7 +49,7 @@ describe('workspace-project App', () => {
 
     // check quota - 1
 
-    browser.sleep(100000000);
+    // browser.sleep(100000000);
   });
 
   afterEach(async () => {
