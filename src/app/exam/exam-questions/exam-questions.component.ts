@@ -45,7 +45,7 @@ export class ExamQuestionsComponent implements OnInit, AfterViewInit {
       exam$.subscribe(e => {
         this.exam = e;
       });
-    })
+    });
   }
 
   private renderMarkdown(element: ElementRef, mdString: string) {
@@ -76,7 +76,7 @@ export class ExamQuestionsComponent implements OnInit, AfterViewInit {
   getQuestionBestRecord(question: QuestionItem): string {
     const bestRecord = question.bestRecord;
     if (!bestRecord) {
-      return `--`;
+      return '--';
     }
     if (bestRecord.status === JudgeStatus.AC) {
       return `(${describeTimeInSeconds(bestRecord.maximumRuntime)}, ${describeMemory(bestRecord.maximumMemoryUsage)})`;

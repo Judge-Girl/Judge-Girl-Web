@@ -1,5 +1,3 @@
-
-
 <p-toast position="top-right" key="{{MESSAGE_KEY_ERROR_TOAST}}"></p-toast>
 
 
@@ -18,15 +16,19 @@
       <div *ngIf="problem">
         <div class="upload-row"
              *ngFor="let codeSpec of problem.submittedCodeSpecs; let i = index" #codeSpecRow>
-          <span>{{codeSpec.fileName}}</span>
-          <p-fileUpload id="_fileSelector{{i}}" mode="basic" chooseLabel="Upload" name="files" accept="{{getAcceptedFileExtensionByCodeSpec(codeSpec)}}"
-                         (click)="clearAndSelect(i, fileInput)" (change)="onFileInputChange(i, codeSpecRow, fileInput)" #fileInput></p-fileUpload>
-
+          <span class="file-name">{{codeSpec.fileName}}</span>
+          <p-fileUpload id="_fileSelector{{i}}"
+                        mode="basic"
+                        chooseLabel="Upload"
+                        name="files"
+                        accept="{{getAcceptedFileExtensionByCodeSpec(codeSpec)}}"
+                        (click)="clearAndSelect(i, fileInput)"
+                        (change)="onFileInputChange(i, codeSpecRow, fileInput)"
+                        #fileInput></p-fileUpload>
         </div>
-
       </div>
 
-      <div style="width: 100%; text-align: end">
+      <div style="width: 100%; text-align: end; border-radius: 10px">
         <input class="btn btn-primary" id="submit-btn" type="submit" value="Submit"
                (click)="submit()"/>
       </div>

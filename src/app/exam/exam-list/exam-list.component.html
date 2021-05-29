@@ -20,7 +20,7 @@
     <ld-circle></ld-circle>
   </div>
 
-  <table *ngIf="!loadingExams" class="w-100 table table-borderless table-hover my-exam-table">
+  <table *ngIf="!loadingExams" class=" w-100 my-table table-borderless table-hover fade-in">
     <thead>
       <tr>
         <th scope="col"> # </th>
@@ -30,9 +30,9 @@
       </tr>
     </thead>
     <tbody>
-      <tr> </tr>
+      <tr></tr>
       <tr *ngFor="let examItem of examItems">
-        <th scope="row"> {{ examItem.id }} </th>
+        <td scope="row"> {{ examItem.id }} </td>
         <td><span class="fake-link" (click)="routeToExam(examItem.id)"> {{ examItem.name }} </span></td>
         <td> {{ getTimeString(examItem.startTime) }} </td>
         <td> {{ getTimeString(examItem.endTime) }} </td>

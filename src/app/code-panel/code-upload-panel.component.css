@@ -1,10 +1,8 @@
-
 .feedback {
   font-size: 13px;
   line-height: 14px;
   font-style: italic;
 }
-
 
 #source-code-text-area {
   width: 100%;
@@ -15,11 +13,47 @@
   margin-top: 20px;
 }
 
+:host ::ng-deep body .ui-button {
+  padding: 1px;
+  color: #ffffff;
+  background-color: #3298dc;
+  border: 1px solid #3298dc;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 10px;
+  align-self: stretch;
+  margin-bottom: -10px;
+  font-family: 'Poppins', Arial, sans-serif;
+}
 
 .upload-row > * {
-  line-height: 50px;
+  line-height: 30px;
   height: 50px;
-  margin-right: 20px;
+  font-size: 16px;
+  margin: 8px;
+}
+
+.upload-row.ng-star-inserted {
+  margin-top: 10px;
+}
+
+.btn-primary {
+  background-color: #48C9B0;
+  border-color: #48C9B0;
+  border-radius: 10px;
+}
+
+.btn-primary:focus {
+  color: #fff;
+  background-color: #3EB8A0;
+  border-color: #3EB8A0;
+  box-shadow: 0 0 0 0rem ;
+}
+
+.btn-primary:hover {
+  color: #fff;
+  background-color: #25A78E;
+  border-color: #25A78E;
 }
 
 .clear-upload-cross {

@@ -1,24 +1,18 @@
-
-
 .my-btn-text {
-  font-weight: 600;
-  color: #676877;
-}
-
-.table th {
-  text-align: left;
-}
-
-.table td {
-  text-align: left;
-}
-
-.my-exam-table thead {
-  border-bottom: 2px solid #6D6E7D;
-  text: #676877;
-}
-
-.my-exam-table tr {
+  font-weight: 500;
   color: #6D6E7D;
+  border-color: #ced4da;
+}
+
+.my-btn-text:hover {
+  background-color: #F2F2F2;
+}
+
+.my-table th:not(:first-child) {
+  text-align: left;
+}
+
+.my-table td:not(:first-child) {
+  text-align: left;
 }
 
