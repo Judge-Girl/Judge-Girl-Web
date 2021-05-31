@@ -128,7 +128,7 @@ export class HttpExamQuestionSubmissionService extends SubmissionService {
   getSubmittedCodes(problemId: number, submissionId: string, submittedCodesFileId: string): Observable<CodeFile[]> {
     return this.problemService.getProblem(problemId)
       .pipe(switchMap(() => {
-        const url = `${this.baseUrl}/api/exams/${this.examId}/problems/${problemId}/${DEFAULT_LANG_ENV}/students/${this.studentId}/submissions/${submissionId}/submittedCodes/${submittedCodesFileId}`;
+        const url = `${this.baseUrl}/api/problems/${problemId}/${DEFAULT_LANG_ENV}/students/${this.studentId}/submissions/${submissionId}/submittedCodes/${submittedCodesFileId}`;
         return this.http.get(url, {
           headers: this.httpHeaders,
           responseType: 'arraybuffer'
