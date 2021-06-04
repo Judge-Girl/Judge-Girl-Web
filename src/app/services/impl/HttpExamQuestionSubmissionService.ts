@@ -85,7 +85,7 @@ export class HttpExamQuestionSubmissionService extends SubmissionService {
   getSubmissions(problemId: number): Observable<Submission[]> {
     this.currentSubmissions$.next([]); // clear previous submissions
     this.studentService.authenticate();
-    const url = `${this.baseUrl}/api/problems/${problemId}/${DEFAULT_LANG_ENV}/students/${this.studentId}/submissions?exam-id=${this.examId}`;
+    const url = `${this.baseUrl}/api/problems/${problemId}/${DEFAULT_LANG_ENV}/students/${this.studentId}/submissions?examId=${this.examId}`;
     this.http.get<Submission[]>(url, this.httpOptions)
       .toPromise()
       .then(submissions => {
