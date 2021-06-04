@@ -2,7 +2,6 @@ import { resolve } from 'path';
 
 import { AppPage } from './app.po';
 import { browser, by, element, logging, ExpectedConditions } from 'protractor';
-import { ECANCELED } from 'constants';
 
 describe('workspace-project App', () => {
   let page: AppPage;
@@ -20,16 +19,15 @@ describe('workspace-project App', () => {
     element(by.css('input[type=submit]')).click(); // login
     browser.sleep(3000);
 
-    element(by.css('nav ul li + li a')).click(); // click exam a
+    element(by.css('nav ul li + li a')).click(); // click exam nav
 
-
-    element(by.css('tbody tr + tr + tr td span')).click(); // click exam name
+    element(by.css('tbody tr + tr + tr td span')).click(); // click first exam name
 
     expect(element(by.css('.content-title-font')).getText()).toBe('Problems');
 
     const problemName = element(by.css('tbody tr td + td')).getText();
     const quotaLeft = Number(element(by.css('tbody tr td + td + td + td + td')).getText());
-    element(by.css('tbody tr td + td')).click(); // click problem
+    element(by.css('tbody tr td + td')).click(); // click first problem
 
     browser.sleep(1000);
     expect(element(by.css('h1')).getText()).toEqual(problemName);
@@ -43,13 +41,12 @@ describe('workspace-project App', () => {
       expect(classes.split(' ').includes('acitve')).toBe(true);
     });
 
-    // see result 
+    expect(element(by.css('tbody tr td + td span')).getText()).toEqual('CE');
+    
+    element(by.css('question-banner span')).click(); // back to exam
 
-    // back to exam
-
-    // check quota - 1
-
-    // browser.sleep(100000000);
+    const newQuotaLeft = Number(element(by.css('tbody tr td + td + td + td + td')).getText());
+    expect(newQuotaLeft).toEqual(quotaLeft - 1);
   });
 
   afterEach(async () => {
