@@ -10,10 +10,50 @@
 }
 
 #submit-btn {
-  margin-top: 20px;
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  width: fit-content;
+  padding: 5px 10px 5px 10px;
+  margin: 10px 0 0 auto;
+  border-radius: 10px;
 }
 
-:host ::ng-deep body .ui-button {
+#submit-btn[disabled] {
+  cursor: not-allowed;
+  color: #fff;
+  background-color: #a8a8a8;
+}
+
+#submit-btn[disabled=false] {
+  cursor: pointer;
+  color: #fff;
+  background-color: #48C9B0;
+  border-color: #48C9B0;
+}
+
+#submit-btn ld-spinner {
+  margin-top: 3px; /* [TODO] improve from hard-coded: make the spinner vertically centered */
+}
+
+#submit-btn span {
+  margin-right: 5px;
+  font-size: 18px;
+}
+
+#submit-btn:focus[disabled=false] {
+  background-color: #3EB8A0;
+  border-color: #3EB8A0;
+  box-shadow: 0 0 0 0;
+}
+
+#submit-btn:hover[disabled=false] {
+  color: #fff;
+  background-color: #25A78E;
+  border-color: #25A78E;
+}
+
+::ng-deep body .ui-button {
   padding: 1px;
   color: #ffffff;
   background-color: #3298dc;
@@ -37,24 +77,6 @@
   margin-top: 10px;
 }
 
-.btn-primary {
-  background-color: #48C9B0;
-  border-color: #48C9B0;
-  border-radius: 10px;
-}
-
-.btn-primary:focus {
-  color: #fff;
-  background-color: #3EB8A0;
-  border-color: #3EB8A0;
-  box-shadow: 0 0 0 0rem ;
-}
-
-.btn-primary:hover {
-  color: #fff;
-  background-color: #25A78E;
-  border-color: #25A78E;
-}
 
 .clear-upload-cross {
   font-size: 1.5rem;

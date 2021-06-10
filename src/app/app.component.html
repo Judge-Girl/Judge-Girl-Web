@@ -25,7 +25,7 @@
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div class="collapse navbar-collapse" id="navbarSupportedContent" style="fontSize:16px; font-weight: 300;">
+    <div class="collapse navbar-collapse" id="navbarSupportedContent" style="font-size:16px; font-weight: 300;">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item" >
           <a class="nav-link" [routerLinkActive]="['active']" [routerLink]="'problems'">Problems</a>
@@ -39,7 +39,7 @@
           <a class="nav-link" (click)="routeToChangePassword()" [routerLink]="''">Change Password</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" style="padding: 8px 0px">/</a>
+          <a class="nav-link" style="padding: 8px 0">/</a>
         </li>
         <li class="nav-item cursor-pointer">
           <a class="nav-link" (click)="onLogoutClick()" [routerLink]="''">Logout</a>
@@ -60,14 +60,5 @@
   <div style="flex-grow: 1">
     <router-outlet></router-outlet>
   </div>
-
-  <!-- <footer class="footer" style="clear: both; position: relative; height: 30px; margin-top: -30px;"> -->
-  <footer class="footer" style="height: 30px;">
-    <div>The website was created by
-      <a href="https://github.com/Johnny850807">水球潘</a>,
-      <a href="https://github.com/edisonhello">陳冠宇</a>
-      and this is an open source held <a href="https://github.com/Judge-Girl/Judge-K8S">on Github</a>.
-    </div>
-  </footer>
 
 </div>

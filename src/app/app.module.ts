@@ -10,13 +10,13 @@ import {ExamHomeComponent} from './exam/exam-home/exam-home.component';
 import {ExamQuestionsComponent} from './exam/exam-questions/exam-questions.component';
 import {ExamScoreboardComponent} from './exam/exam-scoreboard/exam-scoreboard.component';
 import {ExamSubmissionsComponent} from './exam/exam-submissions/exam-submissions.component';
-import {BrokerService, ExamService, ProblemService, StudentService, SubmissionService} from './services/Services';
+import {BrokerService, ExamService, ProblemService, StudentService} from './services/Services';
 import {MultiTabsPanelComponent} from './problem-submission-tab-panel/multi-tabs-panel.component';
 import {ProblemDescriptionComponent} from './problem-description/problem-description.component';
 import {CodeUploadPanelComponent} from './code-panel/code-upload-panel.component';
 import {SubmissionsComponent} from './submissions/submissions.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {LdCircleComponent} from './items/id-circle/ld-circle.component';
+import {LdCircleComponent} from './items/spinners/ld-circle.component';
 import {FileUploadModule} from 'primeng/fileupload';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
 import {BlockUIModule, MessageService, MessagesModule, ToastModule} from 'primeng';
@@ -33,9 +33,10 @@ import {ChangePasswordComponent} from './users/change-password/change-password.c
 import {FormsModule} from '@angular/forms';
 import {StompBrokerService} from './services/impl/StompBrokerService';
 import {RxStompConfig} from '@stomp/rx-stomp';
-import { EventBus } from './services/EventBus';
-import { HttpExamQuestionSubmissionService } from './services/impl/HttpExamQuestionSubmissionService';
-import { QuestionBanner } from './exam/question-banner/question-banner.component';
+import {EventBus} from './services/EventBus';
+import {HttpExamQuestionSubmissionService} from './services/impl/HttpExamQuestionSubmissionService';
+import {QuestionBanner} from './exam/question-banner/question-banner.component';
+import {LdSpinnerComponent} from './items/spinners/ld-spinner.component';
 
 
 const DOMAIN = 'api.judgegirl.beta.pdlab.csie.ntu.edu.tw';
@@ -67,6 +68,7 @@ rxStompConfig.reconnectDelay = 200;
 
     /*items*/
     LdCircleComponent,
+    LdSpinnerComponent,
 
     ProblemTagDropDownComponent,
 

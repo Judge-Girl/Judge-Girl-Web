@@ -17,9 +17,10 @@ export class CodeUploadPanelComponent implements OnInit {
   private problem$: Observable<Problem>;
   problem: Problem;
   hasLogin: boolean;
+  hasSelectedValidSubmittedCodes: boolean;
+  submitting: boolean;
 
   @ViewChildren('fileInput') private fileUploads: FileUpload[];
-
   submissionService: SubmissionService;
   private routeParams: Params;
   private routePrefixing: (routeParams: Params) => string;
@@ -65,21 +66,41 @@ export class CodeUploadPanelComponent implements OnInit {
     }
   }
 
+  onFileClear() {
+    this.hasSelectedValidSubmittedCodes = false;
+  }
+
   onFileInputChange(index: number, codeSpecRow: HTMLDivElement, fileInput: FileUpload) {
     const files = fileInput.files;
     this.selectedFiles[index] = files[0];
+    this.hasSelectedValidSubmittedCodes = this.allSpecifiedFilesSelected();
   }
 
   submit(): boolean {
-    if (this.validateAllSpecifiedFileSelected()) {
+    if (this.canSubmit()) {
+      this.submitting = true;
       this.router.navigateByUrl(`${this.routePrefixing(this.routeParams)}problems/${this.problem.id}/submissions`);
       this.submissionService.submitFromFile(this.problem.id, this.selectedFiles)
-        .toPromise().catch(err => this.handleSubmitError(err));
+        .toPromise()
+        .then(() => this.submitting = false)
+        .catch(err => {
+          this.submitting = false;
+          this.handleSubmitError(err);
+        });
+      return false;
+    } else {
+      if (!this.hasSelectedValidSubmittedCodes) {
+        this.validateAllSpecifiedFileSelected();
+      }
+      return true;
     }
-    return false;
   }
 
-  private validateAllSpecifiedFileSelected(): boolean {
+  canSubmit(): boolean {
+    return !this.submitting && this.hasSelectedValidSubmittedCodes;
+  }
+
+  private validateAllSpecifiedFileSelected(): void {
     for (let i = 0; i < this.problem.submittedCodeSpecs.length; i++) {
       if (!this.selectedFiles[i]) {
         this.messageService.clear();
@@ -87,6 +108,13 @@ export class CodeUploadPanelComponent implements OnInit {
           key: this.MESSAGE_KEY_ERROR_TOAST,
           severity: 'error', summary: 'Error', detail: `The file ${this.problem.submittedCodeSpecs[i].fileName} has not been selected.`
         });
+      }
+    }
+  }
+
+  private allSpecifiedFilesSelected(): boolean {
+    for (let i = 0; i < this.problem.submittedCodeSpecs.length; i++) {
+      if (!this.selectedFiles[i]) {
         return false;
       }
     }
