@@ -1,4 +1,3 @@
-
 import * as MarkdownIt from 'markdown-it';
 import MarkdownItKatex from 'markdown-it-katex';
 import * as hljs from 'highlight.js';
