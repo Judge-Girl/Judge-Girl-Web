@@ -5,7 +5,7 @@
 
 
 <div *ngIf="hasLogin" class="my-panel">
-  <p *ngIf="!loadingSubmissions && !bestRecord">You have not submitted to this problem yet.</p>
+  <p *ngIf="!loadingSubmissions && !hasSubmissions()">You have no submissions.</p>
 
   <p *ngIf="bestRecord" id="best-record-label">Best Record</p>
   <span *ngIf="isJudgeStatus(bestRecord, AC)" class="badge badge-success judge-status">AC</span>
@@ -150,9 +150,8 @@
       </div>
       <div class="modal-body">
         <!-- TODO #17 Hardcoded CC score, should replace with generic way that support any kinds of report-->
-        <p>Cyclometic Complexity Score: {{getCCScore()}}</p>
-        <p>Coding Style Score: {{getCsaScore()}}</p>
-        <pre>    Global Variables: {{getGlobalVariables()}}</pre>
+        <p>{{getCCReport()}}</p>
+        <p>{{getCsaReport()}}</p>
       </div>
     </div>
   </div>

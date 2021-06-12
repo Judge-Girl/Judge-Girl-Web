@@ -77,7 +77,7 @@ export abstract class StudentService {
 
   abstract logout();
 
-  get currentStudentObservable(): Observable<Student> {
+  get currentStudent$(): Observable<Student> {
     return this.student$;
   }
 

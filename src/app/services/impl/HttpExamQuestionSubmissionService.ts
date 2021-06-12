@@ -17,6 +17,7 @@ import {HttpRequestCache} from './HttpRequestCache';
 import {ActivatedRoute} from '@angular/router';
 import {EventBus} from '../EventBus';
 
+// TODO: [improve] duplicate code from HttpSubmissionService
 // Currently, we only support 'C' langEnv,
 // we should extend this with other languageEnvs in the future
 const DEFAULT_LANG_ENV = 'C';
@@ -27,6 +28,7 @@ const DEFAULT_LANG_ENV = 'C';
 export class HttpExamQuestionSubmissionService extends SubmissionService {
   httpRequestCache: HttpRequestCache;
   baseUrl: string;
+  latestProblemId: number;
   currentSubmissions: Submission[] = [];
   currentSubmissions$ = new ReplaySubject<Submission[]>(1);
   verdictIssuedEvent$ = new Subject<VerdictIssuedEvent>();
@@ -50,7 +52,7 @@ export class HttpExamQuestionSubmissionService extends SubmissionService {
   }
 
   public onInit() {
-    const subscription = this.studentService.currentStudentObservable.subscribe(student => {
+    const subscription = this.studentService.currentStudent$.subscribe(student => {
       this.unsubscribes.push(
         this.brokerService.subscribe('ExamQuestSubmissionService: Subscribe-To-Verdict',
           `/students/${student.id}/verdicts`, message => this.handleVerdictFromBrokerMessage(message)));
@@ -83,9 +85,14 @@ export class HttpExamQuestionSubmissionService extends SubmissionService {
   }
 
   getSubmissions(problemId: number): Observable<Submission[]> {
-    this.currentSubmissions$.next([]); // clear previous submissions
+    if (this.latestProblemId !== problemId) {
+      // refresh the subject for different problem's submissions
+      this.currentSubmissions$ = new ReplaySubject<Submission[]>(1);
+    }
+    this.latestProblemId = problemId;
     this.studentService.authenticate();
-    const url = `${this.baseUrl}/api/problems/${problemId}/${DEFAULT_LANG_ENV}/students/${this.studentId}/submissions?examId=${this.examId}`;
+    const url = `${this.baseUrl}/api/problems/${problemId}/${DEFAULT_LANG_ENV}` +
+      `/students/${this.studentId}/submissions?examId=${this.examId}`;
     this.http.get<Submission[]>(url, this.httpOptions)
       .toPromise()
       .then(submissions => {
@@ -100,9 +107,8 @@ export class HttpExamQuestionSubmissionService extends SubmissionService {
     this.studentService.authenticate();
     const formData = new FormData();
     return this.problemService.getProblem(problemId)
-      .pipe(switchMap(p => {
-        return this.requestSubmitCodes(p, formData, files);
-      })).pipe(catchError((err: HttpErrorResponse) => {
+      .pipe(switchMap(p => this.requestSubmitCodes(p, formData, files)))
+      .pipe(catchError((err: HttpErrorResponse) => {
         if (err.status === 400) {  // 400 --> throttling problem (currently the only case)
           return throwError(new SubmissionThrottlingError());
         } else {
@@ -128,7 +134,8 @@ export class HttpExamQuestionSubmissionService extends SubmissionService {
   getSubmittedCodes(problemId: number, submissionId: string, submittedCodesFileId: string): Observable<CodeFile[]> {
     return this.problemService.getProblem(problemId)
       .pipe(switchMap(() => {
-        const url = `${this.baseUrl}/api/problems/${problemId}/${DEFAULT_LANG_ENV}/students/${this.studentId}/submissions/${submissionId}/submittedCodes/${submittedCodesFileId}`;
+        const url = `${this.baseUrl}/api/problems/${problemId}/${DEFAULT_LANG_ENV}/students/` +
+          `${this.studentId}/submissions/${submissionId}/submittedCodes/${submittedCodesFileId}`;
         return this.http.get(url, {
           headers: this.httpHeaders,
           responseType: 'arraybuffer'

@@ -26,6 +26,7 @@ const DEFAULT_LANG_ENV = 'C';
 export class HttpSubmissionService extends SubmissionService {
   httpRequestCache: HttpRequestCache;
   baseUrl: string;
+  latestProblemId: number;
   currentSubmissions: Submission[] = [];
   currentSubmissions$ = new ReplaySubject<Submission[]>(1);
   verdictIssuedEvent$ = new Subject<VerdictIssuedEvent>();
@@ -43,7 +44,7 @@ export class HttpSubmissionService extends SubmissionService {
   }
 
   public onInit() {
-    const subscription = this.studentService.currentStudentObservable.subscribe(student => {
+    const subscription = this.studentService.currentStudent$.subscribe(student => {
       this.unsubscribes.push(
         this.brokerService.subscribe('SubmissionService: Subscribe-To-Verdict',
           `/students/${student.id}/verdicts`, message => this.handleVerdictFromBrokerMessage(message)));
@@ -76,10 +77,15 @@ export class HttpSubmissionService extends SubmissionService {
   }
 
   getSubmissions(problemId: number): Observable<Submission[]> {
-    this.currentSubmissions$.next([]); // clear previous submissions
+    if (this.latestProblemId !== problemId) {
+      // refresh the subject for different problem's submissions
+      this.currentSubmissions$ = new ReplaySubject<Submission[]>(1);
+    }
+    this.latestProblemId = problemId;
     this.studentService.authenticate();
     this.http.get<Submission[]>(
-      `${this.baseUrl}/api/problems/${problemId}/${DEFAULT_LANG_ENV}/students/${this.studentId}/submissions`,
+      `${this.baseUrl}/api/problems/${problemId}/${DEFAULT_LANG_ENV}` +
+      `/students/${this.studentId}/submissions`,
       this.httpOptions).toPromise()
       .then(submissions => {
         this.currentSubmissions = submissions;
@@ -89,20 +95,12 @@ export class HttpSubmissionService extends SubmissionService {
     return this.currentSubmissions$;
   }
 
-  getSubmission(problemId: number, submissionId: string): Observable<Submission> {
-    this.studentService.authenticate();
-    return this.http.get<Submission>(
-      `${this.baseUrl}/api/problems/${problemId}/${DEFAULT_LANG_ENV}/students/${this.studentId}/submissions/${submissionId}`,
-      this.httpOptions);
-  }
-
   submitFromFile(problemId: number, files: File[]): Observable<Submission> {
     this.studentService.authenticate();
     const formData = new FormData();
     return this.problemService.getProblem(problemId)
-      .pipe(switchMap(p => {
-        return this.requestSubmitCodes(p, formData, files);
-      })).pipe(catchError((err: HttpErrorResponse) => {
+      .pipe(switchMap(p => this.requestSubmitCodes(p, formData, files)))
+      .pipe(catchError((err: HttpErrorResponse) => {
         if (err.status === 400) {  // 400 --> throttling problem (currently the only case)
           return throwError(new SubmissionThrottlingError());
         } else {
@@ -118,18 +116,26 @@ export class HttpSubmissionService extends SubmissionService {
     return this.http.post<Submission>(`${this.baseUrl}/api/problems/${problem.id}/${DEFAULT_LANG_ENV}/students/` +
       `${this.studentId}/submissions`, formData, this.httpOptions)
       .pipe(switchMap(submission => {
-        this.currentSubmissions.push(submission);
+        this.pushSubmissionIfNotDuplicate(submission);
         this.currentSubmissions$.next(this.currentSubmissions);
         return of(submission);
       }));
+  }
+
+  private pushSubmissionIfNotDuplicate(submission: Submission) {
+    for (const s of this.currentSubmissions) {
+      if (s.id === submission.id) {
+        return;
+      }
+    }
+    this.currentSubmissions.push(submission);
   }
 
   getSubmittedCodes(problemId: number, submissionId: string, submittedCodesFileId: string): Observable<CodeFile[]> {
     return this.problemService.getProblem(problemId)
       .pipe(switchMap(() => {
         return this.http.get(`${this.baseUrl}/api/problems/${problemId}/${DEFAULT_LANG_ENV}` +
-          `/students/${this.studentId}` +
-          `/submissions/${submissionId}/submittedCodes/${submittedCodesFileId}`, {
+          `/students/${this.studentId}/submissions/${submissionId}/submittedCodes/${submittedCodesFileId}`, {
           headers: this.httpHeaders,
           responseType: 'arraybuffer'
         });

@@ -60,15 +60,15 @@ export class Problem extends ProblemItem {
   }
 
   public get compilation() {
-    return this.C.compilation;
+    return this.C ? this.C.compilation : undefined;
   }
 
   public get submittedCodeSpecs() {
-    return this.C.submittedCodeSpecs;
+    return this.C ? this.C.submittedCodeSpecs : [];
   }
 
   public get providedCodesFileId() {
-    return this.C.providedCodesFileId;
+    return this.C ? this.C.providedCodesFileId : undefined;
   }
 }
 

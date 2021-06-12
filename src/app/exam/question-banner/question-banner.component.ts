@@ -41,7 +41,7 @@ export class QuestionBanner implements OnInit {
       this.updateExamProgressOverview(currentStudent);
     }
 
-    this.studentService.currentStudentObservable.subscribe(student => {
+    this.studentService.currentStudent$.subscribe(student => {
       if (student) {
         this.updateExamProgressOverview(student);
       }
