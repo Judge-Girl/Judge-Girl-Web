@@ -49,6 +49,7 @@ export class CodeUploadPanelComponent implements OnInit {
       this.problemService.getProblem(+params.problemId)
     ));
     this.problem$.subscribe(p => {
+      console.log(this.problem);
       this.problem = p;
       this.selectedFiles = new Array(p.submittedCodeSpecs.length);
     });
