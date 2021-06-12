@@ -26,6 +26,7 @@ const DEFAULT_LANG_ENV = 'C';
 export class HttpSubmissionService extends SubmissionService {
   httpRequestCache: HttpRequestCache;
   baseUrl: string;
+  latestProblemId: number;
   currentSubmissions: Submission[] = [];
   currentSubmissions$ = new ReplaySubject<Submission[]>(1);
   verdictIssuedEvent$ = new Subject<VerdictIssuedEvent>();
@@ -43,7 +44,7 @@ export class HttpSubmissionService extends SubmissionService {
   }
 
   public onInit() {
-    const subscription = this.studentService.currentStudentObservable.subscribe(student => {
+    const subscription = this.studentService.currentStudent$.subscribe(student => {
       this.unsubscribes.push(
         this.brokerService.subscribe('SubmissionService: Subscribe-To-Verdict',
           `/students/${student.id}/verdicts`, message => this.handleVerdictFromBrokerMessage(message)));
@@ -76,10 +77,15 @@ export class HttpSubmissionService extends SubmissionService {
   }
 
   getSubmissions(problemId: number): Observable<Submission[]> {
-    this.currentSubmissions$.next([]); // clear previous submissions
+    if (this.latestProblemId !== problemId) {
+      // refresh the subject for different problem's submissions
+      this.currentSubmissions$ = new ReplaySubject<Submission[]>(1);
+    }
+    this.latestProblemId = problemId;
     this.studentService.authenticate();
     this.http.get<Submission[]>(
-      `${this.baseUrl}/api/problems/${problemId}/${DEFAULT_LANG_ENV}/students/${this.studentId}/submissions`,
+      `${this.baseUrl}/api/problems/${problemId}/${DEFAULT_LANG_ENV}` +
+      `/students/${this.studentId}/submissions`,
       this.httpOptions).toPromise()
       .then(submissions => {
         this.currentSubmissions = submissions;
@@ -89,15 +95,7 @@ export class HttpSubmissionService extends SubmissionService {
     return this.currentSubmissions$;
   }
 
-  getSubmission(problemId: number, submissionId: string): Observable<Submission> {
-    this.studentService.authenticate();
-    return this.http.get<Submission>(
-      `${this.baseUrl}/api/problems/${problemId}/${DEFAULT_LANG_ENV}/students/${this.studentId}/submissions/${submissionId}`,
-      this.httpOptions);
-  }
-
   submitFromFile(problemId: number, files: File[]): Observable<Submission> {
-    console.log('submitFromFile');
     this.studentService.authenticate();
     const formData = new FormData();
     return this.problemService.getProblem(problemId)
@@ -137,8 +135,7 @@ export class HttpSubmissionService extends SubmissionService {
     return this.problemService.getProblem(problemId)
       .pipe(switchMap(() => {
         return this.http.get(`${this.baseUrl}/api/problems/${problemId}/${DEFAULT_LANG_ENV}` +
-          `/students/${this.studentId}` +
-          `/submissions/${submissionId}/submittedCodes/${submittedCodesFileId}`, {
+          `/students/${this.studentId}/submissions/${submissionId}/submittedCodes/${submittedCodesFileId}`, {
           headers: this.httpHeaders,
           responseType: 'arraybuffer'
         });

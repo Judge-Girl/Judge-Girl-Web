@@ -1,20 +1,35 @@
-import { AfterViewInit, Component, Injector, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { ProblemService, StudentService, SubmissionService } from '../services/Services';
-import { map, switchMap } from 'rxjs/operators';
-import { Observable, Subscription } from 'rxjs';
-import {
-  CodeFile,
-  describeMemory,
-  describeTimeInSeconds,
-  Judge,
-  JudgeStatus,
-  Problem, Student,
-  Submission,
-  TestCase
-} from '../models';
+import {AfterViewInit, Component, Injector, OnDestroy, OnInit, QueryList, ViewChildren} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
+import {ProblemService, StudentService, SubmissionService} from '../services/Services';
+import {map, switchMap} from 'rxjs/operators';
+import {Observable, Subscription} from 'rxjs';
+import {CodeFile, describeMemory, describeTimeInSeconds, Judge, JudgeStatus, Problem, Submission, TestCase} from '../models';
 import * as moment from 'moment';
 import * as CodeMirror from 'codemirror';
+
+function getBestRecord(submissions: Submission[]) {
+  if (!submissions) {
+    return undefined;
+  }
+  let bestGrade = -1;
+  let best: Submission;
+  for (const submission of submissions) {
+    if (submission.judged &&
+      submission.verdict.totalGrade > bestGrade) {
+      bestGrade = submission.verdict.totalGrade;
+      best = submission;
+    }
+  }
+  return best;
+}
+
+function compareSubmissionsByTime(s1: Submission, s2: Submission): number {
+  return s2.submissionTime - s1.submissionTime;
+}
+
+function sortSubmissionsByTime(submissions: Submission[]): Submission[] {
+  return submissions.sort(compareSubmissionsByTime);
+}
 
 @Component({
   selector: 'app-submissions',
@@ -32,6 +47,7 @@ export class SubmissionsComponent implements OnInit, OnDestroy, AfterViewInit {
   loadingSubmissions = false;
   hasLogin: boolean;
 
+  bestRecord: Submission;
   submissions$: Observable<Submission[]>;
   subscriptions: Subscription[] = [];
   problem: Problem;
@@ -50,20 +66,11 @@ export class SubmissionsComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChildren('codeArea') codeAreas: QueryList<any>;
 
   constructor(public studentService: StudentService,
-    private problemService: ProblemService,
-    private injector: Injector,
-    private route: ActivatedRoute) {
+              private problemService: ProblemService,
+              private injector: Injector,
+              private route: ActivatedRoute) {
     const submissionServiceInstanceName = route.parent.snapshot.data.submissionService;
     this.submissionService = injector.get<SubmissionService>(submissionServiceInstanceName);
-  }
-
-
-  private static compareSubmissionsByTime(s1: Submission, s2: Submission): number {
-    return s2.submissionTime - s1.submissionTime;
-  }
-
-  private static sortSubmissionsByTime(submissions: Submission[]): Submission[] {
-    return submissions.sort(SubmissionsComponent.compareSubmissionsByTime);
   }
 
   ngOnInit() {
@@ -72,7 +79,7 @@ export class SubmissionsComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.subscriptions.push(
       this.tryAuthWithCurrentToken(() => {
-        this.subscriptions.push(this.subscribeToSubmissions());
+        this.subscriptions.push(this.subscribeToCurrentSubmissions());
       }
       ));
   }
@@ -90,50 +97,31 @@ export class SubmissionsComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  private subscribeToSubmissions(): Subscription {
+  private subscribeToCurrentSubmissions(): Subscription {
     this.loadingSubmissions = true;
     this.submissions$ = this.route.parent.params.pipe(switchMap(params =>
       this.submissionService.getSubmissions(+params.problemId)
-        .pipe(map(SubmissionsComponent.sortSubmissionsByTime))
+        .pipe(map(sortSubmissionsByTime))
     ));
 
     return this.submissions$.subscribe(submissions => {
       this.submissions = submissions;
+      this.bestRecord = getBestRecord(submissions);
       this.loadingSubmissions = false;
     });
   }
 
-  private tryAuthWithCurrentToken(loginHandling: (Student) => void) {
+  private tryAuthWithCurrentToken(onLogin: (Student) => void) {
     return this.studentService.tryAuthWithCurrentToken().subscribe(hasLogin => {
       this.hasLogin = hasLogin;
       if (this.studentService.hasLogin()) {
-        loginHandling(this.studentService.currentStudent);
+        onLogin(this.studentService.currentStudent);
       }
     });
   }
 
-  get bestRecord(): Submission {
-    if (!this.submissions) {
-      return undefined;
-    }
-    let bestGrade = -1;
-    let best: Submission;
-    for (const submission of this.submissions) {
-      if (submission.judged &&
-        submission.verdict.totalGrade > bestGrade) {
-        bestGrade = submission.verdict.totalGrade;
-        best = submission;
-      }
-    }
-    return best;
-  }
-
-  ifTheBestSubmissionStatusIs(status: JudgeStatus) {
-    return this.bestRecord && this.bestRecord.verdict.summaryStatus === status;
-  }
-
-  isRuntimeErrorJudge(judge: Judge) {
-    return judge !== undefined && judge.status === this.RE;
+  hasSubmissions(): boolean {
+    return this.submissions.length !== 0;
   }
 
   hasRuntimeError(submission: Submission) {
@@ -148,8 +136,12 @@ export class SubmissionsComponent implements OnInit, OnDestroy, AfterViewInit {
     return false;
   }
 
+  isRuntimeErrorJudge(judge: Judge) {
+    return judge?.status === this.RE;
+  }
+
   isJudgeStatus(submission: Submission, status: JudgeStatus) {
-    return submission && submission.verdict.summaryStatus === status;
+    return submission?.verdict?.summaryStatus === status;
   }
 
   onViewSubmissionJudgesBtnClick(submission: Submission): boolean {
@@ -163,17 +155,16 @@ export class SubmissionsComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   // TODO: drunk code, will be improved by #17
-  getCCScore(): string {
-    return this.viewingReport['rawData']['CodeQualityInspectionReport']['CyclomaticComplexityReport'].ccScore;
+  getCCReport(): string {
+    // return this.viewingReport.rawData.CodeQualityInspectionReport.CyclomaticComplexityReport.ccScore;
+    return 'The Cyclomatic-Complexity Report hasn\'t been supported yet';
   }
 
-  getCsaScore(): string {
-    return this.viewingReport['rawData']['CodeQualityInspectionReport']['CodingStyleAnalyzeReport'].csaScore;
+  getCsaReport(): string {
+    // return this.viewingReport.rawData.CodeQualityInspectionReport.CodingStyleAnalyzeReport.csaScore;
+    return 'The Coding-Style Report hasn\'t been supported yet';
   }
 
-  getGlobalVariables(): string {
-    return this.viewingReport['rawData']['CodeQualityInspectionReport']['CodingStyleAnalyzeReport'].globalVariables;
-  }
 
   onViewSubmissionCodesBtnClick(submission: Submission): boolean {
     this.viewingCodesSubmission = submission;
@@ -204,11 +195,11 @@ export class SubmissionsComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngAfterViewInit() {
     // when the codeAreas' members changed, re-render them
-    this.codeAreas.changes.subscribe(s => {
-      this.renderCodeAreas();
-    });
+    this.subscriptions.push(
+      this.codeAreas.changes.subscribe(s => {
+        this.renderCodeAreas();
+      }));
   }
-
 
   renderCodeAreas() {
     if (this.codeAreas.toArray().length > 0) {
@@ -219,7 +210,7 @@ export class SubmissionsComponent implements OnInit, OnDestroy, AfterViewInit {
           mode: 'text/x-csrc',  /* TODO set mode according to the language spec */
           theme: 'darcula'
         });
-        // waiting 200 seconds to let the editor load the content, then refresh it
+        // wait 200 seconds for loading the editor's content, and then refresh it
         setTimeout(() => editor.refresh(), 200);
       }
     }
