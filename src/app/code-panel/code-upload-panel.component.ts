@@ -81,8 +81,7 @@ export class CodeUploadPanelComponent implements OnInit {
       this.submitting = true;
       this.router.navigateByUrl(`${this.routePrefixing(this.routeParams)}problems/${this.problem.id}/submissions`);
       this.submissionService.submitFromFile(this.problem.id, this.selectedFiles)
-        .toPromise()
-        .then(() => this.submitting = false)
+        .toPromise().then(() => this.submitting = false)
         .catch(err => {
           this.submitting = false;
           this.handleSubmitError(err);

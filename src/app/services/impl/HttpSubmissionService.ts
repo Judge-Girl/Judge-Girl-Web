@@ -97,12 +97,12 @@ export class HttpSubmissionService extends SubmissionService {
   }
 
   submitFromFile(problemId: number, files: File[]): Observable<Submission> {
+    console.log('submitFromFile');
     this.studentService.authenticate();
     const formData = new FormData();
     return this.problemService.getProblem(problemId)
-      .pipe(switchMap(p => {
-        return this.requestSubmitCodes(p, formData, files);
-      })).pipe(catchError((err: HttpErrorResponse) => {
+      .pipe(switchMap(p => this.requestSubmitCodes(p, formData, files)))
+      .pipe(catchError((err: HttpErrorResponse) => {
         if (err.status === 400) {  // 400 --> throttling problem (currently the only case)
           return throwError(new SubmissionThrottlingError());
         } else {
@@ -118,10 +118,19 @@ export class HttpSubmissionService extends SubmissionService {
     return this.http.post<Submission>(`${this.baseUrl}/api/problems/${problem.id}/${DEFAULT_LANG_ENV}/students/` +
       `${this.studentId}/submissions`, formData, this.httpOptions)
       .pipe(switchMap(submission => {
-        this.currentSubmissions.push(submission);
+        this.pushSubmissionIfNotDuplicate(submission);
         this.currentSubmissions$.next(this.currentSubmissions);
         return of(submission);
       }));
+  }
+
+  private pushSubmissionIfNotDuplicate(submission: Submission) {
+    for (const s of this.currentSubmissions) {
+      if (s.id === submission.id) {
+        return;
+      }
+    }
+    this.currentSubmissions.push(submission);
   }
 
   getSubmittedCodes(problemId: number, submissionId: string, submittedCodesFileId: string): Observable<CodeFile[]> {
