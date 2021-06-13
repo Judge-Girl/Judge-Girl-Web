@@ -11,9 +11,9 @@ import {ExamQuestionsComponent} from './exam/exam-questions/exam-questions.compo
 import {ExamScoreboardComponent} from './exam/exam-scoreboard/exam-scoreboard.component';
 import {ExamSubmissionsComponent} from './exam/exam-submissions/exam-submissions.component';
 import {BrokerService, ExamService, ProblemService, StudentService} from './services/Services';
-import {MultiTabsPanelComponent} from './problem-submission-tab-panel/multi-tabs-panel.component';
-import {ProblemDescriptionComponent} from './problem-description/problem-description.component';
-import {CodeUploadPanelComponent} from './code-panel/code-upload-panel.component';
+import {IdeComponent} from './ide/ide.component';
+import {ProblemDescriptionComponent} from './ide/problem-description/problem-description.component';
+import {CodeUploadPanelComponent} from './ide/code-panel/code-upload-panel.component';
 import {SubmissionsComponent} from './submissions/submissions.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {LdCircleComponent} from './items/spinners/ld-circle.component';
@@ -54,7 +54,7 @@ rxStompConfig.reconnectDelay = 200;
     ChangePasswordComponent,
     ProblemListComponent,
     ExamListComponent,
-    MultiTabsPanelComponent,
+    IdeComponent,
     ProblemDescriptionComponent,
     CodeUploadPanelComponent,
     SubmissionsComponent,

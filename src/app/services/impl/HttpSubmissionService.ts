@@ -20,6 +20,8 @@ import {EventBus} from '../EventBus';
 // we should extend this with other languageEnvs in the future
 const DEFAULT_LANG_ENV = 'C';
 
+const SUBSCRIBER_NAME = 'SubmissionService: Subscribe-To-Verdict';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -46,7 +48,7 @@ export class HttpSubmissionService extends SubmissionService {
   public onInit() {
     const subscription = this.studentService.currentStudent$.subscribe(student => {
       this.unsubscribes.push(
-        this.brokerService.subscribe('SubmissionService: Subscribe-To-Verdict',
+        this.brokerService.subscribe(SUBSCRIBER_NAME,
           `/students/${student.id}/verdicts`, message => this.handleVerdictFromBrokerMessage(message)));
     });
     this.unsubscribes.push(() => subscription.unsubscribe());
@@ -155,10 +157,6 @@ export class HttpSubmissionService extends SubmissionService {
     return new HttpHeaders({
       Authorization: `Bearer ${this.studentService.currentStudent.token}`
     });
-  }
-
-  get verdictIssuedEventObservable(): Observable<VerdictIssuedEvent> {
-    return this.verdictIssuedEvent$;
   }
 
   private get studentId() {

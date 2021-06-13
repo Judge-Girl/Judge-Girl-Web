@@ -1,7 +1,7 @@
 import {Component, Injector, OnInit, ViewChildren} from '@angular/core';
 import {FileUpload, MessageService} from 'primeng';
-import {ProblemService, StudentService, SubmissionService, SubmissionThrottlingError} from '../services/Services';
-import {getCodeFileExtension, Problem, SubmittedCodeSpec} from '../models';
+import {NoSubmissionQuota, ProblemService, StudentService, SubmissionService, SubmissionThrottlingError} from '../../services/Services';
+import {getCodeFileExtension, Problem, SubmittedCodeSpec} from '../../models';
 import {switchMap} from 'rxjs/operators';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {Observable} from 'rxjs';
@@ -122,10 +122,17 @@ export class CodeUploadPanelComponent implements OnInit {
   }
 
   private handleSubmitError(err: Error) {
+    console.log(err);
     if (err instanceof SubmissionThrottlingError) {
       this.messageService.add({
         key: this.MESSAGE_KEY_ERROR_TOAST,
         severity: 'warn', summary: 'Hold down...',
+        detail: err.message
+      });
+    } else if (err instanceof NoSubmissionQuota) {
+      this.messageService.add({
+        key: this.MESSAGE_KEY_ERROR_TOAST,
+        severity: 'warn', summary: 'Unfortunately...',
         detail: err.message
       });
     } else {
@@ -153,5 +160,10 @@ export class CodeUploadPanelComponent implements OnInit {
 
   getAcceptedFileExtensionByCodeSpec(codeSpec: SubmittedCodeSpec): string {
     return getCodeFileExtension(codeSpec);
+  }
+
+  describeRemainingSubmissionQuota(): string {
+    return this.submissionService.remainingSubmissionQuota ?
+      `Submission Quota: ${this.submissionService.remainingSubmissionQuota}` : '';
   }
 }
