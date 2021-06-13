@@ -163,21 +163,8 @@ export class Answer {
               public problemId: number, public studentId: number,
               public submissionId: string, public answerTime: number) {
   }
-
-  toSubmission(): Submission {
-    const submission =  new Submission(this.submissionId, this.problemId);
-    submission.submissionTime = this.answerTime;
-    submission.judged = false;
-    return submission;
-  }
 }
 
-export function answerToSubmission(answer: Answer) {
-  const submission =  new Submission(answer.submissionId, answer.problemId);
-  submission.submissionTime = answer.answerTime;
-  submission.judged = false;
-  return submission;
-}
 
 export class Verdict {
   constructor(public judges: Judge[],

@@ -29,11 +29,12 @@
         </div>
       </div>
 
-      <div style="width: 100%; text-align: end; border-radius: 10px">
+      <div id="submit-btn-container" style="width: 100%;">
         <div class="btn" id="submit-btn" (click)="submit()" [attr.disabled]="!canSubmit()">
           <span>Submit</span>
           <ld-spinner *ngIf="submitting"></ld-spinner>
         </div>
+        <span id="remaining-submission-quota">{{describeRemainingSubmissionQuota()}}</span>
       </div>
     </div>
   </form>

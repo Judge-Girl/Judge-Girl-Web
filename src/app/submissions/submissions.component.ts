@@ -196,7 +196,7 @@ export class SubmissionsComponent implements OnInit, OnDestroy, AfterViewInit {
   ngAfterViewInit() {
     // when the codeAreas' members changed, re-render them
     this.subscriptions.push(
-      this.codeAreas.changes.subscribe(s => {
+      this.codeAreas.changes.subscribe(() => {
         this.renderCodeAreas();
       }));
   }

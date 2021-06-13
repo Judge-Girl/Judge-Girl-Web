@@ -1,6 +1,7 @@
 import {
   BrokerMessage,
   BrokerService,
+  NoSubmissionQuota,
   ProblemService,
   StudentService,
   SubmissionService,
@@ -10,7 +11,7 @@ import {
 import {Observable, of, ReplaySubject, Subject, throwError} from 'rxjs';
 import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 import {Inject, Injectable} from '@angular/core';
-import {Answer, answerToSubmission, CodeFile, Problem, Submission, VerdictIssuedEvent} from '../../models';
+import {Answer, CodeFile, Problem, Submission, VerdictIssuedEvent} from '../../models';
 import {catchError, switchMap} from 'rxjs/operators';
 import {unzipCodesArrayBuffer} from '../../utils';
 import {HttpRequestCache} from './HttpRequestCache';
@@ -22,13 +23,21 @@ import {EventBus} from '../EventBus';
 // we should extend this with other languageEnvs in the future
 const DEFAULT_LANG_ENV = 'C';
 
+interface AnswerResponse {
+  remainingSubmissionQuota: number;
+  answer: Answer;
+  submission: Submission;
+}
+
+const SUBSCRIBER_NAME = 'ExamQuestSubmissionService: Subscribe-To-Verdict';
+
 @Injectable({
   providedIn: 'root'
 })
 export class HttpExamQuestionSubmissionService extends SubmissionService {
   httpRequestCache: HttpRequestCache;
   baseUrl: string;
-  latestProblemId: number;
+  latestQueryProblemId: number;
   currentSubmissions: Submission[] = [];
   currentSubmissions$ = new ReplaySubject<Submission[]>(1);
   verdictIssuedEvent$ = new Subject<VerdictIssuedEvent>();
@@ -54,7 +63,7 @@ export class HttpExamQuestionSubmissionService extends SubmissionService {
   public onInit() {
     const subscription = this.studentService.currentStudent$.subscribe(student => {
       this.unsubscribes.push(
-        this.brokerService.subscribe('ExamQuestSubmissionService: Subscribe-To-Verdict',
+        this.brokerService.subscribe(SUBSCRIBER_NAME,
           `/students/${student.id}/verdicts`, message => this.handleVerdictFromBrokerMessage(message)));
     });
     this.unsubscribes.push(() => subscription.unsubscribe());
@@ -85,11 +94,11 @@ export class HttpExamQuestionSubmissionService extends SubmissionService {
   }
 
   getSubmissions(problemId: number): Observable<Submission[]> {
-    if (this.latestProblemId !== problemId) {
+    if (this.latestQueryProblemId !== problemId) {
       // refresh the subject for different problem's submissions
       this.currentSubmissions$ = new ReplaySubject<Submission[]>(1);
     }
-    this.latestProblemId = problemId;
+    this.latestQueryProblemId = problemId;
     this.studentService.authenticate();
     const url = `${this.baseUrl}/api/problems/${problemId}/${DEFAULT_LANG_ENV}` +
       `/students/${this.studentId}/submissions?examId=${this.examId}`;
@@ -109,7 +118,10 @@ export class HttpExamQuestionSubmissionService extends SubmissionService {
     return this.problemService.getProblem(problemId)
       .pipe(switchMap(p => this.requestSubmitCodes(p, formData, files)))
       .pipe(catchError((err: HttpErrorResponse) => {
-        if (err.status === 400) {  // 400 --> throttling problem (currently the only case)
+        const error = err.error.error;
+        if ('no-submission-quota' === error) {  // 400 --> throttling problem (currently the only case)
+          return throwError(new NoSubmissionQuota());
+        } else if ('submission-throttling' === error) {
           return throwError(new SubmissionThrottlingError());
         } else {
           return throwError(err);
@@ -122,13 +134,23 @@ export class HttpExamQuestionSubmissionService extends SubmissionService {
       formData.append('submittedCodes', files[i], problem.submittedCodeSpecs[i].fileName);
     }
     const url = `${this.baseUrl}/api/exams/${this.examId}/problems/${problem.id}/${DEFAULT_LANG_ENV}/students/${this.studentId}/answers`;
-    return this.http.post<Answer>(url, formData, this.httpOptions)
-      .pipe(switchMap(answer => {
-        const submission = answerToSubmission(answer);
-        this.currentSubmissions.push(submission);
+    return this.http.post<AnswerResponse>(url, formData, this.httpOptions)
+      .pipe(switchMap(response => {
+        this.remainingSubmissionQuota = response.remainingSubmissionQuota;
+        this.pushSubmissionIfNotDuplicate(response.submission);
         this.currentSubmissions$.next(this.currentSubmissions);
-        return of(submission);
+        return of(response.submission);
       }));
+  }
+
+
+  private pushSubmissionIfNotDuplicate(submission: Submission) {
+    for (const s of this.currentSubmissions) {
+      if (s.id === submission.id) {
+        return;
+      }
+    }
+    this.currentSubmissions.push(submission);
   }
 
   getSubmittedCodes(problemId: number, submissionId: string, submittedCodesFileId: string): Observable<CodeFile[]> {
@@ -158,13 +180,11 @@ export class HttpExamQuestionSubmissionService extends SubmissionService {
     });
   }
 
-  get verdictIssuedEventObservable(): Observable<VerdictIssuedEvent> {
-    return this.verdictIssuedEvent$;
-  }
-
   private get studentId() {
     return this.studentService.currentStudent.id;
   }
 
 }
+
+
 

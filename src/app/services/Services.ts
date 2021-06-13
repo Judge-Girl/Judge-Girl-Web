@@ -1,17 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Observable, ReplaySubject} from 'rxjs';
-import {
-  CodeFile,
-  ExamItem,
-  ExamOverview,
-  Problem,
-  ProblemItem,
-  Student,
-  studentToString,
-  Submission,
-  TestCase,
-  VerdictIssuedEvent
-} from '../models';
+import {CodeFile, ExamItem, ExamOverview, Problem, ProblemItem, Student, studentToString, Submission, TestCase} from '../models';
 import {Router} from '@angular/router';
 import {CookieService} from './cookie/cookie.service';
 import {ExamStatus} from './impl/HttpExamService';
@@ -27,6 +16,12 @@ export class AccountNotFoundError extends Error {
 }
 
 export class IncorrectPasswordFoundError extends Error {
+}
+
+export class NoSubmissionQuota extends Error {
+  constructor() {
+    super('You have no remaining submission quota.');
+  }
 }
 
 export class SubmissionThrottlingError extends Error {
@@ -137,11 +132,11 @@ export abstract class ExamService {
   providedIn: 'root'
 })
 export abstract class SubmissionService {
+  remainingSubmissionQuota: number;
+
   abstract onInit();
 
   abstract onDestroy();
-
-  abstract get verdictIssuedEventObservable(): Observable<VerdictIssuedEvent>;
 
   abstract getSubmissions(problemId: number): Observable<Submission[]>;
 
@@ -149,6 +144,7 @@ export abstract class SubmissionService {
 
   abstract getSubmittedCodes(problemId: number, submissionId: string,
                              submittedCodesFileId: string): Observable<CodeFile[]>;
+
 }
 
 @Injectable({
