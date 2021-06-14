@@ -77,7 +77,7 @@ export class ExamHomeComponent implements OnInit, AfterViewInit {
     // } else if (window.location.pathname.endsWith('submissions')) {
     //   this.activateTabAndDeactivateOthers(this.submissionsTab);
     // } else {
-      this.activateTabAndDeactivateOthers(this.problemsTab);
+    this.activateTabAndDeactivateOthers(this.problemsTab);
     // }
   }
 
@@ -99,7 +99,7 @@ export class ExamHomeComponent implements OnInit, AfterViewInit {
     // } else if (window.location.pathname.endsWith('submissions')) {
     //   this.routeToTab(Tab.SUBMISSIONS);
     // } else {
-      this.routeToTab(Tab.PROBLEMS);
+    this.routeToTab(Tab.PROBLEMS);
     // } 
   }
 
