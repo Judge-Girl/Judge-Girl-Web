@@ -5,8 +5,6 @@ import {ProblemListComponent} from './problem-list/problem-list.component';
 import {ExamListComponent} from './exam/exam-list/exam-list.component';
 import {ExamHomeComponent} from './exam/exam-home/exam-home.component';
 import {ExamQuestionsComponent} from './exam/exam-questions/exam-questions.component';
-import {ExamSubmissionsComponent} from './exam/exam-submissions/exam-submissions.component';
-import {ExamScoreboardComponent} from './exam/exam-scoreboard/exam-scoreboard.component';
 import {IdeComponent} from './ide/ide.component';
 import {SubmissionsComponent} from './submissions/submissions.component';
 import {ProblemDescriptionComponent} from './ide/problem-description/problem-description.component';
@@ -23,8 +21,6 @@ const routes: Routes = [
     path: 'exams/:examId', component: ExamHomeComponent,
     children: [
       {path: '', component: ExamQuestionsComponent},
-      {path: 'submissions', component: ExamSubmissionsComponent},
-      {path: 'scoreboard', component: ExamScoreboardComponent},
     ],
   },
   {

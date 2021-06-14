@@ -84,7 +84,6 @@ export abstract class StudentService {
     const newStudent = this._currentStudent?.id !== student?.id;
     this._currentStudent = student;
     if (student) {
-      console.log(`Set current student to ${studentToString(student)}.`);
       if (newStudent) {
         this.student$.next(student);
       }
@@ -132,6 +131,7 @@ export abstract class ExamService {
   providedIn: 'root'
 })
 export abstract class SubmissionService {
+  submissionDisabledMessage: string;  // if this message is set, the code-submission is disabled with the message shown.
   remainingSubmissionQuota: number;
 
   abstract onInit();

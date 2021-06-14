@@ -65,7 +65,6 @@
               "node_modules/highlight.js/lib/languages/bash.js",
 
               "node_modules/angular-split/bundles/angular-split.umd.min.js"
-
             ]
           },
           "configurations": {

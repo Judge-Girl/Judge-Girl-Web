@@ -1,3 +1,5 @@
+import {now} from 'moment';
+
 export class Student {
   constructor(public id: number,
               public account: string,
@@ -100,6 +102,14 @@ export class ExamOverview extends ExamItem {
     super(id, name, startTime, endTime);
   }
 
+  isClosed(): boolean {
+    const nowTime = now();
+    return nowTime < this.startTime.getTime() || nowTime > this.endTime.getTime();
+  }
+
+  getQuestion(problemId: number): QuestionItem {
+    return this.questions.filter(q => q.problemId === problemId)[0];
+  }
 }
 
 export class QuestionItem {

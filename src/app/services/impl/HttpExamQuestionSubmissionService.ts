@@ -17,6 +17,7 @@ import {unzipCodesArrayBuffer} from '../../utils';
 import {HttpRequestCache} from './HttpRequestCache';
 import {ActivatedRoute} from '@angular/router';
 import {EventBus} from '../EventBus';
+import {ExamContext} from '../../contexts/ExamContext';
 
 // TODO: [improve] duplicate code from HttpSubmissionService
 // Currently, we only support 'C' langEnv,
@@ -51,6 +52,7 @@ export class HttpExamQuestionSubmissionService extends SubmissionService {
               private brokerService: BrokerService,
               private route: ActivatedRoute,
               private eventBus: EventBus,
+              private examContext: ExamContext,
               @Inject('EXAM_SERVICE_BASE_URL') baseUrl: string) {
     super();
     this.httpRequestCache = new HttpRequestCache(http);
@@ -97,6 +99,12 @@ export class HttpExamQuestionSubmissionService extends SubmissionService {
     if (this.latestQueryProblemId !== problemId) {
       // refresh the subject for different problem's submissions
       this.currentSubmissions$ = new ReplaySubject<Submission[]>(1);
+      this.examContext.overview$.toPromise().then(examOverview => {
+        console.log(`eee`);
+        const question = examOverview.getQuestion(problemId);
+        this.submissionDisabledMessage = examOverview.isClosed() ? 'This exam has been closed, you can’t answer this question.' : undefined;
+        this.remainingSubmissionQuota = question.remainingQuota;
+      });
     }
     this.latestQueryProblemId = problemId;
     this.studentService.authenticate();
@@ -142,7 +150,6 @@ export class HttpExamQuestionSubmissionService extends SubmissionService {
         return of(response.submission);
       }));
   }
-
 
   private pushSubmissionIfNotDuplicate(submission: Submission) {
     for (const s of this.currentSubmissions) {

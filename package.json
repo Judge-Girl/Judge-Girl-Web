@@ -22,7 +22,6 @@
     "@angular/router": "~9.0.6",
     "@ctrl/ngx-codemirror": "^3.0.4",
     "@fullcalendar/core": "^4.4.0",
-    "@ngrx/store": "^12.1.0",
     "@stomp/rx-stomp": "^1.1.0",
     "angular-split": "^3.0.3",
     "bootstrap": "^4.4.1",
