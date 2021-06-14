@@ -1,4 +1,4 @@
-import {Component, Injector, OnInit, ViewChildren} from '@angular/core';
+import { Component, EventEmitter, Injector, OnInit, Output, ViewChildren } from '@angular/core';
 import {FileUpload, MessageService} from 'primeng';
 import {ProblemService, StudentService, SubmissionService, SubmissionThrottlingError} from '../services/Services';
 import {getCodeFileExtension, Problem, SubmittedCodeSpec} from '../models';
@@ -25,6 +25,8 @@ export class CodeUploadPanelComponent implements OnInit {
   private routeParams: Params;
   private routePrefixing: (routeParams: Params) => string;
 
+  @Output() problemErrorEvent = new EventEmitter<Error>();
+
   constructor(public studentService: StudentService,
               private problemService: ProblemService,
               private route: ActivatedRoute,
@@ -48,10 +50,15 @@ export class CodeUploadPanelComponent implements OnInit {
     this.problem$ = this.route.params.pipe(switchMap(params =>
       this.problemService.getProblem(+params.problemId)
     ));
-    this.problem$.subscribe(p => {
-      console.log(this.problem);
-      this.problem = p;
-      this.selectedFiles = new Array(p.submittedCodeSpecs.length);
+    this.problem$.subscribe({
+      next: p => {
+        console.log(this.problem);
+        this.problem = p;
+        this.selectedFiles = new Array(p.submittedCodeSpecs.length);
+      },
+      error: e => {
+        this.problemErrorEvent.emit(e);
+      },
     });
   }
 
