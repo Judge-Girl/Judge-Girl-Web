@@ -28,6 +28,8 @@ export class MultiTabsPanelComponent implements OnInit, AfterViewInit {
   private allTabs: ElementRef[];
   private routeParams: Params;
   private problemId: number;
+  
+  error: boolean = false;
 
   constructor(private elementRef: ElementRef, public studentService: StudentService,
               private router: Router, private route: ActivatedRoute) {
@@ -55,7 +57,6 @@ export class MultiTabsPanelComponent implements OnInit, AfterViewInit {
   get isInExam(): boolean {
     return !!this.route.snapshot.params.examId;
   }
-
 
   switchTab(tab: Tab): boolean {
     const routePrefix = this.routePrefixing(this.routeParams);
@@ -104,6 +105,15 @@ export class MultiTabsPanelComponent implements OnInit, AfterViewInit {
         this.splitter.direction = 'horizontal';
       }
     }
+  }
+
+  showProblemNotFoundPage(error: Error) {
+    this.error = true;
+  }
+
+  navigateToExam() {
+    const examId = this.route.snapshot.params.examId;
+    this.router.navigate([`exams/${examId}`]);
   }
 }
 
