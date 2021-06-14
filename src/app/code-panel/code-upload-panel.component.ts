@@ -25,7 +25,7 @@ export class CodeUploadPanelComponent implements OnInit {
   private routeParams: Params;
   private routePrefixing: (routeParams: Params) => string;
 
-  @Output() problemErrorEvent = new EventEmitter<Error>();
+  @Output() problemNotFound = new EventEmitter<Error>();
 
   constructor(public studentService: StudentService,
               private problemService: ProblemService,
@@ -52,13 +52,10 @@ export class CodeUploadPanelComponent implements OnInit {
     ));
     this.problem$.subscribe({
       next: p => {
-        console.log(this.problem);
         this.problem = p;
         this.selectedFiles = new Array(p.submittedCodeSpecs.length);
       },
-      error: e => {
-        this.problemErrorEvent.emit(e);
-      },
+      error: e => this.problemNotFound.emit(e),
     });
   }
 

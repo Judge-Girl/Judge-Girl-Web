@@ -25,7 +25,7 @@
             </as-split-area>
             <as-split-area size="34">
               <div class="side-by-side-scroll">
-                <app-code-upload-panel (problemErrorEvent)="problemError($event)"></app-code-upload-panel>
+                <app-code-upload-panel (problemNotFound)="showProblemNotFoundPage($event)"></app-code-upload-panel>
               </div>
             </as-split-area>
           </as-split>

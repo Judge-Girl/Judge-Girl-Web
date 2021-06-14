@@ -107,7 +107,7 @@ export class MultiTabsPanelComponent implements OnInit, AfterViewInit {
     }
   }
 
-  problemError(error: Error) {
+  showProblemNotFoundPage(error: Error) {
     this.error = true;
   }
 
