@@ -12,7 +12,6 @@ export class ExamContext {
   private examOverview?: ExamOverview;
 
   onExamOverviewRetrieved(examOverview: ExamOverview) {
-    console.log(`retrieved`);
     this.examOverview = examOverview;
     this.examOverview$.next(this.examOverview);
   }

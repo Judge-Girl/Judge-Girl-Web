@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Injector, OnInit, Output, ViewChildren } from '@angular/core';
+import {Component, Injector, OnInit, ViewChildren} from '@angular/core';
 import {FileUpload, MessageService} from 'primeng';
 import {NoSubmissionQuota, ProblemService, StudentService, SubmissionService, SubmissionThrottlingError} from '../../services/Services';
 import {getCodeFileExtension, Problem, SubmittedCodeSpec} from '../../models';
@@ -24,8 +24,6 @@ export class CodeUploadPanelComponent implements OnInit {
   submissionService: SubmissionService;
   private routeParams: Params;
   private routePrefixing: (routeParams: Params) => string;
-
-  @Output() problemNotFound = new EventEmitter<Error>();
 
   constructor(public studentService: StudentService,
               private problemService: ProblemService,
@@ -55,7 +53,6 @@ export class CodeUploadPanelComponent implements OnInit {
         this.problem = p;
         this.selectedFiles = new Array(p.submittedCodeSpecs.length);
       },
-      error: e => this.problemNotFound.emit(e),
     });
   }
 
@@ -126,7 +123,6 @@ export class CodeUploadPanelComponent implements OnInit {
   }
 
   private handleSubmitError(err: Error) {
-    console.log(err);
     if (err instanceof SubmissionThrottlingError) {
       this.messageService.add({
         key: this.MESSAGE_KEY_ERROR_TOAST,

@@ -1,9 +1,5 @@
-<!-- Spinner -->
-<div [hidden]="exam" class="row w-100 h-100 align-items-center justify-content-center">
-  <ld-circle></ld-circle>
-</div>
 
-<div *ngIf="exam" class="container pt-4 font-poppins" id="problem-description-panel">
+<div class="container pt-4 font-poppins" id="problem-description-panel">
   <div class="row content-title-font pt-4 px-1 text-left">
     Problems
   </div>
@@ -21,14 +17,14 @@
       </thead>
       <tbody>
       <tr></tr>
-      <tr *ngFor="let question of exam.questions; let i = index">
+      <tr *ngFor="let question of questions$ | async; let i = index">
         <td> {{ toCharactorIndex(i)}} </td>
         <td class="text-left fake-link"
             (click)="routeToQuestion(question)"> {{ question.problemId }}. {{ question.problemTitle }} </td>
         <td> {{ question.yourScore }} / {{ question.maxScore }} </td>
         <td class="text-left">
-          <span class="judge-status {{getQuestionStatus(question)}}">{{getQuestionStatus(question)}}</span>
-          <span class="ml-2">{{ getQuestionBestRecord(question) }}</span>
+          <span class="judge-status {{describeQuestionStatus(question)}}">{{describeQuestionStatus(question)}}</span>
+          <span class="ml-2">{{ describeQuestionBestRecord(question) }}</span>
         </td>
         <td> {{ question.remainingQuota }} </td>
       </tr>
@@ -38,7 +34,7 @@
       <tr>
         <td></td>
         <td class="text-right total-score"> Total Score</td>
-        <td class="total-score"> {{ getTotalScore() }} / {{ getTotalMaxScore() }} </td>
+        <td class="total-score"> {{ totalScore$ | async }} / {{ totalMaxScore$ | async }} </td>
         <td></td>
         <td></td>
       </tr>

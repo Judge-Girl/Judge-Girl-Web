@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Observable, ReplaySubject} from 'rxjs';
-import {CodeFile, ExamItem, ExamOverview, Problem, ProblemItem, Student, studentToString, Submission, TestCase} from '../models';
+import {CodeFile, ExamItem, ExamOverview, Problem, ProblemItem, Student, Submission, TestCase} from '../models';
 import {Router} from '@angular/router';
 import {CookieService} from './cookie/cookie.service';
 import {ExamStatus} from './impl/HttpExamService';
@@ -39,7 +39,9 @@ export abstract class StudentService {
 
   _currentStudent: Student;
 
+
   protected constructor(protected router: Router, protected cookieService: CookieService) {
+
   }
 
   authenticate(): boolean {

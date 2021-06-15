@@ -3,6 +3,8 @@ import * as moment from 'moment';
 import {ExamService, StudentService} from '../../services/Services';
 import {ExamItem} from '../../models';
 import {Router} from '@angular/router';
+import {Observable} from 'rxjs';
+import {switchMap} from 'rxjs/operators';
 
 
 @Component({
@@ -11,8 +13,7 @@ import {Router} from '@angular/router';
   styleUrls: ['../../../animations.css', './exam-list.component.css']
 })
 export class ExamListComponent implements OnInit {
-  examItems: ExamItem[];
-  loadingExams = false;
+  examItems$: Observable<ExamItem[]>;
 
   constructor(private examService: ExamService,
               private studentService: StudentService,
@@ -20,15 +21,8 @@ export class ExamListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.examItems = [];
-    this.loadingExams = true;
-    if (this.studentService.authenticate()) {
-      this.examService.getExamsByStudentId(this.studentService.currentStudent.id)
-        .subscribe(items => {
-          this.loadingExams = false;
-          this.examItems = items;
-        });
-    }
+    this.examItems$ = this.studentService.currentStudent$.pipe(
+      switchMap(student => this.examService.getExamsByStudentId(student.id)));
   }
 
   routeToExam(examId: number) {

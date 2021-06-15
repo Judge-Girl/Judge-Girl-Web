@@ -1,22 +1,33 @@
 
-<div *ngIf="!error; else errorPage">
-  <question-banner *ngIf="isInExam"></question-banner>
+<div *ngIf="problem$ | withLoading | async as obs">
+  <ng-template [ngIf]="obs.error">
+    <app-error-oops [messages]="['We can\'t find this problem.', 'If you find this wrong, please contact the admin.']"
+                    [goBackMessage]="'Go back'"
+                    (goBack)="goBack()"></app-error-oops>
+  </ng-template>
+  <div [hidden]="!obs.value">
+    <app-ide-banner *ngIf="banner$ | async as banner"
+                    h1="{{banner.header1}}"
+                    h2="{{banner.header2}}"
+                    previousPageName="{{banner.previousPageName}}"
+                    (goPreviousPage)="banner.navigatePreviousPage()">
+    </app-ide-banner>
 
-  <div class="my-container" (window:resize)="onResize($event)">
-    <div id="tab-panel" class="shadow flex-column">
-      <ul [style.width]="'100%'" [style.marginBottom]="'10px'" class="nav nav-tabs">
-        <li class="nav-item">
-          <a class="nav-link active" href="#" (click)="switchTab(TAB_PROBLEM)" #problemTab>Problem</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#" (click)="switchTab(TAB_TESTCASES)" #testcasesTab>Test Cases</a>
-        </li>
-        <li class="nav-item">
-          <a [hidden]="!studentService.hasLogin()" class="nav-link" href="#"
-            (click)="switchTab(TAB_SUBMISSIONS)" #submissionsTab>Submissions</a>
-        </li>
-      </ul>
-      <div class="my-panel justify-content-start" [style.height]="'100%'">
+    <div class="my-container" (window:resize)="onResize()">
+      <div id="tab-panel" class="shadow flex-column">
+        <ul [style.width]="'100%'" [style.marginBottom]="'10px'" class="nav nav-tabs">
+          <li class="nav-item">
+            <a class="nav-link active" href="#" (click)="switchTab(TAB_PROBLEM)" #problemTab>Problem</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" (click)="switchTab(TAB_TESTCASES)" #testcasesTab>Test Cases</a>
+          </li>
+          <li class="nav-item">
+            <a [hidden]="!studentService.hasLogin()" class="nav-link" href="#"
+               (click)="switchTab(TAB_SUBMISSIONS)" #submissionsTab>Submissions</a>
+          </li>
+        </ul>
+        <div class="my-panel justify-content-start" [style.height]="'100%'">
           <as-split unit="percent" [direction]="'horizontal'" #splitter>
             <as-split-area size="66">
               <div class="side-by-side-scroll">
@@ -25,31 +36,14 @@
             </as-split-area>
             <as-split-area size="34">
               <div class="side-by-side-scroll">
-                <app-code-upload-panel (problemNotFound)="showProblemNotFoundPage($event)"></app-code-upload-panel>
+                <app-code-upload-panel></app-code-upload-panel>
               </div>
             </as-split-area>
           </as-split>
+        </div>
       </div>
-
     </div>
   </div>
 </div>
 
-<ng-template #errorPage>
-  <div class="container">
-    <div style="height: 10vh"></div>
 
-    <div class="error-box text-center p-3">
-      <div class="error-title py-2">
-        Oops !!
-      </div>
-      <div class="error-content py-2">
-        <div>We can't find this problem.</div>
-        <div>If you find this wrong, please contact the admin.</div>
-      </div>
-      <div class="error-btn">
-        <button class="px-3 py-1" (click)="navigateToExam()"> Go to exam page </button>
-      </div>
-    </div>
-  </div>
-</ng-template>

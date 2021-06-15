@@ -5,9 +5,9 @@ import {AppRoutingModule} from './app-routing.module';
 import {LoginComponent} from './users/login/login.component';
 import {AppComponent} from './app.component';
 import {ProblemListComponent} from './problem-list/problem-list.component';
-import {ExamListComponent} from './exam/exam-list/exam-list.component';
-import {ExamHomeComponent} from './exam/exam-home/exam-home.component';
-import {ExamQuestionsComponent} from './exam/exam-questions/exam-questions.component';
+import {ExamListComponent} from './exam/list/exam-list.component';
+import {ExamHomeComponent} from './exam/home/exam-home.component';
+import {ExamQuestionsComponent} from './exam/home/questions/exam-questions.component';
 import {BrokerService, ExamService, ProblemService, StudentService} from './services/Services';
 import {IdeComponent} from './ide/ide.component';
 import {ProblemDescriptionComponent} from './ide/problem-description/problem-description.component';
@@ -25,7 +25,7 @@ import {HttpStudentService} from './services/impl/HttpStudentService';
 import {HttpSubmissionService} from './services/impl/HttpSubmissionService';
 import {CookieModule} from './services/cookie/cookie.module';
 import {CookieService} from './services/cookie/cookie.service';
-import {TestcasesComponent} from './testcases/testcases.component';
+import {TestcasesComponent} from './ide/testcases/testcases.component';
 import {AngularSplitModule} from 'angular-split';
 import {ChangePasswordComponent} from './users/change-password/change-password.component';
 import {FormsModule} from '@angular/forms';
@@ -33,9 +33,15 @@ import {StompBrokerService} from './services/impl/StompBrokerService';
 import {RxStompConfig} from '@stomp/rx-stomp';
 import {EventBus} from './services/EventBus';
 import {HttpExamQuestionSubmissionService} from './services/impl/HttpExamQuestionSubmissionService';
-import {QuestionBanner} from './exam/question-banner/question-banner.component';
+import {IdeBannerComponent} from './exam/question-banner/ide-banner.component';
 import {LdSpinnerComponent} from './items/spinners/ld-spinner.component';
 import {ExamContext} from './contexts/ExamContext';
+import {WithLoadingPipe} from './pipes/with-loading.pipe';
+import {ProblemContext} from './contexts/ProblemContext';
+import {OopsComponent} from './ide/oops.component';
+import {IdePluginChain} from './ide/ide.plugin';
+import {ExamIdePlugin} from './exam/banner.provider';
+import {IDE_PLUGINS_PROVIDERS_TOKEN} from './providers.token';
 
 
 const DOMAIN = 'api.judgegirl.beta.pdlab.csie.ntu.edu.tw';
@@ -45,8 +51,12 @@ const rxStompConfig = new RxStompConfig();
 rxStompConfig.brokerURL = `ws://${DOMAIN}/broker`;
 rxStompConfig.reconnectDelay = 200;
 
+
 @NgModule({
   declarations: [
+    /*Pipes*/
+    WithLoadingPipe,
+
     /*Pages*/
     AppComponent,
     ProblemTagDropDownComponent,
@@ -65,9 +75,10 @@ rxStompConfig.reconnectDelay = 200;
 
     /*items*/
     ExamQuestionsComponent,
-    QuestionBanner,
+    IdeBannerComponent,
     LdCircleComponent,
     LdSpinnerComponent,
+    OopsComponent,
   ],
   imports: [
     CookieModule.forRoot(),
@@ -97,6 +108,11 @@ rxStompConfig.reconnectDelay = 200;
 
     /* contexts */
     {provide: ExamContext, useClass: ExamContext},
+    {provide: ProblemContext, useClass: ProblemContext},
+
+    /* chain-of-responsibility */
+    {provide: IdePluginChain, useClass: IdePluginChain},
+    {provide: IDE_PLUGINS_PROVIDERS_TOKEN, useClass: ExamIdePlugin, multi: true},
 
     /* variables */
     {provide: 'SUBMISSION_SERVICE', useClass: HttpSubmissionService},

@@ -1,21 +1,24 @@
-import { Component, OnInit } from '@angular/core';
-import { ExamOverview, Problem, Student } from '../../models';
-import { ExamService, ProblemService, StudentService } from '../../services/Services';
-import { ActivatedRoute, Router } from '@angular/router';
-import { initHighlight } from 'src/utils/markdownUtils';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {ExamOverview, Problem, Student} from '../../models';
+import {ExamService, ProblemService, StudentService} from '../../services/Services';
+import {ActivatedRoute} from '@angular/router';
+import {initHighlight} from 'src/utils/markdownUtils';
 
 @Component({
-  selector: 'question-banner',
-  templateUrl: './question-banner.component.html',
-  styleUrls: ['./question-banner.component.css'],
+  selector: 'app-ide-banner',
+  templateUrl: './ide-banner.component.html',
+  styleUrls: ['./ide-banner.component.css'],
 })
-export class QuestionBanner implements OnInit {
+export class IdeBannerComponent implements OnInit {
+  @Input() h1: string;
+  @Input() h2: string;
+  @Input() previousPageName: string;
+  @Output() goPreviousPage = new EventEmitter<void>();
 
   constructor(private problemService: ProblemService,
               private examService: ExamService,
               private studentService: StudentService,
-              private route: ActivatedRoute,
-              private router: Router) {
+              private route: ActivatedRoute) {
   }
 
   examId: number;
@@ -45,22 +48,12 @@ export class QuestionBanner implements OnInit {
       if (student) {
         this.updateExamProgressOverview(student);
       }
-    })
+    });
 
     this.problemService.getProblem(this.problemId).subscribe(problem => {
       this.problem = problem;
     });
   }
 
-  routeToExam() {
-    this.router.navigateByUrl(`exams/${this.examId}`);
-  }
 
-  getProblemName() {
-    return this.problem?.title || "";
-  }
-
-  getExamName() {
-    return this.exam?.name || "";
-  }
 }

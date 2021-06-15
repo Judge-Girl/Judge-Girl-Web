@@ -25,7 +25,6 @@ export class ExamHomeComponent implements OnInit, AfterViewInit {
   private allTabs: ElementRef[];
 
   private examId$: Observable<number>;
-  public isLoading: boolean;
   public examOverview$: Observable<ExamOverview>;
 
   constructor(private elementRef: ElementRef,
@@ -38,14 +37,9 @@ export class ExamHomeComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.isLoading = true;
-    this.examOverview$.toPromise().then(() => this.isLoading = false);
-
-    if (this.studentService.authenticate()) {
-      this.examId$.pipe(switchMap(examId =>
-        this.examService.getExamProgressOverview(this.studentService.currentStudent.id, examId)))
+    this.examId$.pipe(switchMap(examId =>
+      this.examService.getExamProgressOverview(this.studentService.currentStudent.id, examId)))
         .subscribe(examOverview => this.examContext.onExamOverviewRetrieved(examOverview));
-    }
   }
 
   ngAfterViewInit(): void {
