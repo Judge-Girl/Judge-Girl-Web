@@ -5,6 +5,7 @@ import {HttpClient} from '@angular/common/http';
 import {Inject, Injectable} from '@angular/core';
 import {map, shareReplay, switchMap} from 'rxjs/operators';
 import {HttpRequestCache} from './HttpRequestCache';
+import set = Reflect.set;
 
 @Injectable({
   providedIn: 'root'
@@ -21,8 +22,7 @@ export class HttpProblemService extends ProblemService {
   }
 
   getProblem(problemId: number): Observable<Problem> {
-    return this.httpRequestCache.get(`${this.baseUrl}/api/problems/${problemId}`)
-      .pipe(map(body => this.toProblem(body)));
+    return this.httpRequestCache.get(`${this.baseUrl}/api/problems/${problemId}`);
   }
 
   getProblemItemsByTag(problemTag: string): Observable<ProblemItem[]> {

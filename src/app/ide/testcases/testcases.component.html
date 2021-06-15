@@ -1,8 +1,9 @@
 <div *ngIf="testCases$ | withLoading | async as obs">
   <ng-template [ngIf]="obs.loading">
-    <div class="row w-100 h-100 align-items-center justify-content-center">
+    <div id="left-column-spinner-container">
       <ld-circle></ld-circle>
     </div>
+
   </ng-template>
 
   <ng-template [ngIf]="obs.value">

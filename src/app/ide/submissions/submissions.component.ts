@@ -1,9 +1,9 @@
 import {AfterViewInit, Component, Injector, OnDestroy, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
-import {ProblemService, StudentService, SubmissionService} from '../services/Services';
+import {ProblemService, StudentService, SubmissionService} from '../../services/Services';
 import {map, switchMap} from 'rxjs/operators';
 import {Observable, Subscription} from 'rxjs';
-import {CodeFile, describeMemory, describeTimeInSeconds, Judge, JudgeStatus, Problem, Submission, TestCase} from '../models';
+import {CodeFile, describeMemory, describeTimeInSeconds, Judge, JudgeStatus, Problem, Submission, TestCase} from '../../models';
 import * as moment from 'moment';
 import * as CodeMirror from 'codemirror';
 
@@ -34,7 +34,7 @@ function sortSubmissionsByTime(submissions: Submission[]): Submission[] {
 @Component({
   selector: 'app-submissions',
   templateUrl: './submissions.component.html',
-  styleUrls: ['./submissions.component.css']
+  styleUrls: ['./submissions.component.css', '../ide.share.css']
 })
 export class SubmissionsComponent implements OnInit, OnDestroy, AfterViewInit {
   submissionService: SubmissionService;

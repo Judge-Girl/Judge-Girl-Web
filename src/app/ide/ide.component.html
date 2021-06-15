@@ -5,7 +5,7 @@
                     [goBackMessage]="'Go back'"
                     (goBack)="goBack()"></app-error-oops>
   </ng-template>
-  <div [hidden]="!obs.value">
+  <div [hidden]="obs.error">
     <app-ide-banner *ngIf="banner$ | async as banner"
                     h1="{{banner.header1}}"
                     h2="{{banner.header2}}"

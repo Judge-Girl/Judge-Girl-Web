@@ -12,7 +12,7 @@ import {BrokerService, ExamService, ProblemService, StudentService} from './serv
 import {IdeComponent} from './ide/ide.component';
 import {ProblemDescriptionComponent} from './ide/problem-description/problem-description.component';
 import {CodeUploadPanelComponent} from './ide/code-panel/code-upload-panel.component';
-import {SubmissionsComponent} from './submissions/submissions.component';
+import {SubmissionsComponent} from './ide/submissions/submissions.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {LdCircleComponent} from './items/spinners/ld-circle.component';
 import {FileUploadModule} from 'primeng/fileupload';

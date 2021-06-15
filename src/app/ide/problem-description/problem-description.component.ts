@@ -9,7 +9,7 @@ import {takeUntil} from 'rxjs/operators';
 @Component({
   selector: 'app-problem-description',
   templateUrl: './problem-description.component.html',
-  styleUrls: ['./problem-description.component.css']
+  styleUrls: ['./problem-description.component.css', '../ide.share.css']
 })
 export class ProblemDescriptionComponent implements OnDestroy, AfterViewInit {
   private onDestroy$: Subject<void> = new Subject<void>();

@@ -5,7 +5,7 @@ import {Injectable} from '@angular/core';
 import {Location} from '@angular/common';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import {combineLatest, Observable, ReplaySubject} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {filter, map} from 'rxjs/operators';
 import {ExamOverview, Problem} from '../models';
 import {ProblemContext} from '../contexts/ProblemContext';
 
@@ -19,7 +19,9 @@ export class ExamIdePlugin extends IdePlugin {
               private route: ActivatedRoute,
               private router: Router) {
     super();
-    combineLatest([this.router.events, problemContext.problem$, examContext.overview$])
+    const whileNavigateToExamPage$ = this.router.events.pipe(
+      filter(e => e instanceof NavigationEnd && e.url.includes('exams')));
+    combineLatest([whileNavigateToExamPage$, problemContext.problem$, examContext.overview$])
       .subscribe((combine) => {
         const [event, problem, exam] = combine;
         if (event instanceof NavigationEnd && event.url.includes('exams')) {
@@ -45,7 +47,7 @@ export class ExamIdePlugin extends IdePlugin {
           header2: exam.name,
           previousPageName: 'Problem Page',
           navigatePreviousPage: () => {
-            this.location.back();
+            this.router.navigate([`/exams/${exam.id}`], {replaceUrl: true});
           }
         };
       }));

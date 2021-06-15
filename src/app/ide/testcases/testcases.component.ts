@@ -7,7 +7,7 @@ import {map} from 'rxjs/operators';
 @Component({
   selector: 'app-testcases',
   templateUrl: './testcases.component.html',
-  styleUrls: ['./testcases.component.css']
+  styleUrls: ['./testcases.component.css', '../ide.share.css']
 })
 export class TestcasesComponent {
   public testCases$: Observable<TestCase[]>;

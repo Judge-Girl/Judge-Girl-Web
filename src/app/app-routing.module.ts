@@ -6,7 +6,7 @@ import {ExamListComponent} from './exam/list/exam-list.component';
 import {ExamHomeComponent} from './exam/home/exam-home.component';
 import {ExamQuestionsComponent} from './exam/home/questions/exam-questions.component';
 import {IdeComponent} from './ide/ide.component';
-import {SubmissionsComponent} from './submissions/submissions.component';
+import {SubmissionsComponent} from './ide/submissions/submissions.component';
 import {ProblemDescriptionComponent} from './ide/problem-description/problem-description.component';
 import {TestcasesComponent} from './ide/testcases/testcases.component';
 import {ChangePasswordComponent} from './users/change-password/change-password.component';
