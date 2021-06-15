@@ -8,12 +8,10 @@ import {ProblemListComponent} from './problem-list/problem-list.component';
 import {ExamListComponent} from './exam/exam-list/exam-list.component';
 import {ExamHomeComponent} from './exam/exam-home/exam-home.component';
 import {ExamQuestionsComponent} from './exam/exam-questions/exam-questions.component';
-import {ExamScoreboardComponent} from './exam/exam-scoreboard/exam-scoreboard.component';
-import {ExamSubmissionsComponent} from './exam/exam-submissions/exam-submissions.component';
 import {BrokerService, ExamService, ProblemService, StudentService} from './services/Services';
-import {MultiTabsPanelComponent} from './problem-submission-tab-panel/multi-tabs-panel.component';
-import {ProblemDescriptionComponent} from './problem-description/problem-description.component';
-import {CodeUploadPanelComponent} from './code-panel/code-upload-panel.component';
+import {IdeComponent} from './ide/ide.component';
+import {ProblemDescriptionComponent} from './ide/problem-description/problem-description.component';
+import {CodeUploadPanelComponent} from './ide/code-panel/code-upload-panel.component';
 import {SubmissionsComponent} from './submissions/submissions.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {LdCircleComponent} from './items/spinners/ld-circle.component';
@@ -37,6 +35,7 @@ import {EventBus} from './services/EventBus';
 import {HttpExamQuestionSubmissionService} from './services/impl/HttpExamQuestionSubmissionService';
 import {QuestionBanner} from './exam/question-banner/question-banner.component';
 import {LdSpinnerComponent} from './items/spinners/ld-spinner.component';
+import {ExamContext} from './contexts/ExamContext';
 
 
 const DOMAIN = 'api.judgegirl.beta.pdlab.csie.ntu.edu.tw';
@@ -50,30 +49,25 @@ rxStompConfig.reconnectDelay = 200;
   declarations: [
     /*Pages*/
     AppComponent,
+    ProblemTagDropDownComponent,
     LoginComponent,
     ChangePasswordComponent,
     ProblemListComponent,
+    TestcasesComponent,
     ExamListComponent,
-    MultiTabsPanelComponent,
+    IdeComponent,
     ProblemDescriptionComponent,
+
     CodeUploadPanelComponent,
     SubmissionsComponent,
 
     ExamHomeComponent,
-    ExamQuestionsComponent,
-    ExamSubmissionsComponent,
-    ExamScoreboardComponent,
-
-    QuestionBanner,
 
     /*items*/
+    ExamQuestionsComponent,
+    QuestionBanner,
     LdCircleComponent,
     LdSpinnerComponent,
-
-    ProblemTagDropDownComponent,
-
-    /*directives*/
-    TestcasesComponent,
   ],
   imports: [
     CookieModule.forRoot(),
@@ -88,15 +82,23 @@ rxStompConfig.reconnectDelay = 200;
     BlockUIModule, ToastModule, FileUploadModule, MessagesModule
   ],
   providers: [
+    /* external services */
     HttpClient,
     MessageService,
     CookieService,
+
+    /* services */
     {provide: StudentService, useClass: HttpStudentService},
     {provide: ProblemService, useClass: HttpProblemService},
     {provide: ExamService, useClass: HttpExamService},
     {provide: BrokerService, useClass: StompBrokerService},
     {provide: RxStompConfig, useValue: rxStompConfig},
     {provide: EventBus, useClass: EventBus},
+
+    /* contexts */
+    {provide: ExamContext, useClass: ExamContext},
+
+    /* variables */
     {provide: 'SUBMISSION_SERVICE', useClass: HttpSubmissionService},
     {provide: 'EXAM_QUESTION_SUBMISSION_SERVICE', useClass: HttpExamQuestionSubmissionService},
     {provide: 'STUDENT_SERVICE_BASE_URL', useValue: `${HTTP_HOST}`},

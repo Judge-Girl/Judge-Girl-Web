@@ -3,9 +3,12 @@ import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import {ExamService, StudentService} from '../../services/Services';
 import {ExamOverview} from '../../models';
 import {SplitComponent} from 'angular-split';
+import {ExamContext} from '../../contexts/ExamContext';
+import {Observable} from 'rxjs';
+import {map, switchMap} from 'rxjs/operators';
 
 export enum Tab {
-  PROBLEMS, SUBMISSIONS, SCOREBOARD,
+  PROBLEMS
 }
 
 @Component({
@@ -15,37 +18,33 @@ export enum Tab {
 })
 export class ExamHomeComponent implements OnInit, AfterViewInit {
 
-
-  constructor(private elementRef: ElementRef,
-              private studentService: StudentService,
-              private examService: ExamService,
-              private router: Router, private route: ActivatedRoute) {
-    route.params.subscribe(params => this.examId = +params.examId);
-
-  }
-
   readonly TAB_PROBLEMS = Tab.PROBLEMS;
-  // readonly TAB_SUBMISSIONS = Tab.SUBMISSIONS;
-  // readonly TAB_SCOREBOARD = Tab.SCOREBOARD;
 
   @ViewChild('problemsTab') problemsTab: ElementRef;
-  // @ViewChild('submissionsTab') submissionsTab: ElementRef;
-  // @ViewChild('scoreboardTab') scoreboardTab: ElementRef;
   @ViewChild('splitter') splitter: SplitComponent;
   private allTabs: ElementRef[];
 
-  private examId: number;
+  private examId$: Observable<number>;
   public isLoading: boolean;
-  public examOverview: ExamOverview;
+  public examOverview$: Observable<ExamOverview>;
+
+  constructor(private elementRef: ElementRef,
+              private studentService: StudentService,
+              private examContext: ExamContext,
+              private examService: ExamService,
+              private router: Router, private route: ActivatedRoute) {
+    this.examId$ = this.route.paramMap.pipe(map(params => +params.get('examId')));
+    this.examOverview$ = this.examContext.overview$;
+  }
 
   ngOnInit(): void {
     this.isLoading = true;
+    this.examOverview$.toPromise().then(() => this.isLoading = false);
+
     if (this.studentService.authenticate()) {
-      this.examService.getExamProgressOverview(this.studentService.currentStudent.id, this.examId)
-        .subscribe(e => {
-          this.examOverview = e;
-          this.isLoading = false;
-        });
+      this.examId$.pipe(switchMap(examId =>
+        this.examService.getExamProgressOverview(this.studentService.currentStudent.id, examId)))
+        .subscribe(examOverview => this.examContext.onExamOverviewRetrieved(examOverview));
     }
   }
 
@@ -63,22 +62,12 @@ export class ExamHomeComponent implements OnInit, AfterViewInit {
 
   routeToTab(tab: Tab): void {
     if (tab === Tab.PROBLEMS) {
-      this.router.navigate([`exams/${this.examId}`]);
-    } /* else if (tab === Tab.SUBMISSIONS) {
-      this.router.navigate([`exams/${this.examId}/submissions`]);
-    } else if (tab === Tab.SCOREBOARD) {
-      this.router.navigate([`exams/${this.examId}/scoreboard`]);
-    } */
+      this.examId$.subscribe(examId => this.router.navigate([`exams/${examId}`]));
+    }
   }
 
   private refreshTabElementsState() {
-    // if (window.location.pathname.endsWith('scoreboard')) {
-    //   this.activateTabAndDeactivateOthers(this.scoreboardTab);
-    // } else if (window.location.pathname.endsWith('submissions')) {
-    //   this.activateTabAndDeactivateOthers(this.submissionsTab);
-    // } else {
-    this.activateTabAndDeactivateOthers(this.problemsTab);
-    // }
+      this.activateTabAndDeactivateOthers(this.problemsTab);
   }
 
   private activateTabAndDeactivateOthers(tab: ElementRef) {
@@ -94,13 +83,7 @@ export class ExamHomeComponent implements OnInit, AfterViewInit {
   }
 
   private routeToTabByCurrentUrl() {
-    // if (window.location.pathname.endsWith('scoreboard')) {
-    //   this.routeToTab(Tab.SCOREBOARD);
-    // } else if (window.location.pathname.endsWith('submissions')) {
-    //   this.routeToTab(Tab.SUBMISSIONS);
-    // } else {
-    this.routeToTab(Tab.PROBLEMS);
-    // } 
+      this.routeToTab(Tab.PROBLEMS);
   }
 
   routeToExamList() {
@@ -108,8 +91,11 @@ export class ExamHomeComponent implements OnInit, AfterViewInit {
   }
 
   routeToCurrentExamIndex() {
-    this.router.navigateByUrl(`/exams/${this.examOverview.id}`);
-    this.refreshTabElementsState();
+    this.examOverview$.toPromise()
+      .then(exam => {
+        this.router.navigateByUrl(`/exams/${exam.id}`);
+        this.refreshTabElementsState();
+      });
   }
 }
 

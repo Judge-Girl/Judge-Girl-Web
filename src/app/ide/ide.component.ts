@@ -1,7 +1,7 @@
 import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, NavigationEnd, Params, Router} from '@angular/router';
 import {StudentService} from '../services/Services';
-import { SplitComponent } from 'angular-split';
+import {SplitComponent} from 'angular-split';
 
 export enum Tab {
   TESTCASES,
@@ -10,10 +10,10 @@ export enum Tab {
 
 @Component({
   selector: 'app-multi-tabs-panel',
-  templateUrl: './multi-tabs-panel.component.html',
-  styleUrls: ['./multi-tabs-panel.component.css']
+  templateUrl: './ide.component.html',
+  styleUrls: ['./ide.component.css']
 })
-export class MultiTabsPanelComponent implements OnInit, AfterViewInit {
+export class IdeComponent implements OnInit, AfterViewInit {
   private routePrefixing: (routeParams: Params) => string;
 
   readonly TAB_SUBMISSIONS = Tab.SUBMISSIONS;

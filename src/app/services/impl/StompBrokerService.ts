@@ -19,11 +19,9 @@ export class StompBrokerService extends BrokerService {
     this.stompClient.connectionState$.subscribe((state: RxStompState) => {
       if (state === RxStompState.OPEN) {
         this.connect$.next();
-        console.log(`Broker reconnected.`);
       }
       if (state === RxStompState.CLOSED) {
         this.disconnect$.next();
-        console.log(`Broker disconnected.`);
       }
     });
   }
@@ -50,7 +48,6 @@ export class StompBrokerService extends BrokerService {
       const connectSub = this.connect$.subscribe(() => {
         if (!this.subscriptions.has(key)) {
           const destination = `/topic${topic}`;
-          console.log(`Subscribing destination: ${destination}...`);
           const subscription = this.stompClient.watch(destination)
             .pipe(switchMap(this.convertToBrokerMessage))
             .subscribe(subscriber);
