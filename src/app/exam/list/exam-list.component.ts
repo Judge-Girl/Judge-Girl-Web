@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import * as moment from 'moment';
-import {ExamService, StudentService} from '../../services/Services';
+import {ExamService, StudentService} from '../../../services/Services';
 import {ExamItem} from '../../models';
 import {Router} from '@angular/router';
 import {Observable} from 'rxjs';
@@ -21,7 +21,7 @@ export class ExamListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.examItems$ = this.studentService.currentStudent$.pipe(
+    this.examItems$ = this.studentService.loginStudent$.pipe(
       switchMap(student => this.examService.getExamsByStudentId(student.id)));
   }
 

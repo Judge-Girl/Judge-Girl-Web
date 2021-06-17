@@ -14,7 +14,7 @@ import {LoginOnlyGuard} from './guard/login-only.guard';
 
 const routes: Routes = [
   {path: '', component: LoginComponent},
-  {path: 'users/change-password', component: ChangePasswordComponent},
+  {path: 'users/change-password', component: ChangePasswordComponent, canActivate: [LoginOnlyGuard]},
   {path: 'problems', component: ProblemListComponent},
   {
     path: 'problems/:problemId', component: IdeComponent,
@@ -49,6 +49,7 @@ const routes: Routes = [
       routePrefixing: (routeParams: Params) => `/exams/${routeParams.examId}/`
     }
   },
+  { path: '**', redirectTo: ''}
 ];
 
 @NgModule({

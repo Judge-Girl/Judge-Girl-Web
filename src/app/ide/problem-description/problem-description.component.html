@@ -1,5 +1,5 @@
 
-<div  *ngIf="problem$ | withLoading | async as obs">
+<div *ngIf="problem$ | withLoading | async as obs">
   <ng-template [ngIf]="obs.loading">
     <div id="left-column-spinner-container">
       <ld-circle></ld-circle>

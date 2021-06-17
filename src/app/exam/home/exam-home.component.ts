@@ -1,11 +1,10 @@
-import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
-import {ExamService, StudentService} from '../../services/Services';
+import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import {ExamService, StudentService} from '../../../services/Services';
 import {ExamOverview} from '../../models';
 import {SplitComponent} from 'angular-split';
 import {ExamContext} from '../../contexts/ExamContext';
 import {Observable} from 'rxjs';
-import {map, switchMap} from 'rxjs/operators';
 
 export enum Tab {
   PROBLEMS
@@ -16,7 +15,7 @@ export enum Tab {
   templateUrl: './exam-home.component.html',
   styleUrls: ['./exam-home.component.css']
 })
-export class ExamHomeComponent implements OnInit, AfterViewInit {
+export class ExamHomeComponent implements AfterViewInit {
 
   readonly TAB_PROBLEMS = Tab.PROBLEMS;
 
@@ -24,72 +23,52 @@ export class ExamHomeComponent implements OnInit, AfterViewInit {
   @ViewChild('splitter') splitter: SplitComponent;
   private allTabs: ElementRef[];
 
-  private examId$: Observable<number>;
-  public examOverview$: Observable<ExamOverview>;
+  private examId: number;
+  public exam$: Observable<ExamOverview>;
 
   constructor(private elementRef: ElementRef,
               private studentService: StudentService,
               private examContext: ExamContext,
               private examService: ExamService,
               private router: Router, private route: ActivatedRoute) {
-    this.examId$ = this.route.paramMap.pipe(map(params => +params.get('examId')));
-    this.examOverview$ = this.examContext.overview$;
-  }
-
-  ngOnInit(): void {
-    this.examId$.pipe(switchMap(examId =>
-      this.examService.getExamProgressOverview(this.studentService.currentStudent.id, examId)))
-        .subscribe(examOverview => this.examContext.onExamOverviewRetrieved(examOverview));
+    this.examId = +route.snapshot.paramMap.get('examId');
+    this.exam$ = this.examContext.exam$;
   }
 
   ngAfterViewInit(): void {
     this.allTabs = [this.problemsTab /*, this.submissionsTab, this.scoreboardTab */];
-    this.router.events.subscribe(e => {
-      if (e instanceof NavigationEnd) {
-        this.refreshTabElementsState();
-      }
-    });
-    this.routeToTabByCurrentUrl();
-    this.refreshTabElementsState();
+    this.activateTabAndDeactivateOthers(this.problemsTab);
   }
 
 
   routeToTab(tab: Tab): void {
     if (tab === Tab.PROBLEMS) {
-      this.examId$.subscribe(examId => this.router.navigate([`exams/${examId}`]));
+      this.router.navigate([`exams/${this.examId}`]);
     }
-  }
-
-  private refreshTabElementsState() {
-      this.activateTabAndDeactivateOthers(this.problemsTab);
   }
 
   private activateTabAndDeactivateOthers(tab: ElementRef) {
     if (this.allTabs) {
       for (const t of this.allTabs) {
         if (t === tab) {
-          t.nativeElement.classList.add('my-item-active');
+          t.nativeElement?.classList?.add('my-item-active');
         } else {
-          t.nativeElement.classList.remove('my-item-active');
+          t.nativeElement?.classList?.remove('my-item-active');
         }
       }
     }
-  }
-
-  private routeToTabByCurrentUrl() {
-      this.routeToTab(Tab.PROBLEMS);
   }
 
   routeToExamList() {
     this.router.navigateByUrl('/exams');
   }
 
-  routeToCurrentExamIndex() {
-    this.examOverview$.toPromise()
-      .then(exam => {
-        this.router.navigateByUrl(`/exams/${exam.id}`);
-        this.refreshTabElementsState();
-      });
+  routeToCurrentExamHome() {
+    this.router.navigateByUrl(`/exams/${this.examId}`);
+  }
+
+  notFoundGoBack() {
+    this.router.navigateByUrl(`/exams`, {replaceUrl: true});
   }
 }
 

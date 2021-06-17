@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {AccountNotFoundError, IncorrectPasswordFoundError, StudentService} from '../../services/Services';
+import {AccountNotFoundError, IncorrectPasswordFoundError, StudentService} from '../../../services/Services';
 import {Router} from '@angular/router';
 import {Subscription} from 'rxjs';
 
@@ -17,7 +17,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.authSubscription = this.studentService.tryAuthWithCurrentToken()
+    this.authSubscription = this.studentService.awaitAuth$
       .subscribe(hasLogin => {
         if (hasLogin) {
           this.router.navigateByUrl('problems');

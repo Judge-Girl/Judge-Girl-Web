@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {ProblemService} from '../services/Services';
+import {ProblemService} from '../../services/Services';
 import {ProblemItem} from '../models';
 import {Router} from '@angular/router';
 import {ProblemTagDropDownComponent} from '../items/problem-tag-drop-down/problem-tag-drop-down.component';

@@ -8,9 +8,6 @@ export interface Loading<T> {
   value?: T;
   error?: any;
 }
-
-const defaultError = 'Something went wrong';
-
 /**
  * Reference: https://medium.com/angular-in-depth/angular-show-loading-indicator-when-obs-async-is-not-yet-resolved-9d8e5497dd8
  */
@@ -22,13 +19,15 @@ export class WithLoadingPipe implements PipeTransform {
     return val.pipe(
       map((value: any) => {
         return {
-          loading: value.type === 'start',
-          error: value.type === 'error' ? defaultError : '',
-          value: value.type ? value.value : value,
+          loading: false,
+          error: false,
+          value,
         };
       }),
-      startWith({ loading: true }),
-      catchError(error => of({ loading: false, error: error.message }))
+      startWith({loading: true}),
+      catchError(error => {
+        return of({loading: false, error: error.message});
+      })
     );
   }
 }

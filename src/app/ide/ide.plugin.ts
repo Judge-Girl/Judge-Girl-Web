@@ -1,14 +1,23 @@
 import {Banner} from './ide.component';
 import {Inject, Injectable} from '@angular/core';
-import {merge, Observable} from 'rxjs';
+import {Observable, race} from 'rxjs';
 import {IDE_PLUGINS_PROVIDERS_TOKEN} from '../providers.token';
 
-export type GoBackCommand = () => void;
-
 export abstract class IdePlugin {
-  abstract get goBack$(): Observable<GoBackCommand>;
+  abstract get codeUploadPanelDecorator$(): Observable<CodeUploadPanelDecorator>;
+
+  abstract get commandSet$(): Observable<CommandSet>;
 
   abstract get banner$(): Observable<Banner>;
+}
+
+export interface CommandSet {
+  goBack(): void;
+}
+
+export interface CodeUploadPanelDecorator {
+  hideCodeUploadPanel?: { hide: boolean, message?: string };
+  submitCodeButtonDecoration?: { belowMessage?: string };
 }
 
 @Injectable({
@@ -19,11 +28,15 @@ export class IdePluginChain {
   constructor(@Inject(IDE_PLUGINS_PROVIDERS_TOKEN) private readonly providers: Array<IdePlugin>) {
   }
 
-  get goBack$(): Observable<GoBackCommand> {
-    return merge(...this.providers.map(p => p.goBack$));
+  get codeUploadPanelDecorator$(): Observable<CodeUploadPanelDecorator> {
+    return race(...this.providers.map(p => p.codeUploadPanelDecorator$));
+  }
+
+  get commandSet$(): Observable<CommandSet> {
+    return race(...this.providers.map(p => p.commandSet$));
   }
 
   get banner$(): Observable<Banner> {
-    return merge(...this.providers.map(p => p.banner$));
+    return race(...this.providers.map(p => p.banner$));
   }
 }

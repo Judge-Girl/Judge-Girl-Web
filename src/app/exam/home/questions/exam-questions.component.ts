@@ -1,7 +1,7 @@
 import {Component, ElementRef, OnInit, Renderer2, ViewChild} from '@angular/core';
 
 import {describeMemory, describeTimeInSeconds, ExamOverview, JudgeStatus, QuestionItem} from '../../../models';
-import {ExamService, StudentService} from '../../../services/Services';
+import {ExamService, StudentService} from '../../../../services/Services';
 import {ActivatedRoute, Router} from '@angular/router';
 import {initHighlight, parseMarkdown} from 'src/utils/markdownUtils';
 import {ExamContext} from '../../../contexts/ExamContext';
@@ -34,7 +34,7 @@ export class ExamQuestionsComponent implements OnInit {
 
   ngOnInit(): void {
     this.examId = Number(this.route.parent.snapshot.params.examId);
-    this.exam$ = this.examContext.overview$.pipe(map(exam => this.onExamInit(exam)));
+    this.exam$ = this.examContext.exam$.pipe(map(exam => this.onExamInit(exam)));
     this.questions$ = this.exam$.pipe(map(exam => exam.questions));
     this.totalScore$ = this.questions$.pipe(
       map(questions => questions.reduce((p, e) => p + e.yourScore, 0)));

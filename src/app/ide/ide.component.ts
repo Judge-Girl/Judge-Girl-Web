@@ -1,7 +1,9 @@
 import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, NavigationEnd, Params, Router} from '@angular/router';
-import {ProblemService, StudentService} from '../services/Services';
+import {ProblemService, StudentService} from '../../services/Services';
 import {SplitComponent} from 'angular-split';
+import {Location} from '@angular/common';
+
 import {ProblemContext} from '../contexts/ProblemContext';
 import {takeUntil} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
@@ -48,6 +50,7 @@ export class IdeComponent implements OnInit, OnDestroy, AfterViewInit {
               private problemService: ProblemService,
               public studentService: StudentService,
               private idePlugin: IdePluginChain,
+              private location: Location,
               private router: Router, private route: ActivatedRoute) {
     this.problem$ = problemContext.problem$;
     this.routeParams = route.snapshot.params;
@@ -57,17 +60,16 @@ export class IdeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.problemService.getProblem(this.problemId)
-      .pipe(takeUntil(this.onDestroy$))
-      .subscribe({
-        next: problem => this.problemContext.onProblemRetrieved(problem),
-        error: err => this.problemContext.onProblemNotFound(err)
-      });
+    // this.problemService.getProblem(this.problemId)
+    //   .pipe(takeUntil(this.onDestroy$))
+    //   .subscribe({
+    //     next: problem => this.problemContext.onProblemRetrieved(problem),
+    //     error: err => this.problemContext.onProblemNotFound(err)
+    //   });
   }
 
   ngOnDestroy(): void {
     this.onDestroy$.next();
-    this.problemContext.onReset();
   }
 
   ngAfterViewInit(): void {
@@ -84,13 +86,13 @@ export class IdeComponent implements OnInit, OnDestroy, AfterViewInit {
   switchTab(tab: Tab): boolean {
     const routePrefix = this.routePrefixing(this.routeParams);
     if (tab === Tab.PROBLEM) {
-      this.router.navigate([`${routePrefix}problems/${this.problemId}`]);
+      this.router.navigateByUrl(`${routePrefix}problems/${this.problemId}`, {replaceUrl: true});
       this.activateTabAndDeactivateOthers(this.problemTab);
     } else if (tab === Tab.TESTCASES) {
-      this.router.navigate([`${routePrefix}problems/${this.problemId}/testcases`]);
+      this.router.navigateByUrl(`${routePrefix}problems/${this.problemId}/testcases`, {replaceUrl: true});
       this.activateTabAndDeactivateOthers(this.testcasesTab);
     } else if (tab === Tab.SUBMISSIONS) {
-      this.router.navigate([`${routePrefix}problems/${this.problemId}/submissions`]);
+      this.router.navigateByUrl(`${routePrefix}problems/${this.problemId}/submissions`, {replaceUrl: true});
       this.activateTabAndDeactivateOthers(this.submissionsTab);
     }
     return false;  // avoid <a>'s changing page
@@ -131,9 +133,11 @@ export class IdeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   goBack() {
-    this.idePlugin.goBack$
+    this.idePlugin.commandSet$
       .pipe(takeUntil(this.onDestroy$))
-      .subscribe(command => command());
+      .subscribe(commandSet => {
+        commandSet.goBack();
+      });
   }
 
 }

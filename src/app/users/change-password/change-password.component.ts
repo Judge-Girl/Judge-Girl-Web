@@ -1,5 +1,5 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {IncorrectPasswordFoundError, StudentService} from '../../services/Services';
+import {Component, ElementRef, ViewChild} from '@angular/core';
+import {IncorrectPasswordFoundError, StudentService} from '../../../services/Services';
 import {Router} from '@angular/router';
 import {MessageService} from 'primeng';
 import {NgModel} from '@angular/forms';
@@ -9,8 +9,8 @@ import {NgModel} from '@angular/forms';
   templateUrl: './change-password.component.html',
   styleUrls: ['../../../animations.css', './change-password.component.css']
 })
-export class ChangePasswordComponent implements OnInit {
-  CHANGE_NOTIFY_KEY = 'password-change-notify';
+export class ChangePasswordComponent {
+  CHANGE_PASSWORD_SUCCESSFULLY_NOTIFY_KEY = 'password-change-notify';
 
   errorMessage = '';
 
@@ -25,12 +25,7 @@ export class ChangePasswordComponent implements OnInit {
 
   currentPassword: string;
   newPassword: string;
-
   showErrorMessage: boolean;
-
-  ngOnInit(): void {
-    this.studentService.authenticate();
-  }
 
   keyPress(e: KeyboardEvent) {
     if (e.key === 'Enter') {
@@ -48,26 +43,26 @@ export class ChangePasswordComponent implements OnInit {
 
     this.spinner.nativeElement.style.display = 'inline-block';
     this.studentService.changePassword(this.currentPassword, this.newPassword)
-      .subscribe({
-        complete: () => {
-          this.spinner.nativeElement.style.display = 'none';
-          this.messageService.add({
-            key: this.CHANGE_NOTIFY_KEY,
-            life: 2500,
-            severity: 'success',
-            detail: 'Your password has been changed',
-          });
+      .toPromise()
+      .then(() => {
+        this.spinner.nativeElement.style.display = 'none';
+        this.messageService.add({
+          key: this.CHANGE_PASSWORD_SUCCESSFULLY_NOTIFY_KEY,
+          life: 2500,
+          severity: 'success',
+          detail: 'Your password has been changed',
+        });
 
-          setTimeout(() => this.router.navigateByUrl('/'), 3000);
-        },
-        error: err => {
+        setTimeout(() => this.router.navigateByUrl('/', {replaceUrl: true}), 3000);
+      })
+      .catch(err => {
           this.spinner.nativeElement.style.display = 'none';
           if (err instanceof IncorrectPasswordFoundError) {
             this.errorMessage = 'The password is incorrect';
           } else {
             throw err;
           }
-        },
-      });
+        }
+      );
   }
 }

@@ -50,7 +50,7 @@ export class ProblemItem {
 }
 
 export class Problem extends ProblemItem {
-  private C: LanguageEnv;  // Currently only supports C
+  private readonly C: LanguageEnv;  // Currently only supports C
 
   constructor(id: number, title: string,
               public description: string,
@@ -68,10 +68,6 @@ export class Problem extends ProblemItem {
   public get submittedCodeSpecs() {
     return this.C ? this.C.submittedCodeSpecs : [];
   }
-
-  public get providedCodesFileId() {
-    return this.C ? this.C.providedCodesFileId : undefined;
-  }
 }
 
 export class LanguageEnv {
@@ -87,29 +83,29 @@ export class LanguageEnv {
 export class ExamItem {
   constructor(public id: number,
               public name: string,
-              public startTime: Date,
-              public endTime: Date) {
+              public startTime: number,
+              public endTime: number) {
   }
 }
 
 export class ExamOverview extends ExamItem {
   constructor(public id: number,
               public name: string,
-              public startTime: Date,
-              public endTime: Date,
+              public startTime: number,
+              public endTime: number,
               public questions: QuestionItem[],
               public description: string) {
     super(id, name, startTime, endTime);
   }
+}
 
-  isClosed(): boolean {
-    const nowTime = now();
-    return nowTime < this.startTime.getTime() || nowTime > this.endTime.getTime();
-  }
+export function isExamClosed(exam: ExamOverview): boolean {
+  const nowTime = now();
+  return nowTime < exam.startTime || nowTime > exam.endTime;
+}
 
-  getQuestion(problemId: number): QuestionItem {
-    return this.questions.filter(q => q.problemId === problemId)[0];
-  }
+export function getQuestion(exam: ExamOverview, problemId: number): QuestionItem {
+  return exam.questions.filter(q => q.problemId === problemId)[0];
 }
 
 export class QuestionItem {
@@ -149,6 +145,10 @@ export class Judge {
   }
 }
 
+export function isRuntimeError(judge: Judge): boolean {
+  return judge?.status === JudgeStatus.RE;
+}
+
 export class ProgramProfile {
   constructor(public runtime: number,
               public memoryUsage: number,
@@ -165,6 +165,27 @@ export class Submission {
   constructor(public id: string,
               public problemId: number) {
   }
+
+}
+
+export function hasRuntimeError(submission: Submission) {
+  return submission?.verdict?.judges.filter(judge => isRuntimeError(judge)).length !== 0;
+}
+
+export function getBestRecord(submissions: Submission[]): Submission {
+  if (!submissions) {
+    return undefined;
+  }
+  let bestGrade = -1;
+  let best: Submission;
+  for (const submission of submissions) {
+    if (submission.judged &&
+      submission.verdict.totalGrade > bestGrade) {
+      bestGrade = submission.verdict.totalGrade;
+      best = submission;
+    }
+  }
+  return best;
 }
 
 export class Answer {
@@ -242,13 +263,21 @@ export function getCodeFileExtension(codeSpec: SubmittedCodeSpec): string {
   switch (lang) {
     case 'c':
       return '.c';
-    case 'java':
-      return '.java';
+    case 'cpp':
+      return '.cpp';
     case 'open_cl':
       return '.cl';
     case 'cuda':
       return '.cu';
+    case 'java':
+      return '.java';
+    case 'javascript':
+      return '.js';
+    case 'python':
+      return '.py';
+    case 'golang':
+      return '.go';
     default:
-      throw new Error(`The language not supported, given ${lang}`);
+      throw new Error(`The language ${lang} is not supported.`);
   }
 }
