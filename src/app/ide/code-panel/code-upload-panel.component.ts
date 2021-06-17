@@ -1,20 +1,26 @@
-import { Component, EventEmitter, Injector, OnInit, Output, ViewChildren } from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChildren} from '@angular/core';
 import {FileUpload, MessageService} from 'primeng';
-import {NoSubmissionQuota, ProblemService, StudentService, SubmissionService, SubmissionThrottlingError} from '../../services/Services';
+import {NoSubmissionQuota, StudentService, SubmissionService, SubmissionThrottlingError} from '../../../services/Services';
 import {getCodeFileExtension, Problem, SubmittedCodeSpec} from '../../models';
-import {switchMap} from 'rxjs/operators';
 import {ActivatedRoute, Params, Router} from '@angular/router';
-import {Observable} from 'rxjs';
+import {Observable, Subject} from 'rxjs';
+import {ProblemContext} from '../../contexts/ProblemContext';
+import {SubmissionContext} from '../../contexts/SubmissionContext';
+import {CodeUploadPanelDecorator, IdePluginChain} from '../ide.plugin';
+import {takeUntil} from 'rxjs/operators';
 
 @Component({
   selector: 'app-code-upload-panel',
   templateUrl: './code-upload-panel.component.html',
   styleUrls: ['./code-upload-panel.component.css']
 })
-export class CodeUploadPanelComponent implements OnInit {
+export class CodeUploadPanelComponent implements OnInit, OnDestroy {
   readonly MESSAGE_KEY_ERROR_TOAST = 'error-toast-key';
+  private onDestroy$ = new Subject<void>();
   selectedFiles: File[];
   private problem$: Observable<Problem>;
+  private remainingSubmissionQuota$: Observable<number>;
+  decorator: CodeUploadPanelDecorator;
   problem: Problem;
   hasLogin: boolean;
   hasSelectedValidSubmittedCodes: boolean;
@@ -25,38 +31,42 @@ export class CodeUploadPanelComponent implements OnInit {
   private routeParams: Params;
   private routePrefixing: (routeParams: Params) => string;
 
-  @Output() problemNotFound = new EventEmitter<Error>();
-
   constructor(public studentService: StudentService,
-              private problemService: ProblemService,
+              private problemContext: ProblemContext,
+              private submissionContext: SubmissionContext,
+              private idePlugin: IdePluginChain,
               private route: ActivatedRoute,
               private messageService: MessageService,
-              private injector: Injector,
               private router: Router) {
+    this.decorator = { /* default empty decoration */};
+    this.idePlugin.codeUploadPanelDecorator$.pipe(takeUntil(this.onDestroy$))
+      .subscribe(decorator => this.decorator = decorator);
     route.params.subscribe(params => {
       this.routeParams = params;
     });
+    this.problem$ = problemContext.problem$;
+    this.remainingSubmissionQuota$ = submissionContext.remainingSubmissionQuota$;
     this.routePrefixing = route.snapshot.data.routePrefixing;
-
-    const submissionServiceInstanceName = route.snapshot.data.submissionService;
-    this.submissionService = injector.get<SubmissionService>(submissionServiceInstanceName);
+    this.submissionService = submissionContext.submissionService;
   }
 
   ngOnInit(): void {
     this.selectedFiles = undefined;
-    this.studentService.tryAuthWithCurrentToken().subscribe(hasLogin => this.hasLogin = hasLogin);
+    this.studentService.hasLogin$
+      .pipe(takeUntil(this.onDestroy$))
+      .subscribe(hasLogin => this.hasLogin = hasLogin);
 
-    // TODO understand why route.parent is not needed
-    this.problem$ = this.route.params.pipe(switchMap(params =>
-      this.problemService.getProblem(+params.problemId)
-    ));
-    this.problem$.subscribe({
-      next: p => {
-        this.problem = p;
-        this.selectedFiles = new Array(p.submittedCodeSpecs.length);
-      },
-      error: e => this.problemNotFound.emit(e),
-    });
+    this.problem$
+      .pipe(takeUntil(this.onDestroy$))
+      .subscribe(problem => {
+          this.problem = problem;
+          this.selectedFiles = new Array(problem.submittedCodeSpecs.length);
+        }
+      );
+  }
+
+  ngOnDestroy(): void {
+    this.onDestroy$.next();
   }
 
   clearAndSelect(i: number, fileUpload: FileUpload) {
@@ -84,9 +94,13 @@ export class CodeUploadPanelComponent implements OnInit {
   submit(): boolean {
     if (this.canSubmit()) {
       this.submitting = true;
-      this.router.navigateByUrl(`${this.routePrefixing(this.routeParams)}problems/${this.problem.id}/submissions`);
-      this.submissionService.submitFromFile(this.problem.id, this.selectedFiles)
-        .toPromise().then(() => this.submitting = false)
+      this.router.navigateByUrl(`${this.routePrefixing(this.routeParams)}problems/${this.problem.id}/submissions`,
+        {replaceUrl: true});
+      this.submissionService.submitFromFile(this.problem.id, this.problem.submittedCodeSpecs, this.selectedFiles)
+        .toPromise().then((submission) => {
+        this.submissionContext.onNewSubmission(submission);
+        this.submitting = false;
+      })
         .catch(err => {
           this.submitting = false;
           this.handleSubmitError(err);
@@ -126,7 +140,6 @@ export class CodeUploadPanelComponent implements OnInit {
   }
 
   private handleSubmitError(err: Error) {
-    console.log(err);
     if (err instanceof SubmissionThrottlingError) {
       this.messageService.add({
         key: this.MESSAGE_KEY_ERROR_TOAST,
@@ -166,8 +179,4 @@ export class CodeUploadPanelComponent implements OnInit {
     return getCodeFileExtension(codeSpec);
   }
 
-  describeRemainingSubmissionQuota(): string {
-    return this.submissionService.remainingSubmissionQuota ?
-      `Submission Quota: ${this.submissionService.remainingSubmissionQuota}` : '';
-  }
 }

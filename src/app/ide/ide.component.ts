@@ -1,11 +1,25 @@
-import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, NavigationEnd, Params, Router} from '@angular/router';
-import {StudentService} from '../services/Services';
+import {ProblemService, StudentService} from '../../services/Services';
 import {SplitComponent} from 'angular-split';
+import {Location} from '@angular/common';
+
+import {ProblemContext} from '../contexts/ProblemContext';
+import {takeUntil} from 'rxjs/operators';
+import {Observable, Subject} from 'rxjs';
+import {Problem} from '../models';
+import {IdePluginChain} from './ide.plugin';
 
 export enum Tab {
   TESTCASES,
   PROBLEM, SUBMISSIONS
+}
+
+export interface Banner {
+  header1: string;
+  header2: string;
+  previousPageName: string;
+  navigatePreviousPage(): void;
 }
 
 @Component({
@@ -13,34 +27,49 @@ export enum Tab {
   templateUrl: './ide.component.html',
   styleUrls: ['./ide.component.css']
 })
-export class IdeComponent implements OnInit, AfterViewInit {
+export class IdeComponent implements OnInit, OnDestroy, AfterViewInit {
+  private onDestroy$: Subject<void> = new Subject<void>();
+
   private routePrefixing: (routeParams: Params) => string;
-
   readonly TAB_SUBMISSIONS = Tab.SUBMISSIONS;
-
   readonly TAB_PROBLEM = Tab.PROBLEM;
+
   readonly TAB_TESTCASES = Tab.TESTCASES;
   @ViewChild('problemTab') problemTab: ElementRef;
-
   @ViewChild('testcasesTab') testcasesTab: ElementRef;
   @ViewChild('submissionsTab') submissionsTab: ElementRef;
   @ViewChild('splitter') splitter: SplitComponent;
   private allTabs: ElementRef[];
-  private routeParams: Params;
-  private problemId: number;
-  
-  error: boolean = false;
+  private readonly routeParams: Params;
+  private readonly problemId: number;
+  banner$?: Observable<Banner>;
+  problem$: Observable<Problem>;
 
-  constructor(private elementRef: ElementRef, public studentService: StudentService,
+  constructor(private elementRef: ElementRef,
+              private problemContext: ProblemContext,
+              private problemService: ProblemService,
+              public studentService: StudentService,
+              private idePlugin: IdePluginChain,
+              private location: Location,
               private router: Router, private route: ActivatedRoute) {
-    route.params.subscribe(params => {
-      this.routeParams = params;
-      this.problemId = +params.problemId;
-    });
+    this.problem$ = problemContext.problem$;
+    this.routeParams = route.snapshot.params;
+    this.problemId = +route.snapshot.paramMap.get('problemId');
     this.routePrefixing = route.snapshot.data.routePrefixing;
+    this.banner$ = idePlugin.banner$;
   }
 
   ngOnInit(): void {
+    // this.problemService.getProblem(this.problemId)
+    //   .pipe(takeUntil(this.onDestroy$))
+    //   .subscribe({
+    //     next: problem => this.problemContext.onProblemRetrieved(problem),
+    //     error: err => this.problemContext.onProblemNotFound(err)
+    //   });
+  }
+
+  ngOnDestroy(): void {
+    this.onDestroy$.next();
   }
 
   ngAfterViewInit(): void {
@@ -54,20 +83,16 @@ export class IdeComponent implements OnInit, AfterViewInit {
     this.effectResponsiveSplitter();
   }
 
-  get isInExam(): boolean {
-    return !!this.route.snapshot.params.examId;
-  }
-
   switchTab(tab: Tab): boolean {
     const routePrefix = this.routePrefixing(this.routeParams);
     if (tab === Tab.PROBLEM) {
-      this.router.navigate([`${routePrefix}problems/${this.problemId}`]);
+      this.router.navigateByUrl(`${routePrefix}problems/${this.problemId}`, {replaceUrl: true});
       this.activateTabAndDeactivateOthers(this.problemTab);
     } else if (tab === Tab.TESTCASES) {
-      this.router.navigate([`${routePrefix}problems/${this.problemId}/testcases`]);
+      this.router.navigateByUrl(`${routePrefix}problems/${this.problemId}/testcases`, {replaceUrl: true});
       this.activateTabAndDeactivateOthers(this.testcasesTab);
     } else if (tab === Tab.SUBMISSIONS) {
-      this.router.navigate([`${routePrefix}problems/${this.problemId}/submissions`]);
+      this.router.navigateByUrl(`${routePrefix}problems/${this.problemId}/submissions`, {replaceUrl: true});
       this.activateTabAndDeactivateOthers(this.submissionsTab);
     }
     return false;  // avoid <a>'s changing page
@@ -93,7 +118,7 @@ export class IdeComponent implements OnInit, AfterViewInit {
     }
   }
 
-  onResize($event: UIEvent) {
+  onResize() {
     this.effectResponsiveSplitter();
   }
 
@@ -107,14 +132,14 @@ export class IdeComponent implements OnInit, AfterViewInit {
     }
   }
 
-  showProblemNotFoundPage(error: Error) {
-    this.error = true;
+  goBack() {
+    this.idePlugin.commandSet$
+      .pipe(takeUntil(this.onDestroy$))
+      .subscribe(commandSet => {
+        commandSet.goBack();
+      });
   }
 
-  navigateToExam() {
-    const examId = this.route.snapshot.params.examId;
-    this.router.navigate([`exams/${examId}`]);
-  }
 }
 
 

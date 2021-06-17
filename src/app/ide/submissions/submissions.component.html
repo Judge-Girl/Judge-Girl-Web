@@ -1,0 +1,202 @@
+<div *ngIf="submissions$ | withLoading | async as obs">
+  <ng-template [ngIf]="obs.loading">
+    <div id="left-column-spinner-container" class="row w-100 h-100 align-items-center justify-content-center">
+      <ld-circle></ld-circle>
+    </div>
+  </ng-template>
+  <ng-template [ngIf]="!obs.error">
+    <div *ngIf="(auth$ | async) && obs.value as submissions" class="my-panel">
+      <p *ngIf="submissions.length == 0">You have no submissions.</p>
+
+      <p *ngIf="bestRecord" id="best-record-label">Best Record</p>
+      <span *ngIf="isJudgeStatus(bestRecord, AC)" class="badge badge-success judge-status">AC</span>
+      <span *ngIf="isJudgeStatus(bestRecord, RE)" class="badge badge-danger judge-status">RE</span>
+      <span *ngIf="isJudgeStatus(bestRecord, MLE)" class="badge badge-warning judge-status">MLE</span>
+      <span *ngIf="isJudgeStatus(bestRecord, TLE)" class="badge badge-warning judge-status">TLE</span>
+      <span *ngIf="isJudgeStatus(bestRecord, CE)" class="badge badge-danger judge-status">CE</span>
+      <span *ngIf="isJudgeStatus(bestRecord, WA)" class="badge badge-danger judge-status">WA</span>
+
+      <p *ngIf="bestRecord" class="text">Total Grade: {{bestRecord.verdict.totalGrade}}&nbsp;pt</p>
+
+      <table *ngIf="submissions.length != 0" class="table" id="submissions-table">
+        <thead id="submission-table-header" [style.fontSize]="'14px'">
+        <tr>
+          <th scope="col" [width]="'100px'">Time</th>
+          <th scope="col" [width]="'60px'">Status</th>
+          <th scope="col" [width]="'60px'">Max Runtime</th>
+          <th scope="col" [width]="'60px'">Max Memory</th>
+          <th scope="col" [width]="'60px'">Total Grade</th>
+          <th scope="col" [width]="'80px'">View Judges</th>
+          <th scope="col" [width]="'80px'">View Codes</th>
+          <th scope="col" [width]="'80px'">View Report</th>
+
+        </tr>
+        </thead>
+        <tbody class="submissions-table">
+        <tr *ngFor="let submission of submissions">
+          <td>{{describeTimeFromNow(submission.submissionTime)}}</td>
+
+          <td>
+            <span *ngIf="submission.judged"
+                  class="{{submission.verdict.summaryStatus}}">{{submission.verdict.summaryStatus}}</span>
+            <div *ngIf="!submission.judged" class="spinner-border text-primary" role="status" id="spinner">
+              <span class="sr-only">Loading...</span>
+            </div>
+          </td>
+
+          <td>{{submission.judged ? describeTimeInSeconds(submission.verdict.maximumRuntime) : ''}}</td>
+          <td>{{submission.judged ? describeMemory(submission.verdict.maximumMemoryUsage) : ''}}</td>
+          <td>{{submission.judged ? describeGrade(submission.verdict.totalGrade) : ''}}</td>
+
+          <td>
+            <button *ngIf="submission.judged && isJudgeStatus(submission, CE)" type="button"
+                    class="btn btn-link see-details-btn" data-toggle="modal"
+                    (click)="onViewSubmissionJudgesBtnClick(submission)"
+                    data-target="#submission-judges-modal-CE">
+              View Compile Error
+            </button>
+            <button *ngIf="submission.judged && !isJudgeStatus(submission, CE)" type="button"
+                    class="btn btn-link see-details-btn" data-toggle="modal"
+                    (click)="onViewSubmissionJudgesBtnClick(submission)"
+                    data-target="#submission-judges-modal">
+              View Judges
+            </button>
+          </td>
+
+          <td>
+            <!-- Codes are available immediately when it's submitted -->
+            <button type="button" class="btn btn-link see-details-btn" data-toggle="modal"
+                    (click)="onViewSubmissionCodesBtnClick(submission)"
+                    data-target="#submission-codes-modal">
+              View Codes
+            </button>
+          </td>
+          <td>
+            <button *ngIf="submission.judged" type="button" class="btn btn-link see-details-btn" data-toggle="modal"
+                    (click)="onViewReportBtnClick(submission)"
+                    data-target="#report-modal">
+              View Report
+            </button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- View Judges Modal -->
+    <div [hidden]="!viewingJudgesSubmission" class="modal fade" id="submission-judges-modal" tabindex="-1" role="dialog"
+         aria-labelledby="submission-judges-modal-title" aria-hidden="true">
+      <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Submission Judges</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <table class="table">
+              <thead class="modal-title" [style.fontSize]="'14px'">
+              <tr>
+                <th scope="col">Test Case</th>
+                <th scope="col">Status</th>
+                <th scope="col">Runtime</th>
+                <th scope="col">Memory</th>
+                <th scope="col">Grade</th>
+                <th scope="col" *ngIf="hasRuntimeError(viewingJudgesSubmission)">Error Message</th>
+              </tr>
+              </thead>
+              <tbody class="submissions-table">
+              <tr *ngFor="let judge of viewingJudgesSubmission?.verdict.judges; let i = index">
+                <td [width]="'80px'">{{ judge.testcaseName }}</td>
+                <td [width]="'50px'" class="{{judge.status}}">{{judge.status}}</td>
+                <td
+                  [width]="'50px'">{{judge.status === CE ? '--' : describeTimeInSeconds(judge.programProfile.runtime)}}</td>
+                <td
+                  [width]="'50px'">{{judge.status === CE ? '--' : describeMemory(judge.programProfile.memoryUsage)}} </td>
+                <td [width]="'50px'">{{judge.grade}} pt</td>
+                <td [width]="'150px'" *ngIf="isRuntimeErrorJudge(judge)"
+                    class="judge-error-message">{{describeRuntimeErrorMessage(judge.programProfile.errorMessage)}}</td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- View Judges Compile Error Message Modal -->
+    <div [hidden]="!viewingJudgesSubmission" class="modal fade" id="submission-judges-modal-CE" tabindex="-1"
+         role="dialog"
+         aria-labelledby="submission-judges-modal-title" aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Compile Error Message</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body judge-error-message">
+            <p>{{viewingJudgesSubmission?.verdict.compileErrorMessage}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- View ReportMessage Modal -->
+    <div *ngIf="viewingReport" class="modal fade" id="report-modal" tabindex="-1" role="dialog"
+         aria-labelledby="submission-judges-modal-title" aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Report</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <!-- TODO #17 Hardcoded CC score, should replace with generic way that support any kinds of report-->
+            <p>{{getCCReport()}}</p>
+            <p>{{getCsaReport()}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div [hidden]="!viewingCodesSubmission" class="modal fade" id="submission-codes-modal" tabindex="-1" role="dialog"
+         aria-labelledby="submission-judges-modal-title" aria-hidden="true">
+      <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Submission Codes</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <ng-template [ngIf]="viewingSubmittedCodes$">
+            <div *ngIf="viewingSubmittedCodes$ | withLoading | async as obs" class="modal-body">
+              <ng-template [ngIf]="obs.loading">
+                <div class="row w-100 h-100 align-items-center justify-content-center">
+                  <ld-circle></ld-circle>
+                </div>
+              </ng-template>
+              <div *ngIf="obs.value as codeFiles" class="card">
+                <div *ngFor="let code of codeFiles;">
+                  <div class="card-body">
+                    <h5 class="card-title">{{code.fileName}}</h5>
+                    <textarea class="card-text" #codeArea>{{code.content}}</textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</div>
+
+
+

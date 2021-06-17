@@ -30,11 +30,11 @@
         <li class="nav-item" >
           <a class="nav-link" [routerLinkActive]="['active']" [routerLink]="'problems'">Problems</a>
         </li>
-        <li *ngIf="isLoggedIn" class="nav-item" >
+        <li *ngIf="hasLogin" class="nav-item" >
           <a class="nav-link" [routerLinkActive]="['active']" [routerLink]="'exams'">Exams</a>
         </li>
       </ul>
-      <ul *ngIf="studentService.hasLogin(); else notLogin" class="navbar-nav mr-2">
+      <ul *ngIf="hasLogin; else notLogin" class="navbar-nav mr-2">
         <li class="nav-item cursor-pointer">
           <a class="nav-link" (click)="routeToChangePassword()" [routerLink]="''">Change Password</a>
         </li>

@@ -1,12 +1,10 @@
 
+
 .markdown-panel {
   margin: 0 0 15px 0;
 }
 
-.my-container {
-  font-family: "Times New Roman", serif;
-  width: 100%;
-}
+
 
 #spinner {
   margin-right: auto;
@@ -25,3 +23,4 @@
   font-weight: bold;
   background: rgb(246, 246, 246);
 }
+
