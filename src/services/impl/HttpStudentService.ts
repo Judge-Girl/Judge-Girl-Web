@@ -39,7 +39,11 @@ export class HttpStudentService extends StudentService {
   auth(token: string): Observable<Student> {
     if (token && token.length > 0) {
       return this.http.post<Student>(`${this.baseUrl}/api/students/auth`, null,
-        this.getHttpOptions(),
+        {
+          headers: new HttpHeaders({
+            Authorization: `Bearer ${token}`
+          })
+        },
       ).pipe(map(student => {
         return this.currentStudent = student;
       })).pipe(catchError(() => {
@@ -56,7 +60,7 @@ export class HttpStudentService extends StudentService {
     return this.http.patch<boolean>(`${this.baseUrl}/api/students/${this.currentStudent.id}/password`, {
       currentPassword: oldPassword,
       newPassword,
-    }, this.getHttpOptions()).pipe(catchError(err => {
+    }).pipe(catchError(err => {
       if (err.status === 400) {
         return throwError(new IncorrectPasswordFoundError());
       } else {
@@ -64,15 +68,5 @@ export class HttpStudentService extends StudentService {
       }
     }));
   }
-
-  getHttpOptions(): { headers: HttpHeaders } {
-    const token = this.cookieService.get(StudentService.KEY_TOKEN);
-    return {
-      headers: new HttpHeaders({
-        Authorization: `bearer ${token}`
-      })
-    };
-  }
-
 
 }
