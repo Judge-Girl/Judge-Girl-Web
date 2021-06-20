@@ -1,0 +1,16 @@
+<div class="container">
+  <div style="height: 10vh"></div>
+
+  <div class="error-box text-center p-3">
+    <div class="error-title py-2">
+      Oops !!
+    </div>
+    <div *ngFor="let message of messages" class="error-content py-2">
+      <div>{{message}}</div>
+    </div>
+    <div class="error-btn mt-2">
+      <button class="px-3 py-1" (click)="goBack.emit()">{{goBackMessage}}</button>
+    </div>
+  </div>
+</div>
+

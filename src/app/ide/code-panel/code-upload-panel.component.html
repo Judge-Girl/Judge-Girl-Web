@@ -1,0 +1,42 @@
+<p-toast position="top-right" key="{{MESSAGE_KEY_ERROR_TOAST}}"></p-toast>
+
+
+<div *ngIf="!hasLogin" class="my-panel">
+  <h4>Wanna submit?</h4>
+  <span>You must login to view your submissions.</span>
+  <button class="btn btn-link" [routerLink]="'/'" [style.fontSize]="'17px'">Log in</button>
+  <hr>
+</div>
+
+<div *ngIf="hasLogin" class="my-panel">
+  <h3>Submissions</h3>
+  <hr>
+  <p *ngIf="decorator.hideCodeUploadPanel?.hide">{{decorator.hideCodeUploadPanel.message}}</p>
+  <form [hidden]="decorator.hideCodeUploadPanel?.hide">
+    <div class="form-group">
+      <div *ngIf="problem">
+        <div class="upload-row"
+             *ngFor="let codeSpec of problem.submittedCodeSpecs; let i = index" #codeSpecRow>
+          <span class="file-name">{{codeSpec.fileName}}</span>
+          <p-fileUpload id="_fileSelector{{i}}"
+                        mode="basic"
+                        chooseLabel="Upload"
+                        name="files"
+                        accept="{{getAcceptedFileExtensionByCodeSpec(codeSpec)}}"
+                        (click)="clearAndSelect(i, fileInput)"
+                        (onClear)="onFileClear()"
+                        (change)="onFileInputChange(i, codeSpecRow, fileInput)"
+                        #fileInput></p-fileUpload>
+        </div>
+      </div>
+
+      <div id="submit-btn-container" style="width: 100%;">
+        <div class="btn" id="submit-btn" (click)="submit()" [attr.disabled]="!canSubmit()">
+          <span>Submit</span>
+          <ld-spinner *ngIf="submitting"></ld-spinner>
+        </div>
+        <span id="below-submit-btn-message">{{decorator.submitCodeButtonDecoration?.belowMessage}}</span>
+      </div>
+    </div>
+  </form>
+</div>

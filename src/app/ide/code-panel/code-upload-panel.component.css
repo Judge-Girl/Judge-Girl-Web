@@ -1,0 +1,113 @@
+.feedback {
+  font-size: 13px;
+  line-height: 14px;
+  font-style: italic;
+}
+
+#source-code-text-area {
+  width: 100%;
+  height: 100%;
+}
+
+#submit-btn-container {
+  display: flex;
+  flex-direction: column;
+}
+
+#below-submit-btn-message {
+  margin: 7px 0 0 auto;
+}
+
+#submit-btn {
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  width: fit-content;
+  padding: 5px 10px 5px 10px;
+  margin: 10px 0 0 auto;
+  border-radius: 10px;
+}
+
+#submit-btn[disabled] {
+  cursor: not-allowed;
+  color: #fff;
+  background-color: #a8a8a8;
+}
+
+#submit-btn[disabled=false] {
+  cursor: pointer;
+  color: #fff;
+  background-color: #48C9B0;
+  border-color: #48C9B0;
+}
+
+#submit-btn ld-spinner {
+  margin-top: 3px; /* [TODO] improve from hard-coded: make the spinner vertically centered */
+}
+
+#submit-btn span {
+  margin-right: 5px;
+  font-size: 18px;
+}
+
+#submit-btn:focus[disabled=false] {
+  background-color: #3EB8A0;
+  border-color: #3EB8A0;
+  box-shadow: 0 0 0 0;
+}
+
+#submit-btn:hover[disabled=false] {
+  color: #fff;
+  background-color: #25A78E;
+  border-color: #25A78E;
+}
+
+::ng-deep body .ui-button {
+  padding: 1px;
+  color: #ffffff;
+  background-color: #3298dc;
+  border: 1px solid #3298dc;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 10px;
+  align-self: stretch;
+  margin-bottom: -10px;
+  font-family: 'Poppins', Arial, sans-serif;
+}
+
+.upload-row > * {
+  line-height: 30px;
+  height: 50px;
+  font-size: 16px;
+  margin: 8px;
+}
+
+.upload-row.ng-star-inserted {
+  margin-top: 10px;
+}
+
+
+.clear-upload-cross {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1;
+  color: #000;
+  text-shadow: 0 1px 0 #fff;
+  opacity: .5
+}
+
+.clear-upload-cross:hover {
+  color: #000;
+  text-decoration: none
+}
+
+button.clear-upload-cross {
+  padding: 0;
+  background-color: transparent;
+  border: 0;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none
+}
+.clear-upload-cross:not(:disabled):not(.disabled):focus,.close:not(:disabled):not(.disabled):hover{opacity:.75}
+

@@ -1,5 +1,5 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
-import {ProblemService} from '../../services/Services';
+import {ProblemService} from '../../../services/Services';
 
 @Component({
   // tslint:disable-next-line:component-selector

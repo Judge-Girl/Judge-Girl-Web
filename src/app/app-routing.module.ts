@@ -2,33 +2,22 @@ import {NgModule} from '@angular/core';
 import {Params, RouterModule, Routes} from '@angular/router';
 import {LoginComponent} from './users/login/login.component';
 import {ProblemListComponent} from './problem-list/problem-list.component';
-import {ExamListComponent} from './exam/exam-list/exam-list.component';
-import {ExamHomeComponent} from './exam/exam-home/exam-home.component';
-import {ExamQuestionsComponent} from './exam/exam-questions/exam-questions.component';
-import {ExamSubmissionsComponent} from './exam/exam-submissions/exam-submissions.component';
-import {ExamScoreboardComponent} from './exam/exam-scoreboard/exam-scoreboard.component';
-import {MultiTabsPanelComponent} from './problem-submission-tab-panel/multi-tabs-panel.component';
-import {SubmissionsComponent} from './submissions/submissions.component';
-import {ProblemDescriptionComponent} from './problem-description/problem-description.component';
-import {TestcasesComponent} from './testcases/testcases.component';
+import {ExamListComponent} from './exam/list/exam-list.component';
+import {ExamHomeComponent} from './exam/home/exam-home.component';
+import {ExamQuestionsComponent} from './exam/home/questions/exam-questions.component';
+import {IdeComponent} from './ide/ide.component';
+import {SubmissionsComponent} from './ide/submissions/submissions.component';
+import {ProblemDescriptionComponent} from './ide/problem-description/problem-description.component';
+import {TestcasesComponent} from './ide/testcases/testcases.component';
 import {ChangePasswordComponent} from './users/change-password/change-password.component';
+import {LoginOnlyGuard} from './guard/login-only.guard';
 
 const routes: Routes = [
   {path: '', component: LoginComponent},
-  {path: 'users/change-password', component: ChangePasswordComponent},
+  {path: 'users/change-password', component: ChangePasswordComponent, canActivate: [LoginOnlyGuard]},
   {path: 'problems', component: ProblemListComponent},
-  {path: 'exams/:examId/questions/:questionId', component: MultiTabsPanelComponent},
-  {path: 'exams', component: ExamListComponent},
   {
-    path: 'exams/:examId', component: ExamHomeComponent,
-    children: [
-      {path: '', component: ExamQuestionsComponent},
-      {path: 'submissions', component: ExamSubmissionsComponent},
-      {path: 'scoreboard', component: ExamScoreboardComponent},
-    ],
-  },
-  {
-    path: 'problems/:problemId', component: MultiTabsPanelComponent,
+    path: 'problems/:problemId', component: IdeComponent,
     children: [
       {path: '', component: ProblemDescriptionComponent},
       {path: 'description', component: ProblemDescriptionComponent},
@@ -40,8 +29,15 @@ const routes: Routes = [
       routePrefixing: () => ''
     }
   },
+  {path: 'exams', component: ExamListComponent, canActivate: [LoginOnlyGuard]},
   {
-    path: 'exams/:examId/problems/:problemId', component: MultiTabsPanelComponent,
+    path: 'exams/:examId', component: ExamHomeComponent, canActivate: [LoginOnlyGuard],
+    children: [
+      {path: '', component: ExamQuestionsComponent},
+    ],
+  },
+  {
+    path: 'exams/:examId/problems/:problemId', component: IdeComponent, canActivate: [LoginOnlyGuard],
     children: [
       {path: '', component: ProblemDescriptionComponent},
       {path: 'description', component: ProblemDescriptionComponent},
@@ -53,6 +49,7 @@ const routes: Routes = [
       routePrefixing: (routeParams: Params) => `/exams/${routeParams.examId}/`
     }
   },
+  { path: '**', redirectTo: ''}
 ];
 
 @NgModule({

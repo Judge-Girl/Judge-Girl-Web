@@ -1,10 +1,11 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {MessageService} from 'primeng';
-import {BrokerService, StudentService, SubmissionService} from './services/Services';
+import {BrokerService, StudentService} from '../services/Services';
 import {JudgeStatus, VerdictIssuedEvent} from './models';
-import {CookieService} from './services/cookie/cookie.service';
-import {ActivatedRoute, Router} from '@angular/router';
-import {EventBus, EventSubscriber} from './services/EventBus';
+import {CookieService} from '../services/cookie/cookie.service';
+import {Router} from '@angular/router';
+import {EventBus, EventSubscriber} from '../services/EventBus';
+import {Observable} from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -14,7 +15,8 @@ import {EventBus, EventSubscriber} from './services/EventBus';
 export class AppComponent extends MessageService implements OnInit, OnDestroy, EventSubscriber {
   readonly MESSAGE_KEY_SUBMISSION_TOAST = 'submission-toast-key';
 
-  isLoggedIn = false;
+  hasLogin$: Observable<boolean>;
+  hasLogin = false;
 
   constructor(public studentService: StudentService,
               private cookieService: CookieService,
@@ -23,13 +25,15 @@ export class AppComponent extends MessageService implements OnInit, OnDestroy, E
               private eventBus: EventBus,
               private router: Router) {
     super();
+    this.hasLogin$ = this.studentService.hasLogin$;
   }
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.eventBus.subscribe(this);
-    this.studentService.tryAuthWithCurrentToken().subscribe(isLoggedIn => {
-      this.isLoggedIn = isLoggedIn;
-      if (isLoggedIn) {
+    this.studentService.tryAuthFromCookie();
+    this.hasLogin$.subscribe(hasLogin => {
+      this.hasLogin = hasLogin;
+      if (hasLogin) {
         this.brokerService.connect();
       } else {
         this.brokerService.disconnect();
