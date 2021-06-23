@@ -30,8 +30,8 @@
         <li class="nav-item" >
           <a class="nav-link" [routerLinkActive]="['active']" [routerLink]="'problems'">Problems</a>
         </li>
-        <li *ngIf="hasLogin" class="nav-item" >
-          <a class="nav-link" [routerLinkActive]="['active']" [routerLink]="'exams'">Exams</a>
+        <li *ngIf="hasLogin" class="nav-item">
+          <a class="nav-link" [routerLinkActive]="['active']" [routerLink]="'exams'" data-test="nav-exam-link">Exams</a>
         </li>
       </ul>
       <ul *ngIf="hasLogin; else notLogin" class="navbar-nav mr-2">

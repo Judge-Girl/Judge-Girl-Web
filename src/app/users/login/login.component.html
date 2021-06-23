@@ -17,7 +17,8 @@
       <div class="d-flex align-items-center justify-content-center"
            [style.padding]="'13px 0 35px 0'">
         <input type="submit" id="login-btn" class="fade-in fourth"
-               (click)="login(emailInput.value, passwordInput.value)" value="Log In">
+               (click)="login(emailInput.value, passwordInput.value)" value="Log In"
+               data-test="login-btn">
         <div class="spinner-border text-primary" role="status" id="spinner">
           <span class="sr-only">Loading...</span>
         </div>

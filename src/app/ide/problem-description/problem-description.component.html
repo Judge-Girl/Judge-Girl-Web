@@ -7,7 +7,8 @@
   </ng-template>
   <ng-template [ngIf]="!obs.error">
     <div class="my-panel" id="problem-description-panel" #problemDescriptionPanel>
-      <header class="markdown-panel"><h1 *ngIf="obs.value as problem">{{problem.id + '. ' + problem.title}}</h1>
+      <header class="markdown-panel">
+        <h1 *ngIf="obs.value as problem" data-test="problem-title">{{problem.id + '. ' + problem.title}}</h1>
       </header>
       <div class="markdown-panel" #markdownPanel></div>
       <div class="darcula markdown-panel " #compilationScriptPanel></div>

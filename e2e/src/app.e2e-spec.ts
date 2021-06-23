@@ -1,7 +1,13 @@
 import { resolve } from 'path';
 
 import { AppPage } from './app.po';
-import { browser, by, element, logging, ExpectedConditions } from 'protractor';
+import { browser, by, element, logging, ExpectedConditions as until } from 'protractor';
+import { hasUncaughtExceptionCaptureCallback } from 'process';
+
+function waitForTestTag(tag: string) {
+  browser.wait(until.presenceOf(element(by.css(`[data-test="${tag}"]`))));
+  browser.sleep(200);
+}
 
 describe('workspace-project App', () => {
   let page: AppPage;
@@ -10,14 +16,16 @@ describe('workspace-project App', () => {
     page = new AppPage();
   });
 
-  it('User can navigate to exam and submit', () => {
+  it('User can navigate to exam and submit', done => {
     page.navigateTo();
 
-    browser.sleep(10000);
+    waitForTestTag('login-btn');
+
     element(by.css('form input[name=email]')).sendKeys('chaoyu@gmail.com');
     element(by.css('form input[name=password]')).sendKeys('12345678');
     element(by.css('input[type=submit]')).click(); // login
-    browser.sleep(3000);
+
+    waitForTestTag('nav-exam-link');
 
     element(by.css('nav ul li + li a')).click(); // click exam nav
 
@@ -29,13 +37,11 @@ describe('workspace-project App', () => {
     const quotaLeft = Number(element(by.css('tbody tr td + td + td + td + td')).getText());
     element(by.css('tbody tr td + td')).click(); // click first problem
 
-    browser.sleep(1000);
+    waitForTestTag('problem-title');
     expect(element(by.css('h1')).getText()).toEqual(problemName);
 
     element(by.css('form input[type=file]')).sendKeys(resolve(__dirname, '..', 'empty.c'));
-    browser.sleep(1000);
     element(by.css('form div + div span')).click(); // submit
-    browser.sleep(1000);
 
     element(by.css('div[id=tab-panel] ul li + li + li a')).getAttribute('class').then(classes => {
       expect(classes.split(' ').includes('active')).toBe(true);
@@ -45,10 +51,12 @@ describe('workspace-project App', () => {
     expect(element(by.css('tbody tr td + td span')).getText()).toEqual('CE');
     
     element(by.css('app-ide-banner span')).click(); // back to exam
-    browser.sleep(1000);
+    waitForTestTag('exam-questions-table');
 
     const newQuotaLeft = Number(element(by.css('tbody tr td + td + td + td + td')).getText());
     expect(newQuotaLeft).toEqual(quotaLeft - 1);
+
+    done();
   });
 
   afterEach(async () => {
