@@ -16,3 +16,28 @@
   text-align: left;
 }
 
+
+.exam-status {
+  color: white;
+  font-weight: 600;
+  font-size: 13px;
+  padding: 2px 10px;
+  border-radius: 50px;
+  margin: 0 8px;
+}
+
+.closed .exam-status {
+  background-color: #C4C4C4;
+}
+
+.ongoing .exam-status {
+  background-color: #F84338;
+}
+
+.upcoming .exam-status {
+  background-color: #339BE7;
+}
+
+.ongoing .duration {
+  color: #0F7ED0;
+}

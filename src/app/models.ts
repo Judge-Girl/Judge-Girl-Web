@@ -8,10 +8,6 @@ export class Student {
   }
 }
 
-export function studentToString(student: Student): string {
-  return `{id: ${student.id}, account: ${student.account}, expiryTime: ${student.expiryTime}, token: ${student.token}}`;
-}
-
 export class TestCase {
   constructor(public name: string,
               public timeLimit: number,
@@ -86,6 +82,21 @@ export class ExamItem {
               public startTime: number,
               public endTime: number) {
   }
+}
+
+export enum ExamStatus {
+  CLOSED, ONGOING, UPCOMING
+}
+
+export function getExamStatus(exam: { startTime: number, endTime: number }): ExamStatus {
+  const time = now();
+  if (exam.startTime <= time && time <= exam.endTime) {
+    return ExamStatus.ONGOING;
+  }
+  if (time < exam.startTime) {
+    return ExamStatus.UPCOMING;
+  }
+  return ExamStatus.CLOSED;
 }
 
 export class ExamOverview extends ExamItem {

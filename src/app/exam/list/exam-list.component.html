@@ -33,11 +33,12 @@
         </thead>
         <tbody>
         <tr></tr>
-        <tr *ngFor="let examItem of obs.value">
-          <td> {{ examItem.id }} </td>
-          <td><span class="fake-link" (click)="routeToExam(examItem.id)"> {{ examItem.name }} </span></td>
-          <td> {{ getTimeString(examItem.startTime) }} </td>
-          <td> {{ getTimeString(examItem.endTime) }} </td>
+        <tr class="{{examStyle(exam)}}" *ngFor="let exam of obs.value">
+          <td> {{ exam.id }} </td>
+          <td><span class="{{isUpcoming(exam) ? '': 'fake-link'}}" (click)="routeToExam(exam)"> {{ exam.name }} </span>
+            <span class="exam-status"> {{ describeExamStatus(exam) }} </span></td>
+          <td class="duration"> {{ getTimeString(exam.startTime) }} </td>
+          <td class="duration"> {{ getTimeString(exam.endTime) }} </td>
         </tr>
         </tbody>
       </table>
