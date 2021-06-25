@@ -4,8 +4,12 @@ import { AppPage } from './app.po';
 import { browser, by, element, logging, ExpectedConditions as until } from 'protractor';
 import { hasUncaughtExceptionCaptureCallback } from 'process';
 
+function getElementByTag(tag: string) {
+  return element(by.css(`[data-test="${tag}"]`));
+}
+
 function waitForTestTag(tag: string) {
-  browser.wait(until.presenceOf(element(by.css(`[data-test="${tag}"]`))));
+  browser.wait(until.presenceOf(getElementByTag(tag)));
   browser.sleep(200);
 }
 
@@ -21,39 +25,64 @@ describe('workspace-project App', () => {
 
     waitForTestTag('login-btn');
 
-    element(by.css('form input[name=email]')).sendKeys('chaoyu@gmail.com');
-    element(by.css('form input[name=password]')).sendKeys('12345678');
-    element(by.css('input[type=submit]')).click(); // login
+    const form = getElementByTag('login-form');
+
+    form.element(by.css('input[name=email]')).sendKeys('chaoyu@gmail.com');
+    form.element(by.css('input[name=password]')).sendKeys('12345678');
+    form.element(by.css('input[type=submit]')).click();
 
     waitForTestTag('nav-exam-link');
 
-    element(by.css('nav ul li + li a')).click(); // click exam nav
+    getElementByTag('nav-exam-link').click();
 
-    element(by.css('tbody tr + tr td span')).click(); // click first exam name
+    waitForTestTag('exam-list-table');
 
-    expect(element(by.css('.content-title-font')).getText()).toBe('Problems');
+    getElementByTag('exam-list-table')
+      .element(by.css('tbody'))
+      .all(by.css('tr')).get(1)
+      .all(by.css('td')).get(1)
+      .element(by.css('span'))
+      .click(); // click first exam name
 
-    const problemName = element(by.css('tbody tr td + td')).getText();
-    const quotaLeft = Number(element(by.css('tbody tr td + td + td + td + td')).getText());
-    element(by.css('tbody tr td + td')).click(); // click first problem
+    waitForTestTag('exam-questions-title');
+
+    expect(getElementByTag('exam-questions-title').getText()).toBe('Problems');
+
+    // Get the first problem
+    const problemRow = getElementByTag('exam-questions-table').element(by.css('tbody')).all(by.css('tr')).get(1);
+
+    const problemName = problemRow.all(by.css('td')).get(1).getText();
+    const quotaLeft = Number(problemRow.all(by.css('td')).get(4).getText());
+    problemRow.all(by.css('td')).get(1).click();
 
     waitForTestTag('problem-title');
-    expect(element(by.css('h1')).getText()).toEqual(problemName);
+    expect(getElementByTag('problem-title')).toEqual(problemName);
 
-    element(by.css('form input[type=file]')).sendKeys(resolve(__dirname, '..', 'empty.c'));
-    element(by.css('form div + div span')).click(); // submit
+    const codeUploadForm = getElementByTag('code-upload-form');
 
-    element(by.css('div[id=tab-panel] ul li + li + li a')).getAttribute('class').then(classes => {
+    codeUploadForm.element(by.css('input[type=file]')).sendKeys(resolve(__dirname, '..', 'empty.c'));
+    getElementByTag('code-upload-form-submit-btn').click();
+
+    
+    getElementByTag('ide-submission-tab-link').getAttribute('class').then(classes => {
       expect(classes.split(' ').includes('active')).toBe(true);
     });
 
-    browser.sleep(10000);
-    expect(element(by.css('tbody tr td + td span')).getText()).toEqual('CE');
+    browser.sleep(10000); // wait for judge to finish
+
+    expect(getElementByTag('submissions-table')
+      .element(by.css('tbody'))
+      .all(by.css('tr')).get(0)
+      .all(by.css('td')).get(1)
+      .element(by.css('span'))
+      .getText()
+    ).toEqual('CE');
     
     element(by.css('app-ide-banner span')).click(); // back to exam
     waitForTestTag('exam-questions-table');
 
-    const newQuotaLeft = Number(element(by.css('tbody tr td + td + td + td + td')).getText());
+    const newProblemRow = getElementByTag('exam-questions-table').element(by.css('tbody')).all(by.css('tr')).get(1);
+    const newQuotaLeft = Number(newProblemRow.all(by.css('td')).get(4).getText());
     expect(newQuotaLeft).toEqual(quotaLeft - 1);
 
     done();

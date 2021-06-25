@@ -18,7 +18,7 @@
 
       <p *ngIf="bestRecord" class="text">Total Grade: {{bestRecord.verdict.totalGrade}}&nbsp;pt</p>
 
-      <table *ngIf="submissions.length != 0" class="table" id="submissions-table">
+      <table *ngIf="submissions.length != 0" class="table" id="submissions-table" data-test="submissions-table">
         <thead id="submission-table-header" [style.fontSize]="'14px'">
         <tr>
           <th scope="col" [width]="'100px'">Time</th>

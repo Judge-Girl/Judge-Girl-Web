@@ -1,6 +1,6 @@
 
 <div class="container pt-4 font-poppins" id="problem-description-panel">
-  <div class="row content-title-font pt-4 px-1 text-left">
+  <div class="row content-title-font pt-4 px-1 text-left" data-test="exam-questions-title">
     Problems
   </div>
   <hr class="row">
@@ -10,32 +10,32 @@
     <table class="w-100 my-table table-borderless table-hover" data-test="exam-questions-table">
       <thead>
         <tr>
-          <th scope="col"> #</th>
-          <th scope="col" class="text-left"> Problem Title</th>
-          <th scope="col"> Score</th>
-          <th scope="col" class="text-left"> Verdict</th>
-          <th scope="col"> Submission Quota</th>
+          <th scope="col"> # </th>
+          <th scope="col" class="text-left"> Problem Title </th>
+          <th scope="col"> Score </th>
+          <th scope="col" class="text-left"> Verdict </th>
+          <th scope="col"> Submission Quota </th>
         </tr>
       </thead>
       <tbody>
-      <tr></tr>
-      <tr *ngFor="let question of questions$ | async; let i = index">
-        <td> {{ toCharactorIndex(i)}} </td>
-        <td class="text-left fake-link"
-            (click)="routeToQuestion(question)"> {{ question.problemId }}. {{ question.problemTitle }} </td>
-        <td> {{ question.yourScore }} / {{ question.maxScore }} </td>
-        <td class="text-left">
-          <span class="judge-status {{describeQuestionStatus(question)}}">{{describeQuestionStatus(question)}}</span>
-          <span class="ml-2">{{ describeQuestionBestRecord(question) }}</span>
-        </td>
-        <td> {{ question.remainingQuota }} </td>
-      </tr>
+        <tr></tr>
+        <tr *ngFor="let question of questions$ | async; let i = index">
+          <td> {{ toCharactorIndex(i)}} </td>
+          <td class="text-left fake-link"
+              (click)="routeToQuestion(question)"> {{ question.problemId }}. {{ question.problemTitle }} </td>
+          <td> {{ question.yourScore }} / {{ question.maxScore }} </td>
+          <td class="text-left">
+            <span class="judge-status {{describeQuestionStatus(question)}}"> {{ describeQuestionStatus(question) }} </span>
+            <span class="ml-2"> {{ describeQuestionBestRecord(question) }} </span>
+          </td>
+          <td> {{ question.remainingQuota }} </td>
+        </tr>
       </tbody>
       <!-- TODO: table footer -->
       <tfoot>
       <tr>
         <td></td>
-        <td class="text-right total-score"> Total Score</td>
+        <td class="text-right total-score"> Total Score </td>
         <td class="total-score"> {{ totalScore$ | async }} / {{ totalMaxScore$ | async }} </td>
         <td></td>
         <td></td>

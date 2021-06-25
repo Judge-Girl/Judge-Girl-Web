@@ -12,7 +12,7 @@
   <h3>Submissions</h3>
   <hr>
   <p *ngIf="decorator.hideCodeUploadPanel?.hide">{{decorator.hideCodeUploadPanel.message}}</p>
-  <form [hidden]="decorator.hideCodeUploadPanel?.hide">
+  <form [hidden]="decorator.hideCodeUploadPanel?.hide" data-test="code-upload-form">
     <div class="form-group">
       <div *ngIf="problem">
         <div class="upload-row"
@@ -31,7 +31,7 @@
       </div>
 
       <div id="submit-btn-container" style="width: 100%;">
-        <div class="btn" id="submit-btn" (click)="submit()" [attr.disabled]="!canSubmit()">
+        <div class="btn" id="submit-btn" (click)="submit()" [attr.disabled]="!canSubmit()" data-test="code-upload-form-submit-btn">
           <span>Submit</span>
           <ld-spinner *ngIf="submitting"></ld-spinner>
         </div>

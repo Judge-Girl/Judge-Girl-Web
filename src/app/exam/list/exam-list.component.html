@@ -22,7 +22,7 @@
       </div>
     </ng-template>
     <ng-template [ngIf]="obs.value">
-      <table class=" w-100 my-table table-borderless table-hover fade-in">
+      <table class="w-100 my-table table-borderless table-hover fade-in" data-test="exam-list-table">
         <thead>
         <tr>
           <th scope="col"> #</th>
@@ -32,13 +32,13 @@
         </tr>
         </thead>
         <tbody>
-        <tr></tr>
-        <tr *ngFor="let examItem of obs.value">
-          <td> {{ examItem.id }} </td>
-          <td><span class="fake-link" (click)="routeToExam(examItem.id)"> {{ examItem.name }} </span></td>
-          <td> {{ getTimeString(examItem.startTime) }} </td>
-          <td> {{ getTimeString(examItem.endTime) }} </td>
-        </tr>
+          <tr></tr>
+          <tr *ngFor="let examItem of obs.value">
+            <td> {{ examItem.id }} </td>
+            <td><span class="fake-link" (click)="routeToExam(examItem.id)"> {{ examItem.name }} </span></td>
+            <td> {{ getTimeString(examItem.startTime) }} </td>
+            <td> {{ getTimeString(examItem.endTime) }} </td>
+          </tr>
         </tbody>
       </table>
     </ng-template>
