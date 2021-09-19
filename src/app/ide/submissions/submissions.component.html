@@ -19,7 +19,7 @@
       <p *ngIf="bestRecord" class="text">Total Grade: {{bestRecord.verdict.totalGrade}}&nbsp;pt</p>
 
       <table *ngIf="submissions.length != 0" class="table" id="submissions-table">
-        <thead id="submission-table-header" [style.fontSize]="'14px'">
+        <thead class="my-thead" >
         <tr>
           <th scope="col" [width]="'100px'">Time</th>
           <th scope="col" [width]="'60px'">Status</th>
@@ -32,9 +32,9 @@
 
         </tr>
         </thead>
-        <tbody class="submissions-table">
+        <tbody>
         <tr *ngFor="let submission of submissions">
-          <td>{{describeTimeFromNow(submission.submissionTime)}}</td>
+          <td class="submission-time">{{describeTimeFromNow(submission.submissionTime)}}</td>
 
           <td>
             <span *ngIf="submission.judged"

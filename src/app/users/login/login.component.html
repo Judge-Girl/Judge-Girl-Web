@@ -1,33 +1,36 @@
-<div class="center-content-panel fade-in-down">
-  <div id="form-content" class="shadow">
-    <!-- Icon -->
-    <div class="fade-in first flex-column" [style.padding]="'8px'">
-      <img src="../../assets/logo/logo.png"
-          [style.height]="'12%'" [style.width]="'7.5%'" alt="logo"/>
-      <header id="title">Judge Girl</header>
-    </div>
-
-    <!-- Login Form -->
-    <form>
-      <input type="text" id="login" class="input-field fade-in second" name="email" placeholder="Email"
-             #emailInput>
-      <input type="password" id="password" class=" input-field fade-in third" name="password" placeholder="Password"
-             #passwordInput>
-      <p id="error-message">{{errorMessage}}</p>
-      <div class="d-flex align-items-center justify-content-center"
-           [style.padding]="'13px 0 35px 0'">
-        <input type="submit" id="login-btn" class="fade-in fourth"
-               (click)="login(emailInput.value, passwordInput.value)" value="Log In">
-        <div class="spinner-border text-primary" role="status" id="spinner">
-          <span class="sr-only">Loading...</span>
-        </div>
+<div id="body">
+  <div class="center-content-panel fade-in-down">
+    <div id="form-content" class="shadow">
+      <!-- Icon -->
+      <div class="fade-in first flex-column" [style.padding]="'8px'">
+        <img src="../../assets/logo/logo.png"
+             [style.height]="'12%'" [style.width]="'7.5%'" alt="logo"/>
+        <header id="title">Judge Girl</header>
       </div>
-    </form>
 
-    <!-- Remind Password -->
-    <div id="form-footer">
-      Don't have an account? &nbsp;&nbsp;&nbsp; Tell the TA!
+      <!-- Login Form -->
+      <form>
+        <input type="text" id="login" class="input-field fade-in second" name="email" placeholder="Email"
+               #emailInput>
+        <input type="password" id="password" class=" input-field fade-in third" name="password" placeholder="Password"
+               #passwordInput>
+        <p id="error-message">{{errorMessage}}</p>
+        <div class="d-flex align-items-center justify-content-center"
+             [style.padding]="'13px 0 35px 0'">
+          <input type="submit" id="login-btn" class="fade-in fourth"
+                 (click)="login(emailInput.value, passwordInput.value)" value="Log In">
+          <div class="spinner-border text-primary" role="status" id="spinner">
+            <span class="sr-only">Loading...</span>
+          </div>
+        </div>
+      </form>
+
+      <!-- Remind Password -->
+      <div id="form-footer">
+        Don't have an account? &nbsp;&nbsp;&nbsp; Tell the TA!
+      </div>
     </div>
   </div>
-</div>
 
+
+</div>
