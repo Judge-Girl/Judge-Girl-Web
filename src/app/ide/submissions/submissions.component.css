@@ -1,6 +1,4 @@
-.my-panel {
-  padding: 30px 8px 8px 15px;
-}
+
 
 #best-record-label {
   font-size: 12px;
@@ -20,21 +18,26 @@
 }
 
 #submissions-table {
+  border-top: 0;
   margin-top: 35px;
 }
 
+#submissions-table th {
+  font-size: 14px;
+}
 
-.submissions-table td, .submissions-table th {
-  font-size: 15px;
+#submissions-table td, #submissions-table th {
+  padding: 10px;
   vertical-align: middle;
+  text-align: center;
 }
 
-.submissions-table .see-details-btn {
-  font-size: 15px;
-}
-
-#submission-table-header {
+#submissions-table .submission-time {
   font-size: 13px;
+}
+
+#submissions-table .see-details-btn {
+  font-size: 14px;
 }
 
 .AC {

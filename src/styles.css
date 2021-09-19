@@ -24,7 +24,7 @@
 }
 
 .my-panel {
-  padding: 10px 12px 30px 12px;
+  padding: 10px 8px 30px 8px;
 }
 
 .shadow {
@@ -74,6 +74,11 @@ body {
   padding: .5rem;
   color: #6D6E7D;
   border-bottom: 2px solid #6D6E7D;
+}
+
+.my-thead {
+  color: #474747;
+  background-color: #f6f8fa;
 }
 
 .my-table td {

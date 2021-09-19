@@ -9,7 +9,7 @@
 </div>
 
 <div *ngIf="hasLogin" class="my-panel">
-  <h3>Submissions</h3>
+  <h4 [style.marginTop]="'5px'">Submissions</h4>
   <hr>
   <p *ngIf="decorator.hideCodeUploadPanel?.hide">{{decorator.hideCodeUploadPanel.message}}</p>
   <form [hidden]="decorator.hideCodeUploadPanel?.hide">
