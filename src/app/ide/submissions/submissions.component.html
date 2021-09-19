@@ -18,7 +18,7 @@
 
       <p *ngIf="bestRecord" class="text">Total Grade: {{bestRecord.verdict.totalGrade}}&nbsp;pt</p>
 
-      <table *ngIf="submissions.length != 0" class="table" id="submissions-table">
+      <table *ngIf="submissions.length != 0" class="table submissions-table">
         <thead class="my-thead" >
         <tr>
           <th scope="col" [width]="'100px'">Time</th>
@@ -95,8 +95,8 @@
             </button>
           </div>
           <div class="modal-body">
-            <table class="table">
-              <thead class="modal-title" [style.fontSize]="'14px'">
+            <table class="table submissions-table">
+              <thead class="modal-title my-thead" [style.fontSize]="'13px'">
               <tr>
                 <th scope="col">Test Case</th>
                 <th scope="col">Status</th>
@@ -106,7 +106,7 @@
                 <th scope="col" *ngIf="hasRuntimeError(viewingJudgesSubmission)">Error Message</th>
               </tr>
               </thead>
-              <tbody class="submissions-table">
+              <tbody>
               <tr *ngFor="let judge of viewingJudgesSubmission?.verdict.judges; let i = index">
                 <td [width]="'80px'">{{ judge.testcaseName }}</td>
                 <td [width]="'50px'" class="{{judge.status}}">{{judge.status}}</td>

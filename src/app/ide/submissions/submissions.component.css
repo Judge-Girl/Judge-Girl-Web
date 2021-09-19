@@ -17,27 +17,31 @@
   border-radius: 10px;
 }
 
-#submissions-table {
+.submissions-table {
   border-top: 0;
-  margin-top: 35px;
+  margin-top: 10px;
 }
 
-#submissions-table th {
-  font-size: 14px;
-}
-
-#submissions-table td, #submissions-table th {
-  padding: 10px;
+.submissions-table td, .submissions-table th {
+  padding: 8px;
   vertical-align: middle;
   text-align: center;
 }
 
-#submissions-table .submission-time {
+.submissions-table th {
   font-size: 13px;
 }
 
-#submissions-table .see-details-btn {
+.submissions-table td {
   font-size: 14px;
+}
+
+.submissions-table .submission-time {
+  font-size: 12px;
+}
+
+.submissions-table .see-details-btn {
+  font-size: 12px;
 }
 
 .AC {
