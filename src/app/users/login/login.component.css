@@ -12,19 +12,20 @@
 
 /* STRUCTURE */
 #form-content {
-  margin-top: 70px;
+  margin-top: 25px;
   -webkit-border-radius: 10px 10px 10px 10px;
   border-radius: 10px 10px 10px 10px;
   background: #fff;
   width: 90%;
   height: fit-content;
-  max-width: 420px;
+  max-width: 400px;
   position: relative;
   padding: 10px 0 0 0;
   text-align: center;
 }
 
 #form-footer {
+  font-size: 14px;
   background-color: #f6f6f6;
   border-top: 1px solid #dce8f1;
   padding: 25px;
