@@ -20,7 +20,7 @@
       <tbody>
       <tr></tr>
       <tr *ngFor="let question of questions$ | async; let i = index">
-        <td> {{ toCharactorIndex(i)}} </td>
+        <td> {{ toCharacterIndex(i)}} </td>
         <td class="text-left fake-link"
             (click)="routeToQuestion(question)"> {{ question.problemId }}. {{ question.problemTitle }} </td>
         <td> {{ question.yourScore }} / {{ question.maxScore }} </td>

@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnDestroy, OnInit, QueryList, ViewChildren} from '@angular/core';
+import {AfterViewInit, Component, Injector, OnDestroy, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {StudentService, SubmissionService} from '../../../services/Services';
 import {map, takeUntil} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
@@ -17,6 +17,7 @@ import * as moment from 'moment';
 import * as CodeMirror from 'codemirror';
 import {ProblemContext} from '../../contexts/ProblemContext';
 import {SubmissionContext} from '../../contexts/SubmissionContext';
+import {ActivatedRoute} from '@angular/router';
 
 
 function compareSubmissionsByTime(s1: Submission, s2: Submission): number {
@@ -57,9 +58,12 @@ export class SubmissionsComponent implements OnInit, OnDestroy, AfterViewInit {
 
   constructor(public studentService: StudentService,
               private problemContext: ProblemContext,
-              private submissionContext: SubmissionContext) {
+              private submissionContext: SubmissionContext,
+              private route: ActivatedRoute,
+              injector: Injector) {
     this.auth$ = studentService.awaitAuth$;
-    this.submissionService = submissionContext.submissionService;
+    this.submissionService = injector.get<SubmissionService>(route.parent.snapshot.data.submissionServiceProvider);
+
     this.submissions$ = submissionContext.submissions$
       .pipe(map(submissions => sortSubmissionsByTime(submissions)),
         map(submissions => this.onSubmissionsInit(submissions)));
@@ -71,6 +75,7 @@ export class SubmissionsComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit() {
+    this.submissionContext.init(this.submissionService);
   }
 
   ngAfterViewInit() {
@@ -81,6 +86,7 @@ export class SubmissionsComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy(): void {
+    this.submissionContext.destroy();
     this.onDestroy$.next();
   }
 

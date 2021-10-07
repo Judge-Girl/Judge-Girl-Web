@@ -72,7 +72,7 @@ export class HttpExamQuestionSubmissionService extends ExamQuestionSubmissionSer
     return this.http.post<AnswerResponse>(`${this.baseUrl}/api/exams/${this.examId}/problems/${problemId}/${DEFAULT_LANG_ENV}`
       + `/students/${this.studentId}/answers`, formData)
       .pipe(map(response => {
-        this.examContext.onQuestionAnswered(response.answer);
+        this.examContext.answerQuestion(response.answer);
         return response.submission;
       }));
   }

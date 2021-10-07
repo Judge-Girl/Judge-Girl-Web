@@ -19,8 +19,11 @@ import {ExamQuestionSubmissionService} from '../services/impl/HttpExamQuestionSu
 
 
 const routes: Routes = [
+  // Student
   {path: '', component: LoginComponent},
   {path: 'users/change-password', component: ChangePasswordComponent, canActivate: [LoginOnlyGuard]},
+
+  // Problem
   {path: 'problems', component: ProblemListComponent},
   {
     path: 'problems/:problemId', component: IdeComponent,
@@ -35,18 +38,20 @@ const routes: Routes = [
       submissionServiceProvider: SubmissionService,
     }
   },
+
+  // Exam
+  {path: 'exams', component: ExamListComponent, canActivate: [LoginOnlyGuard]},
   {
-    path: 'exams', component: ExamRootComponent, canActivate: [LoginOnlyGuard],
+    path: 'exams/:examId', component: ExamRootComponent, canActivate: [LoginOnlyGuard],
     children: [
-      {path: '', component: ExamListComponent},
       {
-        path: ':examId', component: ExamHomeComponent, canActivate: [LoginOnlyGuard],
+        path: '', component: ExamHomeComponent, canActivate: [LoginOnlyGuard],
         children: [
           {path: '', component: ExamQuestionsComponent}
         ]
       },
       {
-        path: 'exams/:examId/problems/:problemId', component: IdeComponent, canActivate: [LoginOnlyGuard],
+        path: 'problems/:problemId', component: IdeComponent, canActivate: [LoginOnlyGuard],
         children: [
           {path: '', component: ProblemDescriptionComponent},
           {path: 'description', component: ProblemDescriptionComponent},

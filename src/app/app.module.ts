@@ -35,17 +35,16 @@ import {EventBus} from '../services/EventBus';
 import {ExamQuestionSubmissionService, HttpExamQuestionSubmissionService} from '../services/impl/HttpExamQuestionSubmissionService';
 import {IdeBannerComponent} from './exam/question-banner/ide-banner.component';
 import {LdSpinnerComponent} from './items/spinners/ld-spinner.component';
-import {ExamContext, ExamSubmissionPlugin} from './contexts/ExamContext';
+import {ExamContext} from './contexts/ExamContext';
 import {WithLoadingPipe} from './pipes/with-loading.pipe';
 import {ProblemContext} from './contexts/ProblemContext';
 import {OopsComponent} from './ide/oops.component';
-import {SUBMISSION_CONTEXT_PLUGINS_PROVIDERS_TOKEN} from './providers.token';
-import {NormalSubmissionPlugin, SubmissionContext} from './contexts/SubmissionContext';
+import {SubmissionContext} from './contexts/SubmissionContext';
 import {AuthHttpRequestInterceptor} from '../services/impl/AuthHttpRequestInterceptor';
 import {ExamIdePlugin} from './exam/ide.plugin';
 import {DefaultIdePlugin} from './ide/ide.default.plugin';
 import {VarDirective} from './ng-var.directive';
-import { ExamRootComponent } from './exam/root/exam-root.component';
+import {ExamRootComponent} from './exam/root/exam-root.component';
 
 
 const DOMAIN = 'api.judgegirl.beta.pdlab.csie.ntu.edu.tw';
@@ -125,12 +124,8 @@ rxStompConfig.reconnectDelay = 200;
     {provide: DefaultIdePlugin, useClass: DefaultIdePlugin},
     {provide: ExamIdePlugin, useClass: ExamIdePlugin},
     {provide: HTTP_INTERCEPTORS, useClass: AuthHttpRequestInterceptor, multi: true},
-    {provide: SUBMISSION_CONTEXT_PLUGINS_PROVIDERS_TOKEN, useClass: ExamSubmissionPlugin, multi: true},
-    {provide: SUBMISSION_CONTEXT_PLUGINS_PROVIDERS_TOKEN, useClass: NormalSubmissionPlugin, multi: true},
 
     /* variables */
-    {provide: 'NORMAL_SUBMISSION_SERVICE', useClass: HttpSubmissionService},
-    {provide: 'EXAM_QUESTION_SUBMISSION_SERVICE', useClass: HttpExamQuestionSubmissionService},
     {provide: 'STUDENT_SERVICE_BASE_URL', useValue: `${HTTP_HOST}`},
     {provide: 'PROBLEM_SERVICE_BASE_URL', useValue: `${HTTP_HOST}`},
     {provide: 'SUBMISSION_SERVICE_BASE_URL', useValue: `${HTTP_HOST}`},

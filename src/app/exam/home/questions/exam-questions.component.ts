@@ -55,7 +55,7 @@ export class ExamQuestionsComponent implements OnInit {
     }
   }
 
-  public toCharactorIndex(i: number) {
+  public toCharacterIndex(i: number) {
     return String.fromCharCode(i + 65);
   }
 
