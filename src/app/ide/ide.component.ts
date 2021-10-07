@@ -1,14 +1,14 @@
-import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, Injector, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, NavigationEnd, Params, Router} from '@angular/router';
 import {ProblemService, StudentService} from '../../services/Services';
 import {SplitComponent} from 'angular-split';
 import {Location} from '@angular/common';
 
 import {ProblemContext} from '../contexts/ProblemContext';
-import {takeUntil} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
 import {Problem} from '../models';
-import {IdePluginChain} from './ide.plugin';
+import {IdeCommands, IdePlugin, IdeViewModel} from './ide.plugin';
+import {map} from 'rxjs/operators';
 
 export enum Tab {
   TESTCASES,
@@ -30,7 +30,6 @@ export interface Banner {
 export class IdeComponent implements OnInit, OnDestroy, AfterViewInit {
   private onDestroy$: Subject<void> = new Subject<void>();
 
-  private routePrefixing: (routeParams: Params) => string;
   readonly TAB_SUBMISSIONS = Tab.SUBMISSIONS;
   readonly TAB_PROBLEM = Tab.PROBLEM;
 
@@ -42,30 +41,28 @@ export class IdeComponent implements OnInit, OnDestroy, AfterViewInit {
   private allTabs: ElementRef[];
   private readonly routeParams: Params;
   private readonly problemId: number;
-  banner$?: Observable<Banner>;
+  banner$: Observable<Banner>;
   problem$: Observable<Problem>;
+  private ideCommands: IdeCommands;
+  private ideViewModel$: Observable<IdeViewModel>;
 
   constructor(private elementRef: ElementRef,
               private problemContext: ProblemContext,
               private problemService: ProblemService,
               public studentService: StudentService,
-              private idePlugin: IdePluginChain,
               private location: Location,
-              private router: Router, private route: ActivatedRoute) {
+              private router: Router, private route: ActivatedRoute,
+              injector: Injector) {
     this.problem$ = problemContext.problem$;
     this.routeParams = route.snapshot.params;
     this.problemId = +route.snapshot.paramMap.get('problemId');
-    this.routePrefixing = route.snapshot.data.routePrefixing;
-    this.banner$ = idePlugin.banner$;
+    const idePlugin = injector.get<IdePlugin>(route.snapshot.data.idePluginProvider);
+    this.ideCommands = idePlugin.commands(route.snapshot.params);
+    this.ideViewModel$ = idePlugin.viewModel$;
+    this.banner$ = this.ideViewModel$.pipe(map(vm => vm.banner));
   }
 
   ngOnInit(): void {
-    // this.problemService.getProblem(this.problemId)
-    //   .pipe(takeUntil(this.onDestroy$))
-    //   .subscribe({
-    //     next: problem => this.problemContext.onProblemRetrieved(problem),
-    //     error: err => this.problemContext.onProblemNotFound(err)
-    //   });
   }
 
   ngOnDestroy(): void {
@@ -84,7 +81,7 @@ export class IdeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   switchTab(tab: Tab): boolean {
-    const routePrefix = this.routePrefixing(this.routeParams);
+    const routePrefix = this.ideCommands.getTabRoutingPrefix();
     if (tab === Tab.PROBLEM) {
       this.router.navigateByUrl(`${routePrefix}problems/${this.problemId}`, {replaceUrl: true});
       this.activateTabAndDeactivateOthers(this.problemTab);
@@ -133,11 +130,7 @@ export class IdeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   goBack() {
-    this.idePlugin.commandSet$
-      .pipe(takeUntil(this.onDestroy$))
-      .subscribe(commandSet => {
-        commandSet.goBack();
-      });
+    return this.ideCommands.goBack();
   }
 
 }

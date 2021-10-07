@@ -1,18 +1,16 @@
-import {CodeUploadPanelDecorator, CommandSet, IdePlugin} from '../ide/ide.plugin';
-import {Banner} from '../ide/ide.component';
+import {IdeCommands, IdePlugin, IdeViewModel} from '../ide/ide.plugin';
 import {ExamContext} from '../contexts/ExamContext';
 import {Injectable} from '@angular/core';
 import {Location} from '@angular/common';
+import {getQuestion, isExamClosed} from '../models';
+import {ProblemContext} from '../contexts/ProblemContext';
+import {Params, Router} from '@angular/router';
 import {combineLatest, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {ExamOverview, getQuestion, isExamClosed, Problem} from '../models';
-import {ProblemContext} from '../contexts/ProblemContext';
-import {Router} from '@angular/router';
 
 
 @Injectable({providedIn: 'root'})
 export class ExamIdePlugin extends IdePlugin {
-
   constructor(private examContext: ExamContext,
               private problemContext: ProblemContext,
               private location: Location,
@@ -20,49 +18,37 @@ export class ExamIdePlugin extends IdePlugin {
     super();
   }
 
-  get banner$(): Observable<Banner> {
-    return this.whileInQuestion$
-      .pipe(map(({problem, exam}) => {
+  commands(routeParams: Params): IdeCommands {
+    const examId: number = +routeParams.examId;
+    return {
+      getTabRoutingPrefix: () => {
+        return `/exams/${examId}/`;
+      },
+      goBack: () => {
+        this.router.navigateByUrl(`/exams/${examId}`, {replaceUrl: true});
+      }
+    };
+  }
+
+  get viewModel$(): Observable<IdeViewModel> {
+    return combineLatest([this.examContext.exam$, this.problemContext.problem$])
+      .pipe(map(combine => {
+        const [exam, problem] = combine;
+        const hideCodeUploadPanel = isExamClosed(exam) ?
+          {hide: true, message: 'This exam has been closed, you can’t answer this question.'} : undefined;
         return {
-          header1: `${problem.id}. ${problem.title}`,
-          header2: exam.name,
-          previousPageName: 'Problem Page',
-          navigatePreviousPage: () => {
-            this.location.back();
+          banner: {
+            header1: `${problem.id}. ${problem.title}`,
+            header2: exam.name,
+            previousPageName: 'Problem Page',
+            navigatePreviousPage: () => {
+              this.location.back();
+            }
+          }, codeUploadPanelDecorator: {
+            hideCodeUploadPanel,
+            submitCodeButtonDecoration: {belowMessage: `Submission Quota: ${getQuestion(exam, problem.id)?.remainingQuota || 0}`}
           }
         };
       }));
   }
-
-  get codeUploadPanelDecorator$(): Observable<CodeUploadPanelDecorator> {
-    return this.whileInQuestion$
-      .pipe(map(({problem, exam}) => {
-        const hideCodeUploadPanel = isExamClosed(exam) ?
-          {hide: true, message: 'This exam has been closed, you can’t answer this question.'} : undefined;
-        return {
-          hideCodeUploadPanel,
-          submitCodeButtonDecoration: {belowMessage: `Submission Quota: ${getQuestion(exam, problem.id)?.remainingQuota || 0}`}
-        };
-      }));
-  }
-
-  get commandSet$(): Observable<CommandSet> {
-    return this.examContext.exam$.pipe(
-      map((exam) => {
-      return {
-        goBack: () => {
-          this.router.navigateByUrl(`/exams/${exam.id}`, {replaceUrl: true});
-        }
-      };
-    }));
-  }
-
-  get whileInQuestion$(): Observable<{ problem: Problem, exam: ExamOverview }> {
-    return combineLatest([this.problemContext.problem$, this.examContext.exam$])
-      .pipe(map(combine => {
-        const [problem, exam] = combine;
-        return {problem, exam};
-      }));
-  }
-
 }

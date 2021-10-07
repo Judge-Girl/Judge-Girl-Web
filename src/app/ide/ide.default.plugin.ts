@@ -1,40 +1,30 @@
-import {CodeUploadPanelDecorator, CommandSet, IdePlugin} from './ide.plugin';
-import {Banner} from './ide.component';
+import {IdeCommands, IdePlugin, IdeViewModel} from './ide.plugin';
 import {Injectable} from '@angular/core';
-import {NEVER, Observable} from 'rxjs';
-import {delay, map} from 'rxjs/operators';
 import {ProblemContext} from '../contexts/ProblemContext';
-import {Router} from '@angular/router';
+import {Params, Router} from '@angular/router';
+import {NEVER, Observable, of} from 'rxjs';
 
-
-const YIELDING_DELAY = 10;
 
 @Injectable({providedIn: 'root'})
 export class DefaultIdePlugin extends IdePlugin {
-
   constructor(private problemContext: ProblemContext,
               private router: Router) {
     super();
   }
 
-  get banner$(): Observable<Banner> {
+  commands(routeParams: Params): IdeCommands {
+    const problemId = +routeParams.problemId;
+    return {
+      goBack: () => {
+        this.router.navigateByUrl(`/problems/${problemId}`, {replaceUrl: true});
+      },
+      getTabRoutingPrefix: () => {
+        return '';
+      }
+    };
+  }
+
+  get viewModel$(): Observable<IdeViewModel> {
     return NEVER;
   }
-
-  get codeUploadPanelDecorator$(): Observable<CodeUploadPanelDecorator> {
-    return NEVER;
-  }
-
-  get commandSet$(): Observable<CommandSet> {
-    return this.problemContext.problem$
-      .pipe(delay(YIELDING_DELAY),
-        map((problem) => {
-          return {
-            goBack: () => {
-              this.router.navigateByUrl(`/problems/${problem.id}`, {replaceUrl: true});
-            }
-          };
-        }));
-  }
-
 }

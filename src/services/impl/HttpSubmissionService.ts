@@ -15,16 +15,14 @@ const DEFAULT_LANG_ENV = 'C';
   providedIn: 'root'
 })
 export class HttpSubmissionService extends SubmissionService {
-  baseUrl: string;
 
   constructor(protected http: HttpClient,
               private studentService: StudentService,
               private problemService: ProblemService,
               private brokerService: BrokerService,
               private eventBus: EventBus,
-              @Inject('SUBMISSION_SERVICE_BASE_URL') baseUrl: string) {
+              @Inject('SUBMISSION_SERVICE_BASE_URL') private baseUrl: string) {
     super();
-    this.baseUrl = baseUrl;
   }
 
   getSubmissions(problemId: number): Observable<Submission[]> {

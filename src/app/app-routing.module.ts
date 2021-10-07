@@ -1,5 +1,5 @@
 import {NgModule} from '@angular/core';
-import {Params, RouterModule, Routes} from '@angular/router';
+import {RouterModule, Routes} from '@angular/router';
 import {LoginComponent} from './users/login/login.component';
 import {ProblemListComponent} from './problem-list/problem-list.component';
 import {ExamListComponent} from './exam/list/exam-list.component';
@@ -11,6 +11,8 @@ import {ProblemDescriptionComponent} from './ide/problem-description/problem-des
 import {TestcasesComponent} from './ide/testcases/testcases.component';
 import {ChangePasswordComponent} from './users/change-password/change-password.component';
 import {LoginOnlyGuard} from './guard/login-only.guard';
+import {DefaultIdePlugin} from './ide/ide.default.plugin';
+import {ExamIdePlugin} from './exam/ide.plugin';
 
 const routes: Routes = [
   {path: '', component: LoginComponent},
@@ -25,8 +27,7 @@ const routes: Routes = [
       {path: 'submissions', component: SubmissionsComponent}
     ],
     data: {
-      submissionService: 'SUBMISSION_SERVICE',
-      routePrefixing: () => ''
+      idePluginProvider: DefaultIdePlugin,
     }
   },
   {path: 'exams', component: ExamListComponent, canActivate: [LoginOnlyGuard]},
@@ -45,8 +46,7 @@ const routes: Routes = [
       {path: 'submissions', component: SubmissionsComponent}
     ],
     data: {
-      submissionService: 'EXAM_QUESTION_SUBMISSION_SERVICE',
-      routePrefixing: (routeParams: Params) => `/exams/${routeParams.examId}/`
+      idePluginProvider: ExamIdePlugin,
     }
   },
   { path: '**', redirectTo: ''}

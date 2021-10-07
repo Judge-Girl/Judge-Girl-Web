@@ -11,6 +11,7 @@ import {RouteMatchingContext, RouterEvents} from './contexts';
   }
 )
 export class ProblemContext extends RouteMatchingContext<number> {
+  public problem: Problem;
   private problemSubject = new ResettableReplaySubject<Problem>(1);
 
   constructor(protected router: RouterEvents,
@@ -35,10 +36,12 @@ export class ProblemContext extends RouteMatchingContext<number> {
   }
 
   onProblemRetrieved(problem: Problem) {
+    this.problem = problem;
     this.problemSubject.next(problem);
   }
 
   onDestroy() {
+    this.problem = undefined;
     this.problemSubject.reset();
   }
 

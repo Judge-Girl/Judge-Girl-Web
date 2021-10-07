@@ -73,6 +73,10 @@ export class ExamContext extends RouteMatchingContext<number> {
   get exam$(): Observable<ExamOverview> {
     return this.examOverview$;
   }
+
+  get exam(): ExamOverview | undefined {
+    return this.examOverview;
+  }
 }
 
 

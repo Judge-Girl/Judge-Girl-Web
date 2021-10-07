@@ -39,12 +39,12 @@ import {ExamContext, ExamSubmissionPlugin} from './contexts/ExamContext';
 import {WithLoadingPipe} from './pipes/with-loading.pipe';
 import {ProblemContext} from './contexts/ProblemContext';
 import {OopsComponent} from './ide/oops.component';
-import {IdePluginChain} from './ide/ide.plugin';
-import {ExamIdePlugin} from './exam/ide.plugin';
-import {IDE_PLUGINS_PROVIDERS_TOKEN, SUBMISSION_CONTEXT_PLUGINS_PROVIDERS_TOKEN} from './providers.token';
+import {SUBMISSION_CONTEXT_PLUGINS_PROVIDERS_TOKEN} from './providers.token';
 import {NormalSubmissionPlugin, SubmissionContext} from './contexts/SubmissionContext';
 import {AuthHttpRequestInterceptor} from '../services/impl/AuthHttpRequestInterceptor';
+import {ExamIdePlugin} from './exam/ide.plugin';
 import {DefaultIdePlugin} from './ide/ide.default.plugin';
+import {VarDirective} from './ng-var.directive';
 
 
 const DOMAIN = 'api.judgegirl.beta.pdlab.csie.ntu.edu.tw';
@@ -59,6 +59,9 @@ rxStompConfig.reconnectDelay = 200;
   declarations: [
     /*Pipes*/
     WithLoadingPipe,
+
+    /*Directives*/
+    VarDirective,
 
     /*Pages*/
     AppComponent,
@@ -81,7 +84,7 @@ rxStompConfig.reconnectDelay = 200;
     IdeBannerComponent,
     LdCircleComponent,
     LdSpinnerComponent,
-    OopsComponent,
+    OopsComponent
   ],
   imports: [
     CookieModule.forRoot(),
@@ -114,10 +117,8 @@ rxStompConfig.reconnectDelay = 200;
     {provide: ProblemContext, useClass: ProblemContext},
     {provide: SubmissionContext, useClass: SubmissionContext},
 
-    /* chain-of-responsibility */
-    {provide: IdePluginChain, useClass: IdePluginChain},
-    {provide: IDE_PLUGINS_PROVIDERS_TOKEN, useClass: DefaultIdePlugin, multi: true},
-    {provide: IDE_PLUGINS_PROVIDERS_TOKEN, useClass: ExamIdePlugin, multi: true},
+    {provide: DefaultIdePlugin, useClass: DefaultIdePlugin},
+    {provide: ExamIdePlugin, useClass: ExamIdePlugin},
     {provide: HTTP_INTERCEPTORS, useClass: AuthHttpRequestInterceptor, multi: true},
     {provide: SUBMISSION_CONTEXT_PLUGINS_PROVIDERS_TOKEN, useClass: ExamSubmissionPlugin, multi: true},
     {provide: SUBMISSION_CONTEXT_PLUGINS_PROVIDERS_TOKEN, useClass: NormalSubmissionPlugin, multi: true},
