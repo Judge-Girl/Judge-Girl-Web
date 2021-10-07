@@ -25,7 +25,6 @@ export class CodeUploadPanelComponent implements OnInit, OnDestroy {
   private onDestroy$ = new Subject<void>();
   selectedFiles: File[];
   private problem$: Observable<Problem>;
-  private remainingSubmissionQuota$: Observable<number>;
   decorator$: Observable<CodeUploadPanelDecorator>;
   problem: Problem;
   hasLogin: boolean;
@@ -46,9 +45,8 @@ export class CodeUploadPanelComponent implements OnInit, OnDestroy {
     const idePlugin = injector.get<IdePlugin>(route.snapshot.data.idePluginProvider);
     this.decorator$ = idePlugin.viewModel$.pipe(
       map(vm => vm.codeUploadPanelDecorator), startWith({}));
-    this.ideCommands = idePlugin.commands(route.snapshot.params);
+    this.ideCommands = idePlugin.commands(route);
     this.problem$ = problemContext.problem$;
-    this.remainingSubmissionQuota$ = submissionContext.remainingSubmissionQuota$;
     this.submissionService = injector.get<SubmissionService>(route.snapshot.data.submissionServiceProvider);
   }
 

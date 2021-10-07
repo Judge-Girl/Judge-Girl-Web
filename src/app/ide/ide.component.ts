@@ -57,7 +57,7 @@ export class IdeComponent implements OnInit, OnDestroy, AfterViewInit {
     this.routeParams = route.snapshot.params;
     this.problemId = +route.snapshot.paramMap.get('problemId');
     const idePlugin = injector.get<IdePlugin>(route.snapshot.data.idePluginProvider);
-    this.ideCommands = idePlugin.commands(route.snapshot.params);
+    this.ideCommands = idePlugin.commands(route);
     this.ideViewModel$ = idePlugin.viewModel$;
     this.banner$ = this.ideViewModel$.pipe(map(vm => vm.banner));
   }

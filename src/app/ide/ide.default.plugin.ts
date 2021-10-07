@@ -1,7 +1,7 @@
 import {IdeCommands, IdePlugin, IdeViewModel} from './ide.plugin';
 import {Injectable} from '@angular/core';
 import {ProblemContext} from '../contexts/ProblemContext';
-import {Params, Router} from '@angular/router';
+import {ActivatedRoute, Params, Router} from '@angular/router';
 import {NEVER, Observable, of} from 'rxjs';
 
 
@@ -12,11 +12,10 @@ export class DefaultIdePlugin extends IdePlugin {
     super();
   }
 
-  commands(routeParams: Params): IdeCommands {
-    const problemId = +routeParams.problemId;
+  commands(route: ActivatedRoute): IdeCommands {
     return {
       goBack: () => {
-        this.router.navigateByUrl(`/problems/${problemId}`, {replaceUrl: true});
+        this.router.navigateByUrl(`/problems`, {replaceUrl: true});
       },
       getTabRoutingPrefix: () => {
         return '';

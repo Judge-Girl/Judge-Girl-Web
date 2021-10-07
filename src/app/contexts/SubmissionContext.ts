@@ -14,7 +14,6 @@ export class SubmissionContext {
   private unsubscriptions: Unsubscribe[] = [];
   private submissions: Submission[];
   private submissionsSubject = new ResettableReplaySubject<Submission[]>();
-  remainingSubmissionQuota$: Observable<number>;
   private submissionService: SubmissionService;
 
   public constructor(private problemContext: ProblemContext,

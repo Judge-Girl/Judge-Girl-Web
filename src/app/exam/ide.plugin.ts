@@ -4,7 +4,7 @@ import {Injectable} from '@angular/core';
 import {Location} from '@angular/common';
 import {getQuestion, isExamClosed} from '../models';
 import {ProblemContext} from '../contexts/ProblemContext';
-import {Params, Router} from '@angular/router';
+import {ActivatedRoute, Params, Router} from '@angular/router';
 import {combineLatest, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 
@@ -18,8 +18,8 @@ export class ExamIdePlugin extends IdePlugin {
     super();
   }
 
-  commands(routeParams: Params): IdeCommands {
-    const examId: number = +routeParams.examId;
+  commands(route: ActivatedRoute): IdeCommands {
+    const examId: number = +route.parent.snapshot.paramMap.get('examId');
     return {
       getTabRoutingPrefix: () => {
         return `/exams/${examId}/`;

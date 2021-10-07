@@ -1,11 +1,11 @@
 import {Banner} from './ide.component';
-import {Params} from '@angular/router';
+import {ActivatedRoute, Params} from '@angular/router';
 import {Observable} from 'rxjs';
 import {CodeUploadPanelDecorator} from './code-panel/code-upload-panel.component';
 
 export abstract class IdePlugin {
   abstract get viewModel$(): Observable<IdeViewModel>;
-  abstract commands(routeParams: Params): IdeCommands;
+  abstract commands(route: ActivatedRoute): IdeCommands;
 }
 
 export interface IdeViewModel {
