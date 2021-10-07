@@ -34,8 +34,6 @@ export class CodeUploadPanelComponent implements OnInit, OnDestroy {
 
   @ViewChildren('fileInput') private fileUploads: FileUpload[];
   submissionService: SubmissionService;
-  private readonly routeParams: Params;
-  private readonly idePlugin: IdePlugin;
   private readonly ideCommands: IdeCommands;
 
   constructor(public studentService: StudentService,
@@ -51,7 +49,7 @@ export class CodeUploadPanelComponent implements OnInit, OnDestroy {
     this.ideCommands = idePlugin.commands(route.snapshot.params);
     this.problem$ = problemContext.problem$;
     this.remainingSubmissionQuota$ = submissionContext.remainingSubmissionQuota$;
-    this.submissionService = submissionContext.submissionService;
+    this.submissionService = injector.get<SubmissionService>(route.snapshot.data.submissionServiceProvider);
   }
 
   ngOnInit(): void {

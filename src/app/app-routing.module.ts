@@ -13,6 +13,10 @@ import {ChangePasswordComponent} from './users/change-password/change-password.c
 import {LoginOnlyGuard} from './guard/login-only.guard';
 import {DefaultIdePlugin} from './ide/ide.default.plugin';
 import {ExamIdePlugin} from './exam/ide.plugin';
+import {ExamRootComponent} from './exam/root/exam-root.component';
+import {SubmissionService} from '../services/Services';
+import {ExamQuestionSubmissionService} from '../services/impl/HttpExamQuestionSubmissionService';
+
 
 const routes: Routes = [
   {path: '', component: LoginComponent},
@@ -28,26 +32,33 @@ const routes: Routes = [
     ],
     data: {
       idePluginProvider: DefaultIdePlugin,
+      submissionServiceProvider: SubmissionService,
     }
   },
-  {path: 'exams', component: ExamListComponent, canActivate: [LoginOnlyGuard]},
   {
-    path: 'exams/:examId', component: ExamHomeComponent, canActivate: [LoginOnlyGuard],
+    path: 'exams', component: ExamRootComponent, canActivate: [LoginOnlyGuard],
     children: [
-      {path: '', component: ExamQuestionsComponent},
-    ],
-  },
-  {
-    path: 'exams/:examId/problems/:problemId', component: IdeComponent, canActivate: [LoginOnlyGuard],
-    children: [
-      {path: '', component: ProblemDescriptionComponent},
-      {path: 'description', component: ProblemDescriptionComponent},
-      {path: 'testcases', component: TestcasesComponent},
-      {path: 'submissions', component: SubmissionsComponent}
-    ],
-    data: {
-      idePluginProvider: ExamIdePlugin,
-    }
+      {path: '', component: ExamListComponent},
+      {
+        path: ':examId', component: ExamHomeComponent, canActivate: [LoginOnlyGuard],
+        children: [
+          {path: '', component: ExamQuestionsComponent}
+        ]
+      },
+      {
+        path: 'exams/:examId/problems/:problemId', component: IdeComponent, canActivate: [LoginOnlyGuard],
+        children: [
+          {path: '', component: ProblemDescriptionComponent},
+          {path: 'description', component: ProblemDescriptionComponent},
+          {path: 'testcases', component: TestcasesComponent},
+          {path: 'submissions', component: SubmissionsComponent}
+        ],
+        data: {
+          idePluginProvider: ExamIdePlugin,
+          submissionServiceProvider: ExamQuestionSubmissionService
+        }
+      }
+    ]
   },
   { path: '**', redirectTo: ''}
 ];

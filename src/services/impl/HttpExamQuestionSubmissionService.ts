@@ -20,10 +20,13 @@ interface AnswerResponse {
   submission: Submission;
 }
 
+export abstract class ExamQuestionSubmissionService extends SubmissionService {
+}
+
 @Injectable({
   providedIn: 'root'
 })
-export class HttpExamQuestionSubmissionService extends SubmissionService {
+export class HttpExamQuestionSubmissionService extends ExamQuestionSubmissionService {
   baseUrl: string;
   examId: number;
 

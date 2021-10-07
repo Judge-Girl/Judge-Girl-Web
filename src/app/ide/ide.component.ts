@@ -63,9 +63,11 @@ export class IdeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit(): void {
+    this.problemContext.init(this.problemId);
   }
 
   ngOnDestroy(): void {
+    this.problemContext.destroy();
     this.onDestroy$.next();
   }
 
@@ -92,7 +94,7 @@ export class IdeComponent implements OnInit, OnDestroy, AfterViewInit {
       this.router.navigateByUrl(`${routePrefix}problems/${this.problemId}/submissions`, {replaceUrl: true});
       this.activateTabAndDeactivateOthers(this.submissionsTab);
     }
-    return false;  // avoid <a>'s changing page
+    return false;  // avoid <a> from changing page
   }
 
   private activateTabAndDeactivateOthers(tab: ElementRef) {

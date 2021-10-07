@@ -8,7 +8,7 @@ import {ProblemListComponent} from './problem-list/problem-list.component';
 import {ExamListComponent} from './exam/list/exam-list.component';
 import {ExamHomeComponent} from './exam/home/exam-home.component';
 import {ExamQuestionsComponent} from './exam/home/questions/exam-questions.component';
-import {BrokerService, ExamService, ProblemService, StudentService} from '../services/Services';
+import {BrokerService, ExamService, ProblemService, StudentService, SubmissionService} from '../services/Services';
 import {IdeComponent} from './ide/ide.component';
 import {ProblemDescriptionComponent} from './ide/problem-description/problem-description.component';
 import {CodeUploadPanelComponent} from './ide/code-panel/code-upload-panel.component';
@@ -32,7 +32,7 @@ import {FormsModule} from '@angular/forms';
 import {StompBrokerService} from '../services/impl/StompBrokerService';
 import {RxStompConfig} from '@stomp/rx-stomp';
 import {EventBus} from '../services/EventBus';
-import {HttpExamQuestionSubmissionService} from '../services/impl/HttpExamQuestionSubmissionService';
+import {ExamQuestionSubmissionService, HttpExamQuestionSubmissionService} from '../services/impl/HttpExamQuestionSubmissionService';
 import {IdeBannerComponent} from './exam/question-banner/ide-banner.component';
 import {LdSpinnerComponent} from './items/spinners/ld-spinner.component';
 import {ExamContext, ExamSubmissionPlugin} from './contexts/ExamContext';
@@ -45,6 +45,7 @@ import {AuthHttpRequestInterceptor} from '../services/impl/AuthHttpRequestInterc
 import {ExamIdePlugin} from './exam/ide.plugin';
 import {DefaultIdePlugin} from './ide/ide.default.plugin';
 import {VarDirective} from './ng-var.directive';
+import { ExamRootComponent } from './exam/root/exam-root.component';
 
 
 const DOMAIN = 'api.judgegirl.beta.pdlab.csie.ntu.edu.tw';
@@ -84,7 +85,8 @@ rxStompConfig.reconnectDelay = 200;
     IdeBannerComponent,
     LdCircleComponent,
     LdSpinnerComponent,
-    OopsComponent
+    OopsComponent,
+    ExamRootComponent
   ],
   imports: [
     CookieModule.forRoot(),
@@ -107,6 +109,9 @@ rxStompConfig.reconnectDelay = 200;
     /* services */
     {provide: StudentService, useClass: HttpStudentService},
     {provide: ProblemService, useClass: HttpProblemService},
+    {provide: ExamService, useClass: HttpExamService},
+    {provide: SubmissionService, useClass: HttpSubmissionService},
+    {provide: ExamQuestionSubmissionService, useClass: HttpExamQuestionSubmissionService},
     {provide: ExamService, useClass: HttpExamService},
     {provide: BrokerService, useClass: StompBrokerService},
     {provide: RxStompConfig, useValue: rxStompConfig},
