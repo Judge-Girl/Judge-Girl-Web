@@ -26,6 +26,7 @@ export async function unzipCodesArrayBuffer(arrayBuffer: ArrayBuffer) {
     reader.readAsText(codeBlob);
   }
 
+
   await waitForAllCodesUnzippedAndPushedIntoArray.toPromise();
   return submittedCodes;
 }

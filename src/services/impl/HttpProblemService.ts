@@ -5,6 +5,7 @@ import {HttpClient} from '@angular/common/http';
 import {Inject, Injectable} from '@angular/core';
 import {map} from 'rxjs/operators';
 import {HttpRequestCache} from './HttpRequestCache';
+import {environment} from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -13,11 +14,10 @@ export class HttpProblemService extends ProblemService {
   httpRequestCache: HttpRequestCache;
   baseUrl: string;
 
-  constructor(protected http: HttpClient,
-              @Inject('PROBLEM_SERVICE_BASE_URL') baseUrl: string) {
+  constructor(protected http: HttpClient) {
     super();
     this.httpRequestCache = new HttpRequestCache(http);
-    this.baseUrl = baseUrl;
+    this.baseUrl = environment.problemServiceBaseUrl;
   }
 
   getProblem(problemId: number): Observable<Problem> {

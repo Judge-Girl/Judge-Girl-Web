@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit, ViewChildren} from '@angular/core';
+import {Component, Injector, OnDestroy, OnInit, ViewChildren} from '@angular/core';
 import {FileUpload, MessageService} from 'primeng';
 import {NoSubmissionQuota, StudentService, SubmissionService, SubmissionThrottlingError} from '../../../services/Services';
 import {getCodeFileExtension, Problem, SubmittedCodeSpec} from '../../models';
@@ -6,8 +6,14 @@ import {ActivatedRoute, Params, Router} from '@angular/router';
 import {Observable, Subject} from 'rxjs';
 import {ProblemContext} from '../../contexts/ProblemContext';
 import {SubmissionContext} from '../../contexts/SubmissionContext';
-import {CodeUploadPanelDecorator, IdePluginChain} from '../ide.plugin';
-import {takeUntil} from 'rxjs/operators';
+import {IdeCommands, IdePlugin} from '../ide.plugin';
+import {map, startWith, takeUntil} from 'rxjs/operators';
+
+
+export interface CodeUploadPanelDecorator {
+  disableCodeUploadPanel?: { message?: string };
+  submitCodeButtonDecoration?: { belowMessage?: string };
+}
 
 @Component({
   selector: 'app-code-upload-panel',
@@ -19,8 +25,7 @@ export class CodeUploadPanelComponent implements OnInit, OnDestroy {
   private onDestroy$ = new Subject<void>();
   selectedFiles: File[];
   private problem$: Observable<Problem>;
-  private remainingSubmissionQuota$: Observable<number>;
-  decorator: CodeUploadPanelDecorator;
+  decorator$: Observable<CodeUploadPanelDecorator>;
   problem: Problem;
   hasLogin: boolean;
   hasSelectedValidSubmittedCodes: boolean;
@@ -28,26 +33,21 @@ export class CodeUploadPanelComponent implements OnInit, OnDestroy {
 
   @ViewChildren('fileInput') private fileUploads: FileUpload[];
   submissionService: SubmissionService;
-  private routeParams: Params;
-  private routePrefixing: (routeParams: Params) => string;
+  private readonly ideCommands: IdeCommands;
 
   constructor(public studentService: StudentService,
               private problemContext: ProblemContext,
               private submissionContext: SubmissionContext,
-              private idePlugin: IdePluginChain,
               private route: ActivatedRoute,
               private messageService: MessageService,
-              private router: Router) {
-    this.decorator = { /* default empty decoration */};
-    this.idePlugin.codeUploadPanelDecorator$.pipe(takeUntil(this.onDestroy$))
-      .subscribe(decorator => this.decorator = decorator);
-    route.params.subscribe(params => {
-      this.routeParams = params;
-    });
+              private router: Router,
+              injector: Injector) {
+    const idePlugin = injector.get<IdePlugin>(route.snapshot.data.idePluginProvider);
+    this.decorator$ = idePlugin.viewModel$.pipe(
+      map(vm => vm.codeUploadPanelDecorator), startWith({}));
+    this.ideCommands = idePlugin.commands(route);
     this.problem$ = problemContext.problem$;
-    this.remainingSubmissionQuota$ = submissionContext.remainingSubmissionQuota$;
-    this.routePrefixing = route.snapshot.data.routePrefixing;
-    this.submissionService = submissionContext.submissionService;
+    this.submissionService = injector.get<SubmissionService>(route.snapshot.data.submissionServiceProvider);
   }
 
   ngOnInit(): void {
@@ -94,7 +94,7 @@ export class CodeUploadPanelComponent implements OnInit, OnDestroy {
   submit(): boolean {
     if (this.canSubmit()) {
       this.submitting = true;
-      this.router.navigateByUrl(`${this.routePrefixing(this.routeParams)}problems/${this.problem.id}/submissions`,
+      this.router.navigateByUrl(`${this.ideCommands.getTabRoutingPrefix()}problems/${this.problem.id}/submissions`,
         {replaceUrl: true});
       this.submissionService.submitFromFile(this.problem.id, this.problem.submittedCodeSpecs, this.selectedFiles)
         .toPromise().then((submission) => {

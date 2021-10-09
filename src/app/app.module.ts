@@ -8,7 +8,7 @@ import {ProblemListComponent} from './problem-list/problem-list.component';
 import {ExamListComponent} from './exam/list/exam-list.component';
 import {ExamHomeComponent} from './exam/home/exam-home.component';
 import {ExamQuestionsComponent} from './exam/home/questions/exam-questions.component';
-import {BrokerService, ExamService, ProblemService, StudentService} from '../services/Services';
+import {BrokerService, ExamService, ProblemService, StudentService, SubmissionService} from '../services/Services';
 import {IdeComponent} from './ide/ide.component';
 import {ProblemDescriptionComponent} from './ide/problem-description/problem-description.component';
 import {CodeUploadPanelComponent} from './ide/code-panel/code-upload-panel.component';
@@ -32,33 +32,32 @@ import {FormsModule} from '@angular/forms';
 import {StompBrokerService} from '../services/impl/StompBrokerService';
 import {RxStompConfig} from '@stomp/rx-stomp';
 import {EventBus} from '../services/EventBus';
-import {HttpExamQuestionSubmissionService} from '../services/impl/HttpExamQuestionSubmissionService';
+import {ExamQuestionSubmissionService, HttpExamQuestionSubmissionService} from '../services/impl/HttpExamQuestionSubmissionService';
 import {IdeBannerComponent} from './exam/question-banner/ide-banner.component';
 import {LdSpinnerComponent} from './items/spinners/ld-spinner.component';
-import {ExamContext, ExamSubmissionPlugin} from './contexts/ExamContext';
+import {ExamContext} from './contexts/ExamContext';
 import {WithLoadingPipe} from './pipes/with-loading.pipe';
 import {ProblemContext} from './contexts/ProblemContext';
 import {OopsComponent} from './ide/oops.component';
-import {IdePluginChain} from './ide/ide.plugin';
-import {ExamIdePlugin} from './exam/ide.plugin';
-import {IDE_PLUGINS_PROVIDERS_TOKEN, SUBMISSION_CONTEXT_PLUGINS_PROVIDERS_TOKEN} from './providers.token';
-import {NormalSubmissionPlugin, SubmissionContext} from './contexts/SubmissionContext';
+import {SubmissionContext} from './contexts/SubmissionContext';
 import {AuthHttpRequestInterceptor} from '../services/impl/AuthHttpRequestInterceptor';
+import {ExamIdePlugin} from './exam/ide.plugin';
 import {DefaultIdePlugin} from './ide/ide.default.plugin';
+import {VarDirective} from './ng-var.directive';
+import {ExamRootComponent} from './exam/root/exam-root.component';
 
 
 const DOMAIN = 'api.judgegirl.beta.pdlab.csie.ntu.edu.tw';
 const HTTP_HOST = `http://${DOMAIN}`;
-
-const rxStompConfig = new RxStompConfig();
-rxStompConfig.brokerURL = `ws://${DOMAIN}/broker`;
-rxStompConfig.reconnectDelay = 200;
 
 
 @NgModule({
   declarations: [
     /*Pipes*/
     WithLoadingPipe,
+
+    /*Directives*/
+    VarDirective,
 
     /*Pages*/
     AppComponent,
@@ -82,6 +81,7 @@ rxStompConfig.reconnectDelay = 200;
     LdCircleComponent,
     LdSpinnerComponent,
     OopsComponent,
+    ExamRootComponent
   ],
   imports: [
     CookieModule.forRoot(),
@@ -105,8 +105,10 @@ rxStompConfig.reconnectDelay = 200;
     {provide: StudentService, useClass: HttpStudentService},
     {provide: ProblemService, useClass: HttpProblemService},
     {provide: ExamService, useClass: HttpExamService},
+    {provide: SubmissionService, useClass: HttpSubmissionService},
+    {provide: ExamQuestionSubmissionService, useClass: HttpExamQuestionSubmissionService},
+    {provide: ExamService, useClass: HttpExamService},
     {provide: BrokerService, useClass: StompBrokerService},
-    {provide: RxStompConfig, useValue: rxStompConfig},
     {provide: EventBus, useClass: EventBus},
 
     /* contexts */
@@ -114,21 +116,10 @@ rxStompConfig.reconnectDelay = 200;
     {provide: ProblemContext, useClass: ProblemContext},
     {provide: SubmissionContext, useClass: SubmissionContext},
 
-    /* chain-of-responsibility */
-    {provide: IdePluginChain, useClass: IdePluginChain},
-    {provide: IDE_PLUGINS_PROVIDERS_TOKEN, useClass: DefaultIdePlugin, multi: true},
-    {provide: IDE_PLUGINS_PROVIDERS_TOKEN, useClass: ExamIdePlugin, multi: true},
-    {provide: HTTP_INTERCEPTORS, useClass: AuthHttpRequestInterceptor, multi: true},
-    {provide: SUBMISSION_CONTEXT_PLUGINS_PROVIDERS_TOKEN, useClass: ExamSubmissionPlugin, multi: true},
-    {provide: SUBMISSION_CONTEXT_PLUGINS_PROVIDERS_TOKEN, useClass: NormalSubmissionPlugin, multi: true},
-
-    /* variables */
-    {provide: 'NORMAL_SUBMISSION_SERVICE', useClass: HttpSubmissionService},
-    {provide: 'EXAM_QUESTION_SUBMISSION_SERVICE', useClass: HttpExamQuestionSubmissionService},
-    {provide: 'STUDENT_SERVICE_BASE_URL', useValue: `${HTTP_HOST}`},
-    {provide: 'PROBLEM_SERVICE_BASE_URL', useValue: `${HTTP_HOST}`},
-    {provide: 'SUBMISSION_SERVICE_BASE_URL', useValue: `${HTTP_HOST}`},
-    {provide: 'EXAM_SERVICE_BASE_URL', useValue: `${HTTP_HOST}`}
+    /* plugins */
+    {provide: DefaultIdePlugin, useClass: DefaultIdePlugin},
+    {provide: ExamIdePlugin, useClass: ExamIdePlugin},
+    {provide: HTTP_INTERCEPTORS, useClass: AuthHttpRequestInterceptor, multi: true}
   ],
   bootstrap: [AppComponent]
 })

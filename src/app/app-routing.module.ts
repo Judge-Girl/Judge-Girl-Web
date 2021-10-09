@@ -1,5 +1,5 @@
 import {NgModule} from '@angular/core';
-import {Params, RouterModule, Routes} from '@angular/router';
+import {RouterModule, Routes} from '@angular/router';
 import {LoginComponent} from './users/login/login.component';
 import {ProblemListComponent} from './problem-list/problem-list.component';
 import {ExamListComponent} from './exam/list/exam-list.component';
@@ -11,10 +11,19 @@ import {ProblemDescriptionComponent} from './ide/problem-description/problem-des
 import {TestcasesComponent} from './ide/testcases/testcases.component';
 import {ChangePasswordComponent} from './users/change-password/change-password.component';
 import {LoginOnlyGuard} from './guard/login-only.guard';
+import {DefaultIdePlugin} from './ide/ide.default.plugin';
+import {ExamIdePlugin} from './exam/ide.plugin';
+import {ExamRootComponent} from './exam/root/exam-root.component';
+import {SubmissionService} from '../services/Services';
+import {ExamQuestionSubmissionService} from '../services/impl/HttpExamQuestionSubmissionService';
+
 
 const routes: Routes = [
+  // Student
   {path: '', component: LoginComponent},
   {path: 'users/change-password', component: ChangePasswordComponent, canActivate: [LoginOnlyGuard]},
+
+  // Problem
   {path: 'problems', component: ProblemListComponent},
   {
     path: 'problems/:problemId', component: IdeComponent,
@@ -25,29 +34,36 @@ const routes: Routes = [
       {path: 'submissions', component: SubmissionsComponent}
     ],
     data: {
-      submissionService: 'SUBMISSION_SERVICE',
-      routePrefixing: () => ''
+      idePluginProvider: DefaultIdePlugin,
+      submissionServiceProvider: SubmissionService,
     }
   },
+
+  // Exam
   {path: 'exams', component: ExamListComponent, canActivate: [LoginOnlyGuard]},
   {
-    path: 'exams/:examId', component: ExamHomeComponent, canActivate: [LoginOnlyGuard],
+    path: 'exams/:examId', component: ExamRootComponent, canActivate: [LoginOnlyGuard],
     children: [
-      {path: '', component: ExamQuestionsComponent},
-    ],
-  },
-  {
-    path: 'exams/:examId/problems/:problemId', component: IdeComponent, canActivate: [LoginOnlyGuard],
-    children: [
-      {path: '', component: ProblemDescriptionComponent},
-      {path: 'description', component: ProblemDescriptionComponent},
-      {path: 'testcases', component: TestcasesComponent},
-      {path: 'submissions', component: SubmissionsComponent}
-    ],
-    data: {
-      submissionService: 'EXAM_QUESTION_SUBMISSION_SERVICE',
-      routePrefixing: (routeParams: Params) => `/exams/${routeParams.examId}/`
-    }
+      {
+        path: '', component: ExamHomeComponent, canActivate: [LoginOnlyGuard],
+        children: [
+          {path: '', component: ExamQuestionsComponent}
+        ]
+      },
+      {
+        path: 'problems/:problemId', component: IdeComponent, canActivate: [LoginOnlyGuard],
+        children: [
+          {path: '', component: ProblemDescriptionComponent},
+          {path: 'description', component: ProblemDescriptionComponent},
+          {path: 'testcases', component: TestcasesComponent},
+          {path: 'submissions', component: SubmissionsComponent}
+        ],
+        data: {
+          idePluginProvider: ExamIdePlugin,
+          submissionServiceProvider: ExamQuestionSubmissionService
+        }
+      }
+    ]
   },
   { path: '**', redirectTo: ''}
 ];

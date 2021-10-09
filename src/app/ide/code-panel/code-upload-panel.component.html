@@ -11,32 +11,34 @@
 <div *ngIf="hasLogin" class="my-panel">
   <h4 [style.marginTop]="'5px'">Submissions</h4>
   <hr>
-  <p *ngIf="decorator.hideCodeUploadPanel?.hide">{{decorator.hideCodeUploadPanel.message}}</p>
-  <form [hidden]="decorator.hideCodeUploadPanel?.hide">
-    <div class="form-group">
-      <div *ngIf="problem">
-        <div class="upload-row"
-             *ngFor="let codeSpec of problem.submittedCodeSpecs; let i = index" #codeSpecRow>
-          <span class="file-name">{{codeSpec.fileName}}</span>
-          <p-fileUpload id="_fileSelector{{i}}"
-                        mode="basic"
-                        chooseLabel="Upload"
-                        name="files"
-                        accept="{{getAcceptedFileExtensionByCodeSpec(codeSpec)}}"
-                        (click)="clearAndSelect(i, fileInput)"
-                        (onClear)="onFileClear()"
-                        (change)="onFileInputChange(i, codeSpecRow, fileInput)"
-                        #fileInput></p-fileUpload>
+  <ng-container *ngVar="decorator$ | async as decorator">
+    <p *ngIf="decorator$ | async as decorator">{{decorator.disableCodeUploadPanel?.message}}</p>
+    <form [hidden]="decorator.disableCodeUploadPanel">
+      <div class="form-group">
+        <div *ngIf="problem">
+          <div class="upload-row"
+               *ngFor="let codeSpec of problem.submittedCodeSpecs; let i = index" #codeSpecRow>
+            <span class="file-name">{{codeSpec.fileName}}</span>
+            <p-fileUpload id="_fileSelector{{i}}"
+                          mode="basic"
+                          chooseLabel="Upload"
+                          name="files"
+                          accept="{{getAcceptedFileExtensionByCodeSpec(codeSpec)}}"
+                          (click)="clearAndSelect(i, fileInput)"
+                          (onClear)="onFileClear()"
+                          (change)="onFileInputChange(i, codeSpecRow, fileInput)"
+                          #fileInput></p-fileUpload>
+          </div>
         </div>
-      </div>
 
-      <div id="submit-btn-container" style="width: 100%;">
-        <div class="btn" id="submit-btn" (click)="submit()" [attr.disabled]="!canSubmit()">
-          <span>Submit</span>
-          <ld-spinner *ngIf="submitting"></ld-spinner>
+        <div id="submit-btn-container" style="width: 100%;">
+          <div class="btn" id="submit-btn" (click)="submit()" [attr.disabled]="!canSubmit()">
+            <span>Submit</span>
+            <ld-spinner *ngIf="submitting"></ld-spinner>
+          </div>
+          <span id="below-submit-btn-message">{{decorator.submitCodeButtonDecoration?.belowMessage}}</span>
         </div>
-        <span id="below-submit-btn-message">{{decorator.submitCodeButtonDecoration?.belowMessage}}</span>
       </div>
-    </div>
-  </form>
+    </form>
+  </ng-container>
 </div>

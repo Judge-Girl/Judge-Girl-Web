@@ -3,43 +3,30 @@ import {Injectable} from '@angular/core';
 import {ResettableReplaySubject} from '../../utils/rx/my.subjects';
 import {Observable} from 'rxjs';
 import {ProblemService} from '../../services/Services';
-import {RouteMatchingContext, RouterEvents} from './contexts';
 
 
 @Injectable({
     providedIn: 'root'
   }
 )
-export class ProblemContext extends RouteMatchingContext<number> {
+export class ProblemContext {
   private problemSubject = new ResettableReplaySubject<Problem>(1);
 
-  constructor(protected router: RouterEvents,
-              private problemService: ProblemService) {
-    super(router);
-    this.subscribeToRouterEvents();
+  constructor(private problemService: ProblemService) {
   }
 
-  matchAndExtractParams(url: string): number | undefined {
-    const regex = url.match(/\/problems\/(\d+)/);
-    return regex ? +regex[1] : undefined;
+  get problem$(): Observable<Problem> {
+    return this.problemSubject;
   }
 
-  protected onEnterContext(problemId: number) {
+  init(problemId: number) {
     this.problemService.getProblem(problemId)
-      .toPromise().then(problem => this.onProblemRetrieved(problem))
+      .toPromise().then(problem => this.initializeProblem(problem))
       .catch(err => this.onProblemNotFound(err));
   }
 
-  protected onLeaveContext() {
-    this.onDestroy();
-  }
-
-  onProblemRetrieved(problem: Problem) {
+  private initializeProblem(problem: Problem) {
     this.problemSubject.next(problem);
-  }
-
-  onDestroy() {
-    this.problemSubject.reset();
   }
 
   onProblemNotFound(err) {
@@ -50,7 +37,8 @@ export class ProblemContext extends RouteMatchingContext<number> {
     this.problemSubject = new ResettableReplaySubject<Problem>(1);
   }
 
-  get problem$(): Observable<Problem> {
-    return this.problemSubject;
+  destroy() {
+    this.problemSubject.reset();
+    this.problemSubject = new ResettableReplaySubject();
   }
 }

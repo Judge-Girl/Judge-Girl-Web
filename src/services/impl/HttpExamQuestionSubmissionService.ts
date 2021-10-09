@@ -8,6 +8,7 @@ import {unzipCodesArrayBuffer} from '../../app/utils';
 import {ActivatedRoute} from '@angular/router';
 import {EventBus} from '../EventBus';
 import {ExamContext} from '../../app/contexts/ExamContext';
+import {environment} from '../../environments/environment';
 
 // TODO: [improve] duplicate code from HttpSubmissionService
 // Currently, we only support 'C' langEnv,
@@ -20,10 +21,13 @@ interface AnswerResponse {
   submission: Submission;
 }
 
+export abstract class ExamQuestionSubmissionService extends SubmissionService {
+}
+
 @Injectable({
   providedIn: 'root'
 })
-export class HttpExamQuestionSubmissionService extends SubmissionService {
+export class HttpExamQuestionSubmissionService extends ExamQuestionSubmissionService {
   baseUrl: string;
   examId: number;
 
@@ -34,9 +38,9 @@ export class HttpExamQuestionSubmissionService extends SubmissionService {
               private route: ActivatedRoute,
               private eventBus: EventBus,
               private examContext: ExamContext,
-              @Inject('EXAM_SERVICE_BASE_URL') baseUrl: string) {
+              ) {
     super();
-    this.baseUrl = baseUrl;
+    this.baseUrl = environment.academyServiceBaseUrl;
     this.examContext.exam$.subscribe(exam => this.examId = exam.id);
   }
 
@@ -69,7 +73,7 @@ export class HttpExamQuestionSubmissionService extends SubmissionService {
     return this.http.post<AnswerResponse>(`${this.baseUrl}/api/exams/${this.examId}/problems/${problemId}/${DEFAULT_LANG_ENV}`
       + `/students/${this.studentId}/answers`, formData)
       .pipe(map(response => {
-        this.examContext.onQuestionAnswered(response.answer);
+        this.examContext.answerQuestion(response.answer);
         return response.submission;
       }));
   }

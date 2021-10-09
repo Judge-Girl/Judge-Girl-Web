@@ -46,7 +46,7 @@ export class AppComponent extends MessageService implements OnInit, OnDestroy, E
   }
 
   onEvent(event: any) {
-    if (event instanceof VerdictIssuedEvent) {
+    if (event.type === 'VerdictIssuedEvent') {
       this.issueVerdict(event);
     }
   }

@@ -1,6 +1,6 @@
 import {Component, ElementRef, OnInit, Renderer2, ViewChild} from '@angular/core';
 
-import {describeMemory, describeTimeInSeconds, ExamOverview, JudgeStatus, QuestionItem} from '../../../models';
+import {describeMemory, describeTimeInSeconds, ExamOverview, JudgeStatus, Question} from '../../../models';
 import {ExamService, StudentService} from '../../../../services/Services';
 import {ActivatedRoute, Router} from '@angular/router';
 import {initHighlight, parseMarkdown} from 'src/utils/markdownUtils';
@@ -25,7 +25,7 @@ export class ExamQuestionsComponent implements OnInit {
 
   private examId: number;
   public exam$: Observable<ExamOverview>;
-  public questions$: Observable<QuestionItem[]>;
+  public questions$: Observable<Question[]>;
   public totalScore$: Observable<number>;
   public totalMaxScore$: Observable<number>;
 
@@ -55,19 +55,19 @@ export class ExamQuestionsComponent implements OnInit {
     }
   }
 
-  public toCharactorIndex(i: number) {
+  public toCharacterIndex(i: number) {
     return String.fromCharCode(i + 65);
   }
 
-  public routeToQuestion(question: QuestionItem) {
+  public routeToQuestion(question: Question) {
     this.router.navigateByUrl(`exams/${this.examId}/problems/${question.problemId}`);
   }
 
-  describeQuestionStatus(question: QuestionItem): string {
+  describeQuestionStatus(question: Question): string {
     return question.bestRecord ? question.bestRecord.status : '';
   }
 
-  describeQuestionBestRecord(question: QuestionItem): string {
+  describeQuestionBestRecord(question: Question): string {
     const bestRecord = question.bestRecord;
     if (!bestRecord) {
       return '--';

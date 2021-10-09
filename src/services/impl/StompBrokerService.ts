@@ -3,19 +3,22 @@ import {Observable, of, ReplaySubject} from 'rxjs';
 import {RxStomp, RxStompConfig, RxStompState} from '@stomp/rx-stomp';
 import {switchMap} from 'rxjs/operators';
 import {Injectable} from '@angular/core';
+import {environment} from '../../environments/environment';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class StompBrokerService extends BrokerService {
+  private readonly stompConfig: RxStompConfig;
   connect$ = new ReplaySubject<void>(1);
   disconnect$ = new ReplaySubject<void>(1);
   stompClient: RxStomp = new RxStomp();
   subscriptions = new Map<string, Subscription>();
 
-  constructor(private stompConfig: RxStompConfig) {
+  constructor() {
     super();
+    this.stompConfig = environment.rxStompConfig;
     this.stompClient.connectionState$.subscribe((state: RxStompState) => {
       if (state === RxStompState.OPEN) {
         this.connect$.next();
