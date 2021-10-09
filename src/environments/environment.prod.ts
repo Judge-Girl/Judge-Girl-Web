@@ -10,7 +10,7 @@ const rxStompConfig: RxStompConfig = {
 };
 
 export const environment = {
-  production: true,
+  production: false,
   studentServiceBaseUrl: BASE_URL,
   problemServiceBaseUrl: BASE_URL,
   submissionServiceBaseUrl: BASE_URL,
