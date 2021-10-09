@@ -4,6 +4,7 @@ import {Observable} from 'rxjs';
 import {ExamItem, ExamOverview} from '../../app/models';
 import {HttpClient} from '@angular/common/http';
 import {Inject, Injectable} from '@angular/core';
+import {environment} from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -11,11 +12,9 @@ import {Inject, Injectable} from '@angular/core';
 export class HttpExamService extends ExamService {
   baseUrl: string;
 
-  constructor(protected http: HttpClient,
-              private studentService: StudentService,
-              @Inject('EXAM_SERVICE_BASE_URL') baseUrl: string) {
+  constructor(protected http: HttpClient) {
     super();
-    this.baseUrl = baseUrl;
+    this.baseUrl = environment.academyServiceBaseUrl;
   }
 
   getExamProgressOverview(studentId: number, examId: number): Observable<ExamOverview> {

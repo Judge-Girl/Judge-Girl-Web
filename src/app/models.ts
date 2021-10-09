@@ -1,59 +1,24 @@
 import {now} from 'moment';
 
-export class Student {
-  constructor(public id: number,
-              public account: string,
-              public expiryTime: number,
-              public token: string) {
-  }
+
+/* Student */
+export interface Student {
+  id: number;
+  account: string;
+  expiryTime: number;
+  token: string;
 }
 
-export class TestCase {
-  constructor(public name: string,
-              public timeLimit: number,
-              public memoryLimit: number,
-              public outputLimit: number,
-              public threadNumberLimit: number,
-              public grade: number) {
-  }
-}
-
-export class JudgeSpec {
-  constructor(public language: string,
-              public environment: string,
-              public cpu: number,
-              public gpu: number) {
-  }
-}
-
-export class SubmittedCodeSpec {
-  constructor(public format: string,
-              public fileName: string,
-              public fileExtension: string) {
-  }
-}
-
-export class Compilation {
-  constructor(public script: string) {
-  }
-}
-
-export class ProblemItem {
-  constructor(public id: number,
-              public title: string,
-              public tags: string[]) {
-  }
-}
-
-export class Problem extends ProblemItem {
+/* Problem */
+export class Problem implements ProblemItem {
   private readonly C: LanguageEnv;  // Currently only supports C
 
-  constructor(id: number, title: string,
+  constructor(public id: number,
+              public title: string,
               public description: string,
               public tags: string[],
               public languageEnvs: LanguageEnv[],
-              public testcases: TestCase[]) {
-    super(id, title, tags);
+              public testcases: Testcase[]) {
     this.C = languageEnvs.filter(lang => lang.name === 'C')[0];
   }
 
@@ -66,22 +31,51 @@ export class Problem extends ProblemItem {
   }
 }
 
-export class LanguageEnv {
-  constructor(public name: string,
-              public language: string,
-              public compilation: Compilation,
-              public submittedCodeSpecs: SubmittedCodeSpec[],
-              public providedCodesFileId: string,
-              public compiledLanguage: boolean) {
-  }
+export interface LanguageEnv {
+  name: string;
+  language: string;
+  resourceSpec: ResourceSpec;
+  compilation?: Compilation;
+  submittedCodeSpecs: SubmittedCodeSpec[];
+  providedCodesFileId?: string;
+  compiledLanguage: boolean;
 }
 
-export class ExamItem {
-  constructor(public id: number,
-              public name: string,
-              public startTime: number,
-              public endTime: number) {
-  }
+export interface ResourceSpec {
+  cpu: number;
+  gpu: number;
+}
+
+export interface Testcase {
+  name: string;
+  timeLimit: number;
+  memoryLimit: number;
+  outputLimit: number;
+  threadNumberLimit: number;
+  grade: number;
+}
+
+export interface SubmittedCodeSpec {
+  format: string;
+  fileName: string;
+  fileExtension: string;
+}
+
+export interface Compilation {
+  script: string;
+}
+
+export interface ProblemItem {
+  id: number;
+  title: string;
+  tags: string[];
+}
+
+export interface ExamItem {
+  id: number;
+  name: string;
+  startTime: number;
+  endTime: number;
 }
 
 export enum ExamStatus {
@@ -99,15 +93,26 @@ export function getExamStatus(exam: { startTime: number, endTime: number }): Exa
   return ExamStatus.CLOSED;
 }
 
-export class ExamOverview extends ExamItem {
-  constructor(public id: number,
-              public name: string,
-              public startTime: number,
-              public endTime: number,
-              public questions: QuestionItem[],
-              public description: string) {
-    super(id, name, startTime, endTime);
-  }
+export interface ExamOverview extends ExamItem {
+  id: number;
+  name: string;
+  startTime: number;
+  endTime: number;
+  questions: Question[];
+  description: string;
+}
+
+export interface Question {
+  examId: number;
+  problemTitle: string;
+  problemId: number;
+  yourScore: number;
+  maxScore: number;
+  bestRecord: Record;
+  questionOrder: number;
+  remainingQuota: number;
+  verdict: string;
+  quota: number;
 }
 
 export function isExamClosed(exam: ExamOverview): boolean {
@@ -115,35 +120,25 @@ export function isExamClosed(exam: ExamOverview): boolean {
   return nowTime < exam.startTime || nowTime > exam.endTime;
 }
 
-export function getQuestion(exam: ExamOverview, problemId: number): QuestionItem {
+export function findQuestion(exam: ExamOverview, problemId: number): Question {
   return exam.questions.filter(q => q.problemId === problemId)[0];
 }
 
-export class QuestionItem {
-  constructor(public examId: number,
-              public problemTitle: string,
-              public problemId: number,
-              public yourScore: number,
-              public maxScore: number,
-              public bestRecord: Record,
-              public questionOrder: number,
-              public remainingQuota: number,
-              public verdict: string,
-              public quota: number) {
-  }
-}
-
-export class Record {
-  constructor(public score: number,
-              public status: JudgeStatus,
-              public maximumRuntime: number,
-              public maximumMemoryUsage: number,
-              public submissionTime: number) {
-  }
+export interface Record {
+  score: number;
+  status: JudgeStatus;
+  maximumRuntime: number;
+  maximumMemoryUsage: number;
 }
 
 // TODO: maybe more refined?
-export function getBetterRecord(r1: Record, r2: Record) {
+export function getBetterRecord(r1?: Record, r2?: Record) {
+  if (!r1) {
+    return r2;
+  }
+  if (!r2) {
+    return r1;
+  }
   if (r1.score !== r2.score) {
     return r1.score - r2.score > 0 ? r1 : r2;
   }
@@ -175,16 +170,13 @@ export class ProgramProfile {
   }
 }
 
-export class Submission {
-  verdict: Verdict;
+export interface Submission {
+  id: string;
+  problemId: number;
   judged: boolean;
   submissionTime: number;
-  submittedCodesFileId: string;
-
-  constructor(public id: string,
-              public problemId: number) {
-  }
-
+  submittedCodesFileId?: string;
+  verdict?: Verdict;
 }
 
 export function hasRuntimeError(submission: Submission) {
@@ -207,28 +199,33 @@ export function getBestRecord(submissions: Submission[]): Submission {
   return best;
 }
 
-export class Answer {
-
-  constructor(public examId: number,
-              public problemId: number, public studentId: number,
-              public submissionId: string, public answerTime: number) {
-  }
+export interface Answer {
+  examId: number;
+  problemId: number;
+  studentId: number;
+  submissionId: string;
+  answerTime: number;
 }
 
-
-export class Verdict {
-  constructor(public judges: Judge[],
-              public summaryStatus: JudgeStatus,
-              public totalGrade: number,
-              public maximumRuntime: number,
-              public maximumMemoryUsage: number,
-              public compileErrorMessage: string,
-              public issueTime: number,
-              // TODO: report type should be declared in a recursive way
-              public report: Map<string, any>) {
-  }
+export interface Verdict {
+  judges: Judge[];
+  summaryStatus: JudgeStatus;
+  totalGrade: number;
+  maximumRuntime: number;
+  maximumMemoryUsage: number;
+  compileErrorMessage: string;
+  issueTime: number;
+  report: Map<string, any>;
 }
 
+export function toRecord(verdict: Verdict): Record {
+  return {
+    score: verdict.totalGrade,
+    status: verdict.summaryStatus,
+    maximumRuntime: verdict.maximumRuntime,
+    maximumMemoryUsage: verdict.maximumMemoryUsage,
+  };
+}
 
 
 export function describeMemory(memoryInBytes: number): string {
@@ -257,13 +254,13 @@ export function describeTimeInSeconds(ms: number) {
   return `${(ms / 1000).toFixed(2)} s`;
 }
 
-export class VerdictIssuedEvent {
-  constructor(public problemId: number,
-              public studentId: number,
-              public problemTitle: string,
-              public submissionId: string,
-              public verdict: Verdict) {
-  }
+export interface VerdictIssuedEvent {
+  type: 'VerdictIssuedEvent';
+  problemId: number;
+  studentId: number;
+  problemTitle: string;
+  submissionId: string;
+  verdict: Verdict;
 }
 
 export let JUDGE_STATUSES = [JudgeStatus.RE, JudgeStatus.TLE,

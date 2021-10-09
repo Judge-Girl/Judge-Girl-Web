@@ -36,10 +36,9 @@ export class ExamHomeComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.allTabs = [this.problemsTab /*, this.submissionsTab, this.scoreboardTab */];
+    this.allTabs = [this.problemsTab /* this.submissionsTab, this.scoreboardTab */];
     this.activateTabAndDeactivateOthers(this.problemsTab);
   }
-
 
   routeToTab(tab: Tab): void {
     if (tab === Tab.PROBLEMS) {

@@ -2,7 +2,7 @@ import {IdeCommands, IdePlugin, IdeViewModel} from '../ide/ide.plugin';
 import {ExamContext} from '../contexts/ExamContext';
 import {Injectable} from '@angular/core';
 import {Location} from '@angular/common';
-import {getQuestion, isExamClosed} from '../models';
+import {findQuestion, isExamClosed} from '../models';
 import {ProblemContext} from '../contexts/ProblemContext';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {combineLatest, Observable} from 'rxjs';
@@ -46,7 +46,7 @@ export class ExamIdePlugin extends IdePlugin {
             }
           }, codeUploadPanelDecorator: {
             hideCodeUploadPanel,
-            submitCodeButtonDecoration: {belowMessage: `Submission Quota: ${getQuestion(exam, problem.id)?.remainingQuota || 0}`}
+            submitCodeButtonDecoration: {belowMessage: `Submission Quota: ${findQuestion(exam, problem.id)?.remainingQuota || 0}`}
           }
         };
       }));

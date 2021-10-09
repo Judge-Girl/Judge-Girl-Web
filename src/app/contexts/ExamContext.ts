@@ -1,4 +1,4 @@
-import {Answer, getBetterRecord, ExamOverview, Record, VerdictIssuedEvent} from '../models';
+import {Answer, getBetterRecord, ExamOverview, Record, VerdictIssuedEvent, toRecord} from '../models';
 import {Observable, Subject} from 'rxjs';
 import {Injectable} from '@angular/core';
 import {BrokerMessage, BrokerService, ExamService, StudentService, Unsubscribe} from '../../services/Services';
@@ -15,7 +15,7 @@ export class ExamContext {
   private onDestroy$ = new Subject<void>();
   private examOverview$ = new ResettableReplaySubject<ExamOverview>(1);
   private examOverview?: ExamOverview;
-  private unsubscriptions: Unsubscribe[];
+  private unsubscriptions: Unsubscribe[] = [];
 
   constructor(private examService: ExamService,
               private studentService: StudentService,
@@ -67,10 +67,8 @@ export class ExamContext {
   }
 
   private handleVerdictIssuedEventFromBrokerMessage(message: BrokerMessage) {
-    const obj = JSON.parse(message.body);
-    const event = new VerdictIssuedEvent(obj.problemId, obj.studentId, obj.problemTitle, obj.submissionId, obj.verdict);
-    const record = new Record(event.verdict.totalGrade, event.verdict.summaryStatus,
-      event.verdict.maximumRuntime, event.verdict.maximumMemoryUsage, event.verdict.issueTime);
+    const event = {...JSON.parse(message.body)};
+    const record = toRecord(event.verdict);
     const filter = this.examOverview.questions.filter(q => q.problemId === event.problemId);
     if (filter.length === 0) {
       throw new Error(`The question with problemId=${event.problemId} isn't found in the current exam.`);

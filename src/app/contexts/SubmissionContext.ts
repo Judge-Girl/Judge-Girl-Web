@@ -47,7 +47,7 @@ export class SubmissionContext {
 
   private handleVerdictIssuedEventFromBrokerMessage(message: BrokerMessage) {
     const obj = JSON.parse(message.body);
-    const event = new VerdictIssuedEvent(obj.problemId, obj.studentId, obj.problemTitle, obj.submissionId, obj.verdict);
+    const event = {...obj};
     this.onVerdictIssued(event);
   }
 
