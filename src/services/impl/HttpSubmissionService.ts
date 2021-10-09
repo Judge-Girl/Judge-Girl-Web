@@ -1,11 +1,11 @@
-import {BrokerService, NoSubmissionQuota, ProblemService, StudentService, SubmissionService, SubmissionThrottlingError} from '../Services';
+import {NoSubmissionQuota, ProblemService, StudentService, SubmissionService, SubmissionThrottlingError} from '../Services';
 import {Observable, throwError} from 'rxjs';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
-import {Inject, Injectable} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {CodeFile, Submission, SubmittedCodeSpec} from '../../app/models';
 import {catchError, switchMap} from 'rxjs/operators';
 import {unzipCodesArrayBuffer} from '../../app/utils';
-import {EventBus} from '../EventBus';
+import {environment} from '../../environments/environment';
 
 // Currently, we only support 'C' langEnv,
 // we should extend this with other languageEnvs in the future
@@ -15,14 +15,13 @@ const DEFAULT_LANG_ENV = 'C';
   providedIn: 'root'
 })
 export class HttpSubmissionService extends SubmissionService {
+  private baseUrl: string;
 
   constructor(protected http: HttpClient,
               private studentService: StudentService,
-              private problemService: ProblemService,
-              private brokerService: BrokerService,
-              private eventBus: EventBus,
-              @Inject('SUBMISSION_SERVICE_BASE_URL') private baseUrl: string) {
+              private problemService: ProblemService) {
     super();
+    this.baseUrl = environment.submissionServiceBaseUrl;
   }
 
   getSubmissions(problemId: number): Observable<Submission[]> {

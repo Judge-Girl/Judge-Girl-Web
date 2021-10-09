@@ -6,6 +6,7 @@ import {Student} from '../../app/models';
 import {catchError, map} from 'rxjs/operators';
 import {Router} from '@angular/router';
 import {CookieService} from '../cookie/cookie.service';
+import {environment} from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -14,10 +15,9 @@ export class HttpStudentService extends StudentService {
   baseUrl: string;
 
   constructor(private http: HttpClient,
-              @Inject('STUDENT_SERVICE_BASE_URL') baseUrl: string,
               router: Router, cookieService: CookieService) {
     super(router, cookieService);
-    this.baseUrl = baseUrl;
+    this.baseUrl = environment.problemServiceBaseUrl;
   }
 
   login(email: string, password: string): Observable<Student> {

@@ -1,6 +1,16 @@
 import {Injectable} from '@angular/core';
 import {Observable, ReplaySubject} from 'rxjs';
-import {CodeFile, ExamItem, ExamOverview, Problem, ProblemItem, Student, Submission, SubmittedCodeSpec} from '../app/models';
+import {
+  CodeFile,
+  ExamItem,
+  ExamOverview,
+  Problem,
+  ProblemItem,
+  Student,
+  Submission,
+  SubmittedCodeSpec,
+  VerdictIssuedEvent
+} from '../app/models';
 import {Router} from '@angular/router';
 import {CookieService} from './cookie/cookie.service';
 import {ExamStatus} from './impl/HttpExamService';
@@ -136,16 +146,13 @@ export abstract class ExamService {
   providedIn: 'root'
 })
 export abstract class SubmissionService {
-  submissionDisabledMessage: string;  // if this message is set, the code-submission is disabled with the message shown.
-  remainingSubmissionQuota: number;
-
+  verdictIssuedEvents$: Observable<VerdictIssuedEvent>;
   abstract getSubmissions(problemId: number): Observable<Submission[]>;
 
   abstract submitFromFile(problemId: number, submittedCodeSpecs: SubmittedCodeSpec[], files: File[]): Observable<Submission>;
 
   abstract getSubmittedCodes(problemId: number, submissionId: string,
                              submittedCodesFileId: string): Observable<CodeFile[]>;
-
 }
 
 @Injectable({

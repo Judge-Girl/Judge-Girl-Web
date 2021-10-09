@@ -50,10 +50,6 @@ import {ExamRootComponent} from './exam/root/exam-root.component';
 const DOMAIN = 'api.judgegirl.beta.pdlab.csie.ntu.edu.tw';
 const HTTP_HOST = `http://${DOMAIN}`;
 
-const rxStompConfig = new RxStompConfig();
-rxStompConfig.brokerURL = `ws://${DOMAIN}/broker`;
-rxStompConfig.reconnectDelay = 200;
-
 
 @NgModule({
   declarations: [
@@ -113,7 +109,6 @@ rxStompConfig.reconnectDelay = 200;
     {provide: ExamQuestionSubmissionService, useClass: HttpExamQuestionSubmissionService},
     {provide: ExamService, useClass: HttpExamService},
     {provide: BrokerService, useClass: StompBrokerService},
-    {provide: RxStompConfig, useValue: rxStompConfig},
     {provide: EventBus, useClass: EventBus},
 
     /* contexts */
@@ -121,15 +116,10 @@ rxStompConfig.reconnectDelay = 200;
     {provide: ProblemContext, useClass: ProblemContext},
     {provide: SubmissionContext, useClass: SubmissionContext},
 
+    /* plugins */
     {provide: DefaultIdePlugin, useClass: DefaultIdePlugin},
     {provide: ExamIdePlugin, useClass: ExamIdePlugin},
-    {provide: HTTP_INTERCEPTORS, useClass: AuthHttpRequestInterceptor, multi: true},
-
-    /* variables */
-    {provide: 'STUDENT_SERVICE_BASE_URL', useValue: `${HTTP_HOST}`},
-    {provide: 'PROBLEM_SERVICE_BASE_URL', useValue: `${HTTP_HOST}`},
-    {provide: 'SUBMISSION_SERVICE_BASE_URL', useValue: `${HTTP_HOST}`},
-    {provide: 'EXAM_SERVICE_BASE_URL', useValue: `${HTTP_HOST}`}
+    {provide: HTTP_INTERCEPTORS, useClass: AuthHttpRequestInterceptor, multi: true}
   ],
   bootstrap: [AppComponent]
 })

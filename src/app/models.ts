@@ -142,6 +142,14 @@ export class Record {
   }
 }
 
+// TODO: maybe more refined?
+export function getBetterRecord(r1: Record, r2: Record) {
+  if (r1.score !== r2.score) {
+    return r1.score - r2.score > 0 ? r1 : r2;
+  }
+  return r1.maximumRuntime - r2.maximumRuntime > 0 ? r1 : r2;
+}
+
 
 export enum JudgeStatus {
   AC = 'AC', RE = 'RE', TLE = 'TLE', MLE = 'MLE', CE = 'CE', WA = 'WA', SYSTEM_ERR = 'SYSTEM_ERR', NONE = 'NONE'
@@ -220,6 +228,7 @@ export class Verdict {
               public report: Map<string, any>) {
   }
 }
+
 
 
 export function describeMemory(memoryInBytes: number): string {

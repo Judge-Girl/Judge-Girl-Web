@@ -8,6 +8,7 @@ import {unzipCodesArrayBuffer} from '../../app/utils';
 import {ActivatedRoute} from '@angular/router';
 import {EventBus} from '../EventBus';
 import {ExamContext} from '../../app/contexts/ExamContext';
+import {environment} from '../../environments/environment';
 
 // TODO: [improve] duplicate code from HttpSubmissionService
 // Currently, we only support 'C' langEnv,
@@ -37,9 +38,9 @@ export class HttpExamQuestionSubmissionService extends ExamQuestionSubmissionSer
               private route: ActivatedRoute,
               private eventBus: EventBus,
               private examContext: ExamContext,
-              @Inject('EXAM_SERVICE_BASE_URL') baseUrl: string) {
+              ) {
     super();
-    this.baseUrl = baseUrl;
+    this.baseUrl = environment.academyServiceBaseUrl;
     this.examContext.exam$.subscribe(exam => this.examId = exam.id);
   }
 
