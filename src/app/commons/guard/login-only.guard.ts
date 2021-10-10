@@ -4,9 +4,7 @@ import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {StudentContext} from '../../contexts/StudentContext';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({providedIn: 'root'})
 export class LoginOnlyGuard implements CanActivate, CanActivateChild {
   constructor(private studentContext: StudentContext,
               private router: Router) {

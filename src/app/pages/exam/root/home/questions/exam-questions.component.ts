@@ -16,8 +16,7 @@ export class ExamQuestionsComponent implements OnInit {
 
   constructor(private examContext: ExamContext,
               private route: ActivatedRoute,
-              private router: Router,
-              private renderer: Renderer2) {
+              private router: Router) {
   }
 
   private examId: number;
@@ -26,30 +25,16 @@ export class ExamQuestionsComponent implements OnInit {
   public totalScore$: Observable<number>;
   public totalMaxScore$: Observable<number>;
 
-  @ViewChild('examDescriptionPanel')
-  private examDescriptionPanel?: ElementRef;
 
   ngOnInit(): void {
     this.examId = Number(this.route.parent.snapshot.params.examId);
-    this.exam$ = this.examContext.exam$.pipe(map(exam => this.onExamInit(exam)));
+    this.exam$ = this.examContext.exam$;
     this.questions$ = this.exam$.pipe(map(exam => exam.questions));
     this.totalScore$ = this.questions$.pipe(
       map(questions => questions.reduce((p, e) => p + e.yourScore, 0)));
     this.totalMaxScore$ = this.questions$.pipe(
       map(questions => questions.reduce((p, e) => p + e.maxScore, 0)));
     initHighlight();
-  }
-
-  private onExamInit(exam: ExamOverview): ExamOverview {
-    this.renderMarkdown(exam.description);
-    return exam;
-  }
-
-  private renderMarkdown(mdString: string) {
-    if (this.examDescriptionPanel) {
-      this.renderer.setProperty(this.examDescriptionPanel.nativeElement, 'innerHTML',
-        parseMarkdown(mdString));
-    }
   }
 
   public toCharacterIndex(i: number) {
