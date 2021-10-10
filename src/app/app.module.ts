@@ -45,6 +45,9 @@ import {DefaultIdePlugin} from './ide/ide.default.plugin';
 import {VarDirective} from './ng-var.directive';
 import {ExamRootComponent} from './exam/root/exam-root.component';
 import {StudentContext} from './contexts/StudentContext';
+import { DescribeMemoryPipe } from './pipes/describe-memory.pipe';
+import { InSecondsPipe } from './pipes/in-seconds.pipe';
+import { FromNowPipe } from './pipes/from-now.pipe';
 
 @NgModule({
   declarations: [
@@ -76,7 +79,10 @@ import {StudentContext} from './contexts/StudentContext';
     LdCircleComponent,
     LdSpinnerComponent,
     OopsComponent,
-    ExamRootComponent
+    ExamRootComponent,
+    DescribeMemoryPipe,
+    InSecondsPipe,
+    FromNowPipe
   ],
   imports: [
     CookieModule.forRoot(),

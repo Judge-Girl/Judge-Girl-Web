@@ -34,7 +34,7 @@
         </thead>
         <tbody>
         <tr *ngFor="let submission of submissions">
-          <td class="submission-time">{{describeTimeFromNow(submission.submissionTime)}}</td>
+          <td class="submission-time">{{submission.submissionTime | fromNow}}</td>
 
           <td>
             <span *ngIf="submission.judged"
@@ -44,8 +44,8 @@
             </div>
           </td>
 
-          <td>{{submission.judged ? describeTimeInSeconds(submission.verdict.maximumRuntime) : ''}}</td>
-          <td>{{submission.judged ? describeMemory(submission.verdict.maximumMemoryUsage) : ''}}</td>
+          <td>{{submission.judged ? (submission.verdict.maximumRuntime | inSeconds) : ''}}</td>
+          <td>{{submission.judged ? (submission.verdict.maximumMemoryUsage | describeMemory) : ''}} </td>
           <td>{{submission.judged ? describeGrade(submission.verdict.totalGrade) : ''}}</td>
 
           <td>
@@ -111,9 +111,9 @@
                 <td [width]="'80px'">{{ judge.testcaseName }}</td>
                 <td [width]="'50px'" class="{{judge.status}}">{{judge.status}}</td>
                 <td
-                  [width]="'50px'">{{judge.status === CE ? '--' : describeTimeInSeconds(judge.programProfile.runtime)}}</td>
+                  [width]="'50px'">{{judge.status === CE ? '--' : (judge.programProfile.runtime | inSeconds)}}</td>
                 <td
-                  [width]="'50px'">{{judge.status === CE ? '--' : describeMemory(judge.programProfile.memoryUsage)}} </td>
+                  [width]="'50px'">{{judge.status === CE ? '--' : (judge.programProfile.memoryUsage | describeMemory)}} </td>
                 <td [width]="'50px'">{{judge.grade}} pt</td>
                 <td [width]="'150px'" *ngIf="isRuntimeErrorJudge(judge)"
                     class="judge-error-message">{{describeRuntimeErrorMessage(judge.programProfile.errorMessage)}}</td>

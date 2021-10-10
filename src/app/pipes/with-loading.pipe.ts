@@ -2,7 +2,6 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {Observable, of} from 'rxjs';
 import {catchError, map, startWith} from 'rxjs/operators';
 
-
 export interface Loading<T> {
   loading?: boolean;
   value?: T;

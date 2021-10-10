@@ -1,6 +1,5 @@
 import {now} from 'moment';
 
-
 /* Student */
 export interface Student {
   id: number;
@@ -128,7 +127,6 @@ export class ProgramProfile {
 export function hasRuntimeError(submission: Submission) {
   return submission?.verdict?.judges.filter(judge => isRuntimeError(judge)).length !== 0;
 }
-
 
 export function describeMemory(memoryInBytes: number): string {
   if (!memoryInBytes || memoryInBytes < 0) {

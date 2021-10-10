@@ -2,18 +2,7 @@ import {AfterViewInit, Component, Injector, OnDestroy, OnInit, QueryList, ViewCh
 import {SubmissionService} from '../../../services/Services';
 import {map, takeUntil} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
-import {
-  CodeFile,
-  describeMemory,
-  describeTimeInSeconds,
-  getBestRecord,
-  hasRuntimeError,
-  isRuntimeError,
-  Judge,
-  JudgeStatus,
-  Submission
-} from '../../models';
-import * as moment from 'moment';
+import {CodeFile, getBestRecord, hasRuntimeError, isRuntimeError, Judge, JudgeStatus, Submission} from '../../models';
 import * as CodeMirror from 'codemirror';
 import {ProblemContext} from '../../contexts/ProblemContext';
 import {SubmissionContext} from '../../contexts/SubmissionContext';
@@ -129,18 +118,6 @@ export class SubmissionsComponent implements OnInit, OnDestroy, AfterViewInit {
 
   isRuntimeErrorJudge(judge: Judge): boolean {
     return isRuntimeError(judge);
-  }
-
-  describeTimeFromNow(time: number): string {
-    return moment(time).fromNow();
-  }
-
-  describeMemory(memoryInBytes: number): string {
-    return describeMemory(memoryInBytes);
-  }
-
-  describeTimeInSeconds(ms: number) {
-    return describeTimeInSeconds(ms);
   }
 
   renderCodeAreas() {
