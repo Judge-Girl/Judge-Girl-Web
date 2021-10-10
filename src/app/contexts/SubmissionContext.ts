@@ -1,11 +1,12 @@
 import {Submission, VerdictIssuedEvent} from '../models';
 import {Observable} from 'rxjs';
-import {ResettableReplaySubject} from '../../utils/rx/my.subjects';
-import {BrokerMessage, BrokerService, StudentService, SubmissionService, Unsubscribe} from '../../services/Services';
+import {ResettableReplaySubject} from '../commons/utils/rx/my.subjects';
+import {BrokerMessage, BrokerService, SubmissionService, Unsubscribe} from '../services/Services';
 import {ProblemContext} from './ProblemContext';
 import {switchMap} from 'rxjs/operators';
 import {Injectable} from '@angular/core';
-import {EventBus} from '../../services/EventBus';
+import {EventBus} from '../services/EventBus';
+import {StudentContext} from './StudentContext';
 
 const SUBSCRIBER_NAME = 'SubmissionContext';
 
@@ -17,7 +18,7 @@ export class SubmissionContext {
   private submissionService: SubmissionService;
 
   public constructor(private problemContext: ProblemContext,
-                     private studentService: StudentService,
+                     private studentContext: StudentContext,
                      private brokerService: BrokerService,
                      private eventBus: EventBus) {
   }
@@ -25,7 +26,7 @@ export class SubmissionContext {
   public init(submissionService: SubmissionService) {
     this.submissionService = submissionService;
     this.subscribeToStudentSubmissions();
-    const subscription = this.studentService.loginStudent$.pipe(
+    const subscription = this.studentContext.loginStudent$.pipe(
       switchMap(() => this.problemContext.problem$),
       switchMap(problem => this.submissionService.getSubmissions(problem.id)))
       .subscribe(submissions => this.onSubmissionsRetrieved(submissions));
@@ -38,7 +39,7 @@ export class SubmissionContext {
   }
 
   private subscribeToStudentSubmissions() {
-    const currentStudentSub = this.studentService.loginStudent$.subscribe(student => {
+    const currentStudentSub = this.studentContext.loginStudent$.subscribe(student => {
       this.unsubscriptions.push(this.brokerService.subscribe(SUBSCRIBER_NAME,
         `/students/${student.id}/verdicts`, message => this.handleVerdictIssuedEventFromBrokerMessage(message)));
     });

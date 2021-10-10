@@ -1,8 +1,8 @@
 import {Problem} from '../models';
 import {Injectable} from '@angular/core';
-import {ResettableReplaySubject} from '../../utils/rx/my.subjects';
+import {ResettableReplaySubject} from '../commons/utils/rx/my.subjects';
 import {Observable} from 'rxjs';
-import {ProblemService} from '../../services/Services';
+import {ProblemService} from '../services/Services';
 
 
 @Injectable({
@@ -19,17 +19,11 @@ export class ProblemContext {
     return this.problemSubject;
   }
 
-  init(problemId: number) {
-    this.problemService.getProblem(problemId)
-      .toPromise().then(problem => this.initializeProblem(problem))
-      .catch(err => this.onProblemNotFound(err));
-  }
-
-  private initializeProblem(problem: Problem) {
+  initializeProblem(problem: Problem) {
     this.problemSubject.next(problem);
   }
 
-  onProblemNotFound(err) {
+  problemNotFound(err) {
     // [TODO] Improve: error-handling, two issues
     //   (1) too many error logs in the console
     //   (2) No idea how not to initialize new subject

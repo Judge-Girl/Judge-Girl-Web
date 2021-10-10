@@ -1,6 +1,5 @@
 import {now} from 'moment';
 
-
 /* Student */
 export interface Student {
   id: number;
@@ -71,87 +70,42 @@ export interface ProblemItem {
   tags: string[];
 }
 
-export interface ExamItem {
-  id: number;
-  name: string;
-  startTime: number;
-  endTime: number;
-}
+/* Submission */
 
-export enum ExamStatus {
-  CLOSED, ONGOING, UPCOMING
-}
-
-export function getExamStatus(exam: { startTime: number, endTime: number }): ExamStatus {
-  const time = now();
-  if (exam.startTime <= time && time <= exam.endTime) {
-    return ExamStatus.ONGOING;
-  }
-  if (time < exam.startTime) {
-    return ExamStatus.UPCOMING;
-  }
-  return ExamStatus.CLOSED;
-}
-
-export interface ExamOverview extends ExamItem {
-  id: number;
-  name: string;
-  startTime: number;
-  endTime: number;
-  questions: Question[];
-  description: string;
-}
-
-export interface Question {
-  examId: number;
-  problemTitle: string;
+export interface Submission {
+  id: string;
   problemId: number;
-  yourScore: number;
-  maxScore: number;
-  bestRecord: Record;
-  questionOrder: number;
-  remainingQuota: number;
-  verdict: string;
-  quota: number;
+  judged: boolean;
+  submissionTime: number;
+  submittedCodesFileId?: string;
+  verdict?: Verdict;
 }
 
-export function isExamClosed(exam: ExamOverview): boolean {
-  const nowTime = now();
-  return nowTime < exam.startTime || nowTime > exam.endTime;
-}
-
-export function findQuestion(exam: ExamOverview, problemId: number): Question {
-  return exam.questions.filter(q => q.problemId === problemId)[0];
-}
-
-export interface Record {
-  score: number;
-  status: JudgeStatus;
+export interface Verdict {
+  judges: Judge[];
+  summaryStatus: JudgeStatus;
+  totalGrade: number;
   maximumRuntime: number;
   maximumMemoryUsage: number;
+  compileErrorMessage: string;
+  issueTime: number;
+  report: Map<string, any>;
 }
 
-// TODO: maybe more refined?
-export function getBetterRecord(r1?: Record, r2?: Record) {
-  if (!r1) {
-    return r2;
-  }
-  if (!r2) {
-    return r1;
-  }
-  if (r1.score !== r2.score) {
-    return r1.score - r2.score > 0 ? r1 : r2;
-  }
-  return r1.maximumRuntime - r2.maximumRuntime > 0 ? r1 : r2;
+export interface VerdictIssuedEvent {
+  type: 'VerdictIssuedEvent';
+  problemId: number;
+  studentId: number;
+  problemTitle: string;
+  submissionId: string;
+  verdict: Verdict;
 }
-
 
 export enum JudgeStatus {
   AC = 'AC', RE = 'RE', TLE = 'TLE', MLE = 'MLE', CE = 'CE', WA = 'WA', SYSTEM_ERR = 'SYSTEM_ERR', NONE = 'NONE'
 }
 
 export class Judge {
-
   constructor(public testcaseName: string,
               public status: JudgeStatus,
               public programProfile: ProgramProfile,
@@ -170,63 +124,9 @@ export class ProgramProfile {
   }
 }
 
-export interface Submission {
-  id: string;
-  problemId: number;
-  judged: boolean;
-  submissionTime: number;
-  submittedCodesFileId?: string;
-  verdict?: Verdict;
-}
-
 export function hasRuntimeError(submission: Submission) {
   return submission?.verdict?.judges.filter(judge => isRuntimeError(judge)).length !== 0;
 }
-
-export function getBestRecord(submissions: Submission[]): Submission {
-  if (!submissions) {
-    return undefined;
-  }
-  let bestGrade = -1;
-  let best: Submission;
-  for (const submission of submissions) {
-    if (submission.judged &&
-      submission.verdict.totalGrade > bestGrade) {
-      bestGrade = submission.verdict.totalGrade;
-      best = submission;
-    }
-  }
-  return best;
-}
-
-export interface Answer {
-  examId: number;
-  problemId: number;
-  studentId: number;
-  submissionId: string;
-  answerTime: number;
-}
-
-export interface Verdict {
-  judges: Judge[];
-  summaryStatus: JudgeStatus;
-  totalGrade: number;
-  maximumRuntime: number;
-  maximumMemoryUsage: number;
-  compileErrorMessage: string;
-  issueTime: number;
-  report: Map<string, any>;
-}
-
-export function toRecord(verdict: Verdict): Record {
-  return {
-    score: verdict.totalGrade,
-    status: verdict.summaryStatus,
-    maximumRuntime: verdict.maximumRuntime,
-    maximumMemoryUsage: verdict.maximumMemoryUsage,
-  };
-}
-
 
 export function describeMemory(memoryInBytes: number): string {
   if (!memoryInBytes || memoryInBytes < 0) {
@@ -253,19 +153,6 @@ export function describeTimeInSeconds(ms: number) {
   }
   return `${(ms / 1000).toFixed(2)} s`;
 }
-
-export interface VerdictIssuedEvent {
-  type: 'VerdictIssuedEvent';
-  problemId: number;
-  studentId: number;
-  problemTitle: string;
-  submissionId: string;
-  verdict: Verdict;
-}
-
-export let JUDGE_STATUSES = [JudgeStatus.RE, JudgeStatus.TLE,
-  JudgeStatus.MLE, JudgeStatus.CE, JudgeStatus.WA, JudgeStatus.AC];
-
 
 export class CodeFile {
   constructor(public index: number,
@@ -297,4 +184,113 @@ export function getCodeFileExtension(codeSpec: SubmittedCodeSpec): string {
     default:
       throw new Error(`The language ${lang} is not supported.`);
   }
+}
+
+/* Exam */
+
+export interface ExamItem {
+  id: number;
+  name: string;
+  startTime: number;
+  endTime: number;
+}
+
+export interface ExamOverview extends ExamItem {
+  id: number;
+  name: string;
+  startTime: number;
+  endTime: number;
+  questions: Question[];
+  description: string;
+}
+
+export enum ExamStatus {
+  CLOSED, ONGOING, UPCOMING
+}
+
+export function getExamStatus(exam: { startTime: number, endTime: number }): ExamStatus {
+  const time = now();
+  if (exam.startTime <= time && time <= exam.endTime) {
+    return ExamStatus.ONGOING;
+  }
+  if (time < exam.startTime) {
+    return ExamStatus.UPCOMING;
+  }
+  return ExamStatus.CLOSED;
+}
+
+export interface Question {
+  examId: number;
+  problemTitle: string;
+  problemId: number;
+  yourScore: number;
+  maxScore: number;
+  bestRecord: Record;
+  questionOrder: number;
+  remainingQuota: number;
+  verdict: string;
+  quota: number;
+}
+
+export interface Record {
+  score: number;
+  status: JudgeStatus;
+  maximumRuntime: number;
+  maximumMemoryUsage: number;
+}
+
+export interface Answer {
+  examId: number;
+  problemId: number;
+  studentId: number;
+  submissionId: string;
+  answerTime: number;
+}
+
+export function isExamClosed(exam: ExamOverview): boolean {
+  const nowTime = now();
+  return nowTime < exam.startTime || nowTime > exam.endTime;
+}
+
+export function findQuestion(exam: ExamOverview, problemId: number): Question {
+  return exam.questions.filter(q => q.problemId === problemId)[0];
+}
+
+export function getBestRecord(submissions: Submission[]): Submission {
+  if (!submissions) {
+    return undefined;
+  }
+  let bestGrade = -1;
+  let best: Submission;
+  for (const submission of submissions) {
+    if (submission.judged &&
+      submission.verdict.totalGrade > bestGrade) {
+      bestGrade = submission.verdict.totalGrade;
+      best = submission;
+    }
+  }
+  return best;
+}
+
+// TODO: maybe more refined?
+export function getBetterRecord(r1?: Record, r2?: Record) {
+  if (!r1) {
+    return r2;
+  }
+  if (!r2) {
+    return r1;
+  }
+  if (r1.score !== r2.score) {
+    return r1.score - r2.score > 0 ? r1 : r2;
+  }
+  return r1.maximumRuntime - r2.maximumRuntime > 0 ? r1 : r2;
+}
+
+export function toRecord(verdict: Verdict): Record {
+  return {
+    score: verdict.totalGrade,
+    status: verdict.summaryStatus,
+    maximumRuntime: verdict.maximumRuntime,
+    maximumMemoryUsage: verdict.maximumMemoryUsage,
+  };
 }

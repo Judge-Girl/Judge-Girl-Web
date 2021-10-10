@@ -1,11 +1,11 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {MessageService} from 'primeng';
-import {BrokerService, StudentService} from '../services/Services';
+import {BrokerService} from './services/Services';
 import {JudgeStatus, VerdictIssuedEvent} from './models';
-import {CookieService} from '../services/cookie/cookie.service';
 import {Router} from '@angular/router';
-import {EventBus, EventSubscriber} from '../services/EventBus';
+import {EventBus, EventSubscriber} from './services/EventBus';
 import {Observable} from 'rxjs';
+import {StudentContext} from './contexts/StudentContext';
 
 @Component({
   selector: 'app-root',
@@ -18,19 +18,18 @@ export class AppComponent extends MessageService implements OnInit, OnDestroy, E
   hasLogin$: Observable<boolean>;
   hasLogin = false;
 
-  constructor(public studentService: StudentService,
-              private cookieService: CookieService,
+  constructor(public studentContext: StudentContext,
               private messageService: MessageService,
               private brokerService: BrokerService,
               private eventBus: EventBus,
               private router: Router) {
     super();
-    this.hasLogin$ = this.studentService.hasLogin$;
+    this.hasLogin$ = this.studentContext.hasLogin$;
   }
 
   ngOnInit() {
     this.eventBus.subscribe(this);
-    this.studentService.tryAuthFromCookie();
+    this.studentContext.tryAuth();
     this.hasLogin$.subscribe(hasLogin => {
       this.hasLogin = hasLogin;
       if (hasLogin) {
@@ -46,31 +45,28 @@ export class AppComponent extends MessageService implements OnInit, OnDestroy, E
   }
 
   onEvent(event: any) {
+    // TODO: any strong-typed way to reference the event's name instead of referring to a raw string?
     if (event.type === 'VerdictIssuedEvent') {
-      this.issueVerdict(event);
+      this.messageService.add({
+        key: this.MESSAGE_KEY_SUBMISSION_TOAST,
+        severity: event.verdict.summaryStatus === JudgeStatus.AC ? 'success' : 'error',
+        life: 8000,
+        data: {
+          judgeStatus: event.verdict.summaryStatus,
+          problemTitle: event.problemTitle,
+          problemId: event.problemId
+        }
+      });
     }
   }
 
-  issueVerdict(event: VerdictIssuedEvent) {
-    this.messageService.add({
-      key: this.MESSAGE_KEY_SUBMISSION_TOAST,
-      severity: event.verdict.summaryStatus === JudgeStatus.AC ? 'success' : 'error',
-      life: 8000,
-      data: {
-        judgeStatus: event.verdict.summaryStatus,
-        problemTitle: event.problemTitle,
-        problemId: event.problemId
-      }
-    });
-  }
-
   onLogoutClick(): boolean {
-    this.studentService.logout();
+    this.studentContext.logout();
     return true; // propagate click event
   }
 
   routeToChangePassword(): void {
-    this.router.navigateByUrl('users/change-password');
+    this.router.navigateByUrl('students/change-password');
   }
 
   routeToHome(): void {
