@@ -23,7 +23,7 @@
             <a class="nav-link" href="#" (click)="switchTab(TAB_TESTCASES)" #testcasesTab>Test Cases</a>
           </li>
           <li class="nav-item">
-            <a [hidden]="!(studentService.hasLogin$ | async)" class="nav-link" href="#"
+            <a [hidden]="!(studentContext.hasLogin$ | async)" class="nav-link" href="#"
                (click)="switchTab(TAB_SUBMISSIONS)" #submissionsTab>Submissions</a>
           </li>
         </ul>

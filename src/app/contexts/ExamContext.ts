@@ -1,9 +1,10 @@
-import {Answer, getBetterRecord, ExamOverview, Record, VerdictIssuedEvent, toRecord} from '../models';
+import {Answer, ExamOverview, getBetterRecord, toRecord} from '../models';
 import {Observable, Subject} from 'rxjs';
 import {Injectable} from '@angular/core';
-import {BrokerMessage, BrokerService, ExamService, StudentService, Unsubscribe} from '../../services/Services';
+import {BrokerMessage, BrokerService, ExamService, Unsubscribe} from '../../services/Services';
 import {ResettableReplaySubject} from '../../utils/rx/my.subjects';
 import {switchMap, takeUntil} from 'rxjs/operators';
+import {StudentContext} from './StudentContext';
 
 const SUBSCRIBER_NAME = 'ExamContext';
 
@@ -18,12 +19,12 @@ export class ExamContext {
   private unsubscriptions: Unsubscribe[] = [];
 
   constructor(private examService: ExamService,
-              private studentService: StudentService,
+              private studentContext: StudentContext,
               private brokerService: BrokerService) {
   }
 
   public init(examId: number) {
-    this.studentService.loginStudent$
+    this.studentContext.loginStudent$
       .pipe(takeUntil(this.onDestroy$),
         switchMap(student => this.examService.getExamProgressOverview(student.id, examId)))
       .subscribe({
@@ -31,7 +32,7 @@ export class ExamContext {
         error: err => this.examNotFound(err)
       });
 
-    const currentStudentSub = this.studentService.loginStudent$.subscribe(student => {
+    const currentStudentSub = this.studentContext.loginStudent$.subscribe(student => {
       this.unsubscriptions.push(this.brokerService.subscribe(SUBSCRIBER_NAME,
         `/students/${student.id}/verdicts`, message => this.handleVerdictIssuedEventFromBrokerMessage(message)));
     });

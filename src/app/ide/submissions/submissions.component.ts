@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, Injector, OnDestroy, OnInit, QueryList, ViewChildren} from '@angular/core';
-import {StudentService, SubmissionService} from '../../../services/Services';
+import {SubmissionService} from '../../../services/Services';
 import {map, takeUntil} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
 import {
@@ -18,6 +18,7 @@ import * as CodeMirror from 'codemirror';
 import {ProblemContext} from '../../contexts/ProblemContext';
 import {SubmissionContext} from '../../contexts/SubmissionContext';
 import {ActivatedRoute} from '@angular/router';
+import {StudentContext} from '../../contexts/StudentContext';
 
 
 function compareSubmissionsByTime(s1: Submission, s2: Submission): number {
@@ -56,12 +57,12 @@ export class SubmissionsComponent implements OnInit, OnDestroy, AfterViewInit {
   NONE = JudgeStatus.NONE;
   @ViewChildren('codeArea') codeAreas: QueryList<any>;
 
-  constructor(public studentService: StudentService,
+  constructor(public studentContext: StudentContext,
               private problemContext: ProblemContext,
               private submissionContext: SubmissionContext,
               private route: ActivatedRoute,
               injector: Injector) {
-    this.auth$ = studentService.awaitAuth$;
+    this.auth$ = studentContext.awaitAuth$;
     this.submissionService = injector.get<SubmissionService>(route.parent.snapshot.data.submissionServiceProvider);
 
     this.submissions$ = submissionContext.submissions$

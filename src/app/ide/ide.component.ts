@@ -1,6 +1,5 @@
 import {AfterViewInit, Component, ElementRef, Injector, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, NavigationEnd, Params, Router} from '@angular/router';
-import {ProblemService, StudentService} from '../../services/Services';
 import {SplitComponent} from 'angular-split';
 import {Location} from '@angular/common';
 
@@ -9,6 +8,7 @@ import {Observable, Subject} from 'rxjs';
 import {Problem} from '../models';
 import {IdeCommands, IdePlugin, IdeViewModel} from './ide.plugin';
 import {map} from 'rxjs/operators';
+import {StudentContext} from '../contexts/StudentContext';
 
 export enum Tab {
   TESTCASES,
@@ -48,8 +48,7 @@ export class IdeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   constructor(private elementRef: ElementRef,
               private problemContext: ProblemContext,
-              private problemService: ProblemService,
-              public studentService: StudentService,
+              public studentContext: StudentContext,
               private location: Location,
               private router: Router, private route: ActivatedRoute,
               injector: Injector) {

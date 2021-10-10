@@ -1,7 +1,7 @@
-import {BrokerService, NoSubmissionQuota, ProblemService, StudentService, SubmissionService, SubmissionThrottlingError} from '../Services';
+import {BrokerService, NoSubmissionQuota, ProblemService, SubmissionService, SubmissionThrottlingError} from '../Services';
 import {Observable, throwError} from 'rxjs';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
-import {Inject, Injectable} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Answer, CodeFile, Submission, SubmittedCodeSpec} from '../../app/models';
 import {catchError, map, switchMap} from 'rxjs/operators';
 import {unzipCodesArrayBuffer} from '../../app/utils';
@@ -9,6 +9,7 @@ import {ActivatedRoute} from '@angular/router';
 import {EventBus} from '../EventBus';
 import {ExamContext} from '../../app/contexts/ExamContext';
 import {environment} from '../../environments/environment';
+import {StudentContext} from '../../app/contexts/StudentContext';
 
 // TODO: [improve] duplicate code from HttpSubmissionService
 // Currently, we only support 'C' langEnv,
@@ -32,9 +33,7 @@ export class HttpExamQuestionSubmissionService extends ExamQuestionSubmissionSer
   examId: number;
 
   constructor(protected http: HttpClient,
-              private studentService: StudentService,
-              private problemService: ProblemService,
-              private brokerService: BrokerService,
+              private studentContext: StudentContext,
               private route: ActivatedRoute,
               private eventBus: EventBus,
               private examContext: ExamContext,
@@ -87,7 +86,7 @@ export class HttpExamQuestionSubmissionService extends ExamQuestionSubmissionSer
   }
 
   private get studentId() {
-    return this.studentService.currentStudent.id;
+    return this.studentContext.currentStudent.id;
   }
 
 }

@@ -1,7 +1,9 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AccountNotFoundError, IncorrectPasswordFoundError, StudentService} from '../../../services/Services';
 import {Router} from '@angular/router';
-import {Subscription} from 'rxjs';
+import {Subject, Subscription} from 'rxjs';
+import {StudentContext} from '../../contexts/StudentContext';
+import {takeUntil} from 'rxjs/operators';
 
 @Component({
   selector: 'app-login',
@@ -9,15 +11,17 @@ import {Subscription} from 'rxjs';
   styleUrls: ['../../../animations.css', './login.component.css']
 })
 export class LoginComponent implements OnInit, OnDestroy {
+  private destroy$ = new Subject<void>();
   errorMessage = '';
-  authSubscription: Subscription;
 
-  constructor(private studentService: StudentService,
+  constructor(private studentContext: StudentContext,
+              private studentService: StudentService,
               private router: Router) {
   }
 
   ngOnInit(): void {
-    this.authSubscription = this.studentService.awaitAuth$
+    this.studentContext.awaitAuth$
+      .pipe(takeUntil(this.destroy$))
       .subscribe(hasLogin => {
         if (hasLogin) {
           this.router.navigateByUrl('problems');
@@ -26,28 +30,26 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    // it's necessary to unsubscribe it otherwise the subscriber will keep routing to /problems on every login event
-    this.authSubscription.unsubscribe();
+    this.destroy$.next();
   }
 
   login(email: string, password: string): boolean {
     const spinner = document.getElementById('spinner');
     spinner.style.display = 'inline';
-    this.studentService.login(email, password)
-      .subscribe({
-        complete: () => {
-          spinner.style.display = 'none';
-          this.router.navigateByUrl('problems');
-        },
-        error: (err) => {
-          spinner.style.display = 'none';
-          if (err instanceof AccountNotFoundError) {
-            this.errorMessage = 'The email is not found.';
-          } else if (err instanceof IncorrectPasswordFoundError) {
-            this.errorMessage = 'The password is incorrect';
-          } else {
-            throw err;
-          }
+    this.studentService.login(email, password).toPromise()
+      .then((student) => {
+        this.studentContext.updateCurrentStudent(student);
+        spinner.style.display = 'none';
+        this.router.navigateByUrl('problems');
+      })
+      .catch((err) => {
+        spinner.style.display = 'none';
+        if (err instanceof AccountNotFoundError) {
+          this.errorMessage = 'The email is not found.';
+        } else if (err instanceof IncorrectPasswordFoundError) {
+          this.errorMessage = 'The password is incorrect';
+        } else {
+          throw err;
         }
       });
 

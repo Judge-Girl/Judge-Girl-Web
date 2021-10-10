@@ -1,6 +1,5 @@
 import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {ExamService, StudentService} from '../../../services/Services';
 import {ExamOverview} from '../../models';
 import {SplitComponent} from 'angular-split';
 import {ExamContext} from '../../contexts/ExamContext';
@@ -26,10 +25,7 @@ export class ExamHomeComponent implements AfterViewInit {
   private examId: number;
   public exam$: Observable<ExamOverview>;
 
-  constructor(private elementRef: ElementRef,
-              private studentService: StudentService,
-              private examContext: ExamContext,
-              private examService: ExamService,
+  constructor(private examContext: ExamContext,
               private router: Router, private route: ActivatedRoute) {
     this.examId = +route.snapshot.paramMap.get('examId');
     this.exam$ = this.examContext.exam$;

@@ -45,13 +45,13 @@ const routes: Routes = [
     path: 'exams/:examId', component: ExamRootComponent, canActivate: [LoginOnlyGuard],
     children: [
       {
-        path: '', component: ExamHomeComponent, canActivate: [LoginOnlyGuard],
+        path: '', component: ExamHomeComponent,
         children: [
           {path: '', component: ExamQuestionsComponent}
         ]
       },
       {
-        path: 'problems/:problemId', component: IdeComponent, canActivate: [LoginOnlyGuard],
+        path: 'problems/:problemId', component: IdeComponent,
         children: [
           {path: '', component: ProblemDescriptionComponent},
           {path: 'description', component: ProblemDescriptionComponent},

@@ -1,4 +1,4 @@
-import {NoSubmissionQuota, ProblemService, StudentService, SubmissionService, SubmissionThrottlingError} from '../Services';
+import {NoSubmissionQuota, ProblemService, SubmissionService, SubmissionThrottlingError} from '../Services';
 import {Observable, throwError} from 'rxjs';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
@@ -6,6 +6,7 @@ import {CodeFile, Submission, SubmittedCodeSpec} from '../../app/models';
 import {catchError, switchMap} from 'rxjs/operators';
 import {unzipCodesArrayBuffer} from '../../app/utils';
 import {environment} from '../../environments/environment';
+import {StudentContext} from '../../app/contexts/StudentContext';
 
 // Currently, we only support 'C' langEnv,
 // we should extend this with other languageEnvs in the future
@@ -18,7 +19,7 @@ export class HttpSubmissionService extends SubmissionService {
   private baseUrl: string;
 
   constructor(protected http: HttpClient,
-              private studentService: StudentService,
+              private studentContext: StudentContext,
               private problemService: ProblemService) {
     super();
     this.baseUrl = environment.submissionServiceBaseUrl;
@@ -67,7 +68,7 @@ export class HttpSubmissionService extends SubmissionService {
   }
 
   private get studentId() {
-    return this.studentService.currentStudent.id;
+    return this.studentContext.currentStudent.id;
   }
 }
 

@@ -30,7 +30,6 @@ import {AngularSplitModule} from 'angular-split';
 import {ChangePasswordComponent} from './users/change-password/change-password.component';
 import {FormsModule} from '@angular/forms';
 import {StompBrokerService} from '../services/impl/StompBrokerService';
-import {RxStompConfig} from '@stomp/rx-stomp';
 import {EventBus} from '../services/EventBus';
 import {ExamQuestionSubmissionService, HttpExamQuestionSubmissionService} from '../services/impl/HttpExamQuestionSubmissionService';
 import {IdeBannerComponent} from './exam/question-banner/ide-banner.component';
@@ -45,11 +44,7 @@ import {ExamIdePlugin} from './exam/ide.plugin';
 import {DefaultIdePlugin} from './ide/ide.default.plugin';
 import {VarDirective} from './ng-var.directive';
 import {ExamRootComponent} from './exam/root/exam-root.component';
-
-
-const DOMAIN = 'api.judgegirl.beta.pdlab.csie.ntu.edu.tw';
-const HTTP_HOST = `http://${DOMAIN}`;
-
+import {StudentContext} from './contexts/StudentContext';
 
 @NgModule({
   declarations: [

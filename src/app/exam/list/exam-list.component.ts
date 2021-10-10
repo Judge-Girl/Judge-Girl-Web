@@ -1,10 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import * as moment from 'moment';
-import {ExamService, StudentService} from '../../../services/Services';
+import {ExamService} from '../../../services/Services';
 import {ExamItem, ExamStatus, getExamStatus} from '../../models';
 import {Router} from '@angular/router';
 import {Observable} from 'rxjs';
 import {map, switchMap} from 'rxjs/operators';
+import {StudentContext} from '../../contexts/StudentContext';
 
 
 @Component({
@@ -16,12 +17,12 @@ export class ExamListComponent implements OnInit {
   examItems$: Observable<ExamItem[]>;
 
   constructor(private examService: ExamService,
-              private studentService: StudentService,
+              private studentContext: StudentContext,
               private router: Router) {
   }
 
   ngOnInit(): void {
-    this.examItems$ = this.studentService.loginStudent$.pipe(
+    this.examItems$ = this.studentContext.loginStudent$.pipe(
       switchMap(student => this.examService.getExamsByStudentId(student.id)),
       map(exams => this.sortExamsByStatus(exams)));
   }

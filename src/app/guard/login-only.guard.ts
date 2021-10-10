@@ -1,14 +1,15 @@
 import {Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot, CanActivate, CanActivateChild, RouterStateSnapshot, UrlTree} from '@angular/router';
+import {ActivatedRouteSnapshot, CanActivate, CanActivateChild, Router, RouterStateSnapshot, UrlTree} from '@angular/router';
 import {Observable} from 'rxjs';
-import {StudentService} from '../../services/Services';
 import {map} from 'rxjs/operators';
+import {StudentContext} from '../contexts/StudentContext';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LoginOnlyGuard implements CanActivate, CanActivateChild {
-  constructor(private studentService: StudentService) {
+  constructor(private studentContext: StudentContext,
+              private router: Router) {
   }
 
   canActivateChild(childRoute: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> |
@@ -22,10 +23,10 @@ export class LoginOnlyGuard implements CanActivate, CanActivateChild {
   }
 
   private get guard$(): Observable<boolean> {
-    return this.studentService.awaitAuth$
+    return this.studentContext.awaitAuth$
       .pipe(map(login => {
         if (!login) {
-          this.studentService.redirectToLoginPage();
+          this.router.navigateByUrl('/');
         }
         return login;
       }));

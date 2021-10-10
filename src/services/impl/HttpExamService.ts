@@ -1,9 +1,9 @@
-import {ExamService, StudentService} from '../Services';
+import {ExamService} from '../Services';
 
 import {Observable} from 'rxjs';
 import {ExamItem, ExamOverview} from '../../app/models';
 import {HttpClient} from '@angular/common/http';
-import {Inject, Injectable} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {environment} from '../../environments/environment';
 
 @Injectable({

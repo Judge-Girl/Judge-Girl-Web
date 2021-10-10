@@ -1,12 +1,13 @@
 import {Component, ElementRef, OnInit, Renderer2, ViewChild} from '@angular/core';
 
 import {describeMemory, describeTimeInSeconds, ExamOverview, JudgeStatus, Question} from '../../../models';
-import {ExamService, StudentService} from '../../../../services/Services';
+import {ExamService} from '../../../../services/Services';
 import {ActivatedRoute, Router} from '@angular/router';
 import {initHighlight, parseMarkdown} from 'src/utils/markdownUtils';
 import {ExamContext} from '../../../contexts/ExamContext';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
+import {StudentContext} from '../../../contexts/StudentContext';
 
 @Component({
   selector: 'app-exam-problems',
@@ -16,8 +17,7 @@ import {map} from 'rxjs/operators';
 export class ExamQuestionsComponent implements OnInit {
 
   constructor(private examContext: ExamContext,
-              private examService: ExamService,
-              private studentService: StudentService,
+              private studentContext: StudentContext,
               private route: ActivatedRoute,
               private router: Router,
               private renderer: Renderer2) {

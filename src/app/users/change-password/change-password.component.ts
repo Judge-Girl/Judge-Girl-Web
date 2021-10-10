@@ -3,6 +3,7 @@ import {IncorrectPasswordFoundError, StudentService} from '../../../services/Ser
 import {Router} from '@angular/router';
 import {MessageService} from 'primeng';
 import {NgModel} from '@angular/forms';
+import {StudentContext} from '../../contexts/StudentContext';
 
 @Component({
   selector: 'app-login',
@@ -15,6 +16,7 @@ export class ChangePasswordComponent {
   errorMessage = '';
 
   constructor(private studentService: StudentService,
+              private studentContext: StudentContext,
               private router: Router,
               private messageService: MessageService) {
   }
@@ -42,8 +44,8 @@ export class ChangePasswordComponent {
     }
 
     this.spinner.nativeElement.style.display = 'inline-block';
-    this.studentService.changePassword(this.currentPassword, this.newPassword)
-      .toPromise()
+    this.studentService.changePassword(this.studentContext.currentStudent.id,
+      this.currentPassword, this.newPassword).toPromise()
       .then(() => {
         this.spinner.nativeElement.style.display = 'none';
         this.messageService.add({
@@ -52,8 +54,8 @@ export class ChangePasswordComponent {
           severity: 'success',
           detail: 'Your password has been changed',
         });
-
-        setTimeout(() => this.router.navigateByUrl('/', {replaceUrl: true}), 3000);
+        // return to the home page after a while
+        setTimeout(() => this.router.navigateByUrl('/', {replaceUrl: true}), 2000);
       })
       .catch(err => {
           this.spinner.nativeElement.style.display = 'none';

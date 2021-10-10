@@ -1,13 +1,14 @@
 import {Component, Injector, OnDestroy, OnInit, ViewChildren} from '@angular/core';
 import {FileUpload, MessageService} from 'primeng';
-import {NoSubmissionQuota, StudentService, SubmissionService, SubmissionThrottlingError} from '../../../services/Services';
+import {NoSubmissionQuota, SubmissionService, SubmissionThrottlingError} from '../../../services/Services';
 import {getCodeFileExtension, Problem, SubmittedCodeSpec} from '../../models';
-import {ActivatedRoute, Params, Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {Observable, Subject} from 'rxjs';
 import {ProblemContext} from '../../contexts/ProblemContext';
 import {SubmissionContext} from '../../contexts/SubmissionContext';
 import {IdeCommands, IdePlugin} from '../ide.plugin';
 import {map, startWith, takeUntil} from 'rxjs/operators';
+import {StudentContext} from '../../contexts/StudentContext';
 
 
 export interface CodeUploadPanelDecorator {
@@ -35,7 +36,7 @@ export class CodeUploadPanelComponent implements OnInit, OnDestroy {
   submissionService: SubmissionService;
   private readonly ideCommands: IdeCommands;
 
-  constructor(public studentService: StudentService,
+  constructor(public studentContext: StudentContext,
               private problemContext: ProblemContext,
               private submissionContext: SubmissionContext,
               private route: ActivatedRoute,
@@ -52,7 +53,7 @@ export class CodeUploadPanelComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.selectedFiles = undefined;
-    this.studentService.hasLogin$
+    this.studentContext.hasLogin$
       .pipe(takeUntil(this.onDestroy$))
       .subscribe(hasLogin => this.hasLogin = hasLogin);
 
