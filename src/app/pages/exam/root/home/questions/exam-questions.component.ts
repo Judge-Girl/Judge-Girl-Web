@@ -1,9 +1,9 @@
 import {Component, ElementRef, OnInit, Renderer2, ViewChild} from '@angular/core';
 
-import {describeMemory, describeTimeInSeconds, ExamOverview, JudgeStatus, Question} from '../../../../models';
+import {describeMemory, describeTimeInSeconds, ExamOverview, JudgeStatus, Question} from '../../../../../models';
 import {ActivatedRoute, Router} from '@angular/router';
 import {initHighlight, parseMarkdown} from 'src/app/commons/utils/markdownUtils';
-import {ExamContext} from '../../../../contexts/ExamContext';
+import {ExamContext} from '../../../../../contexts/ExamContext';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 

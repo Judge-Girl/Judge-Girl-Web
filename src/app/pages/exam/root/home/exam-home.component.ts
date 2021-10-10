@@ -1,8 +1,8 @@
 import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {ExamOverview} from '../../../models';
+import {ExamOverview} from '../../../../models';
 import {SplitComponent} from 'angular-split';
-import {ExamContext} from '../../../contexts/ExamContext';
+import {ExamContext} from '../../../../contexts/ExamContext';
 import {Observable} from 'rxjs';
 
 export enum Tab {
