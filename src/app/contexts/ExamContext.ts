@@ -1,8 +1,8 @@
 import {Answer, ExamOverview, getBetterRecord, toRecord} from '../models';
 import {Observable, Subject} from 'rxjs';
 import {Injectable} from '@angular/core';
-import {BrokerMessage, BrokerService, ExamService, Unsubscribe} from '../../services/Services';
-import {ResettableReplaySubject} from '../../utils/rx/my.subjects';
+import {BrokerMessage, BrokerService, ExamService, Unsubscribe} from '../services/Services';
+import {ResettableReplaySubject} from '../commons/utils/rx/my.subjects';
 import {switchMap, takeUntil} from 'rxjs/operators';
 import {StudentContext} from './StudentContext';
 

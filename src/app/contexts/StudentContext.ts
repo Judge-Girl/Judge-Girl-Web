@@ -1,10 +1,10 @@
 import {Student} from '../models';
 import {Injectable} from '@angular/core';
 import {Observable, ReplaySubject, Subject} from 'rxjs';
-import {StudentService} from '../../services/Services';
+import {StudentService} from '../services/Services';
 import {filter, map, startWith} from 'rxjs/operators';
 import {Router} from '@angular/router';
-import {CookieService} from '../../services/cookie/cookie.service';
+import {CookieService} from '../services/cookie/cookie.service';
 
 const COOKIE_KEY_TOKEN = 'token';
 

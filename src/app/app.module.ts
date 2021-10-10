@@ -2,87 +2,82 @@ import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 
 import {AppRoutingModule} from './app-routing.module';
-import {LoginComponent} from './users/login/login.component';
+import {LoginComponent} from './pages/students/login/login.component';
 import {AppComponent} from './app.component';
-import {ProblemListComponent} from './problem-list/problem-list.component';
-import {ExamListComponent} from './exam/list/exam-list.component';
-import {ExamHomeComponent} from './exam/home/exam-home.component';
-import {ExamQuestionsComponent} from './exam/home/questions/exam-questions.component';
-import {BrokerService, ExamService, ProblemService, StudentService, SubmissionService} from '../services/Services';
-import {IdeComponent} from './ide/ide.component';
-import {ProblemDescriptionComponent} from './ide/problem-description/problem-description.component';
-import {CodeUploadPanelComponent} from './ide/code-panel/code-upload-panel.component';
-import {SubmissionsComponent} from './ide/submissions/submissions.component';
+import {ProblemListComponent} from './pages/problems/problem-list.component';
+import {ExamListComponent} from './pages/exam/list/exam-list.component';
+import {ExamHomeComponent} from './pages/exam/home/exam-home.component';
+import {ExamQuestionsComponent} from './pages/exam/home/questions/exam-questions.component';
+import {BrokerService, ExamService, ProblemService, StudentService, SubmissionService} from './services/Services';
+import {IdeComponent} from './pages/ide/ide.component';
+import {ProblemDescriptionComponent} from './pages/ide/problem-description/problem-description.component';
+import {CodeUploadPanelComponent} from './pages/ide/code-panel/code-upload-panel.component';
+import {SubmissionsComponent} from './pages/ide/submissions/submissions.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {LdCircleComponent} from './items/spinners/ld-circle.component';
+import {LdCircleComponent} from './commons/widgets/spinners/ld-circle.component';
 import {FileUploadModule} from 'primeng/fileupload';
 import {HTTP_INTERCEPTORS, HttpClient, HttpClientModule} from '@angular/common/http';
 import {BlockUIModule, MessageService, MessagesModule, ToastModule} from 'primeng';
-import {ProblemTagDropDownComponent} from './items/problem-tag-drop-down/problem-tag-drop-down.component';
-import {HttpProblemService} from '../services/impl/HttpProblemService';
-import {HttpExamService} from '../services/impl/HttpExamService';
-import {HttpStudentService} from '../services/impl/HttpStudentService';
-import {HttpSubmissionService} from '../services/impl/HttpSubmissionService';
-import {CookieModule} from '../services/cookie/cookie.module';
-import {CookieService} from '../services/cookie/cookie.service';
-import {TestcasesComponent} from './ide/testcases/testcases.component';
+import {HttpProblemService} from './services/impl/HttpProblemService';
+import {HttpExamService} from './services/impl/HttpExamService';
+import {HttpStudentService} from './services/impl/HttpStudentService';
+import {HttpSubmissionService} from './services/impl/HttpSubmissionService';
+import {CookieModule} from './services/cookie/cookie.module';
+import {CookieService} from './services/cookie/cookie.service';
+import {TestcasesComponent} from './pages/ide/testcases/testcases.component';
 import {AngularSplitModule} from 'angular-split';
-import {ChangePasswordComponent} from './users/change-password/change-password.component';
+import {ChangePasswordComponent} from './pages/students/change-password/change-password.component';
 import {FormsModule} from '@angular/forms';
-import {StompBrokerService} from '../services/impl/StompBrokerService';
-import {EventBus} from '../services/EventBus';
-import {ExamQuestionSubmissionService, HttpExamQuestionSubmissionService} from '../services/impl/HttpExamQuestionSubmissionService';
-import {IdeBannerComponent} from './exam/question-banner/ide-banner.component';
-import {LdSpinnerComponent} from './items/spinners/ld-spinner.component';
+import {StompBrokerService} from './services/impl/StompBrokerService';
+import {EventBus} from './services/EventBus';
+import {ExamQuestionSubmissionService, HttpExamQuestionSubmissionService} from './services/impl/HttpExamQuestionSubmissionService';
+import {IdeBannerComponent} from './pages/ide/banner/ide-banner.component';
+import {LdSpinnerComponent} from './commons/widgets/spinners/ld-spinner.component';
 import {ExamContext} from './contexts/ExamContext';
-import {WithLoadingPipe} from './pipes/with-loading.pipe';
+import {WithLoadingPipe} from './commons/pipes/with-loading.pipe';
 import {ProblemContext} from './contexts/ProblemContext';
-import {OopsComponent} from './ide/oops.component';
+import {OopsComponent} from './pages/ide/oops.component';
 import {SubmissionContext} from './contexts/SubmissionContext';
-import {AuthHttpRequestInterceptor} from '../services/impl/AuthHttpRequestInterceptor';
-import {ExamIdePlugin} from './exam/ide.plugin';
-import {DefaultIdePlugin} from './ide/ide.default.plugin';
-import {VarDirective} from './ng-var.directive';
-import {ExamRootComponent} from './exam/root/exam-root.component';
-import {StudentContext} from './contexts/StudentContext';
-import { DescribeMemoryPipe } from './pipes/describe-memory.pipe';
-import { InSecondsPipe } from './pipes/in-seconds.pipe';
-import { FromNowPipe } from './pipes/from-now.pipe';
+import {AuthHttpRequestInterceptor} from './services/impl/AuthHttpRequestInterceptor';
+import {ExamIdePlugin} from './pages/exam/ide.plugin';
+import {DefaultIdePlugin} from './pages/ide/ide.default.plugin';
+import {VarDirective} from './commons/directives/ng-var.directive';
+import {ExamRootComponent} from './pages/exam/root/exam-root.component';
+import {DescribeMemoryPipe} from './commons/pipes/describe-memory.pipe';
+import {InSecondsPipe} from './commons/pipes/in-seconds.pipe';
+import {FromNowPipe} from './commons/pipes/from-now.pipe';
 
 @NgModule({
   declarations: [
     /*Pipes*/
     WithLoadingPipe,
+    DescribeMemoryPipe,
+    InSecondsPipe,
+    FromNowPipe,
 
     /*Directives*/
     VarDirective,
 
     /*Pages*/
     AppComponent,
-    ProblemTagDropDownComponent,
     LoginComponent,
     ChangePasswordComponent,
     ProblemListComponent,
-    TestcasesComponent,
-    ExamListComponent,
     IdeComponent,
-    ProblemDescriptionComponent,
-
-    CodeUploadPanelComponent,
-    SubmissionsComponent,
-
-    ExamHomeComponent,
-
-    /*items*/
-    ExamQuestionsComponent,
     IdeBannerComponent,
-    LdCircleComponent,
-    LdSpinnerComponent,
-    OopsComponent,
+    ProblemDescriptionComponent,
+    TestcasesComponent,
+    SubmissionsComponent,
+    CodeUploadPanelComponent,
+    ExamListComponent,
     ExamRootComponent,
-    DescribeMemoryPipe,
-    InSecondsPipe,
-    FromNowPipe
+    ExamHomeComponent,
+    ExamQuestionsComponent,
+    OopsComponent,
+
+    /*widgets*/
+    LdCircleComponent,
+    LdSpinnerComponent
   ],
   imports: [
     CookieModule.forRoot(),

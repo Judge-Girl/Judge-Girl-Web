@@ -1,27 +1,27 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-import {LoginComponent} from './users/login/login.component';
-import {ProblemListComponent} from './problem-list/problem-list.component';
-import {ExamListComponent} from './exam/list/exam-list.component';
-import {ExamHomeComponent} from './exam/home/exam-home.component';
-import {ExamQuestionsComponent} from './exam/home/questions/exam-questions.component';
-import {IdeComponent} from './ide/ide.component';
-import {SubmissionsComponent} from './ide/submissions/submissions.component';
-import {ProblemDescriptionComponent} from './ide/problem-description/problem-description.component';
-import {TestcasesComponent} from './ide/testcases/testcases.component';
-import {ChangePasswordComponent} from './users/change-password/change-password.component';
-import {LoginOnlyGuard} from './guard/login-only.guard';
-import {DefaultIdePlugin} from './ide/ide.default.plugin';
-import {ExamIdePlugin} from './exam/ide.plugin';
-import {ExamRootComponent} from './exam/root/exam-root.component';
-import {SubmissionService} from '../services/Services';
-import {ExamQuestionSubmissionService} from '../services/impl/HttpExamQuestionSubmissionService';
+import {LoginComponent} from './pages/students/login/login.component';
+import {ProblemListComponent} from './pages/problems/problem-list.component';
+import {ExamListComponent} from './pages/exam/list/exam-list.component';
+import {ExamHomeComponent} from './pages/exam/home/exam-home.component';
+import {ExamQuestionsComponent} from './pages/exam/home/questions/exam-questions.component';
+import {IdeComponent} from './pages/ide/ide.component';
+import {SubmissionsComponent} from './pages/ide/submissions/submissions.component';
+import {ProblemDescriptionComponent} from './pages/ide/problem-description/problem-description.component';
+import {TestcasesComponent} from './pages/ide/testcases/testcases.component';
+import {ChangePasswordComponent} from './pages/students/change-password/change-password.component';
+import {LoginOnlyGuard} from './commons/guard/login-only.guard';
+import {DefaultIdePlugin} from './pages/ide/ide.default.plugin';
+import {ExamIdePlugin} from './pages/exam/ide.plugin';
+import {ExamRootComponent} from './pages/exam/root/exam-root.component';
+import {SubmissionService} from './services/Services';
+import {ExamQuestionSubmissionService} from './services/impl/HttpExamQuestionSubmissionService';
 
 
 const routes: Routes = [
   // Student
   {path: '', component: LoginComponent},
-  {path: 'users/change-password', component: ChangePasswordComponent, canActivate: [LoginOnlyGuard]},
+  {path: 'students/change-password', component: ChangePasswordComponent, canActivate: [LoginOnlyGuard]},
 
   // Problem
   {path: 'problems', component: ProblemListComponent},

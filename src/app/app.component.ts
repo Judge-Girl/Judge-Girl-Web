@@ -1,10 +1,9 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {MessageService} from 'primeng';
-import {BrokerService} from '../services/Services';
+import {BrokerService} from './services/Services';
 import {JudgeStatus, VerdictIssuedEvent} from './models';
-import {CookieService} from '../services/cookie/cookie.service';
 import {Router} from '@angular/router';
-import {EventBus, EventSubscriber} from '../services/EventBus';
+import {EventBus, EventSubscriber} from './services/EventBus';
 import {Observable} from 'rxjs';
 import {StudentContext} from './contexts/StudentContext';
 
@@ -20,7 +19,6 @@ export class AppComponent extends MessageService implements OnInit, OnDestroy, E
   hasLogin = false;
 
   constructor(public studentContext: StudentContext,
-              private cookieService: CookieService,
               private messageService: MessageService,
               private brokerService: BrokerService,
               private eventBus: EventBus,
@@ -68,7 +66,7 @@ export class AppComponent extends MessageService implements OnInit, OnDestroy, E
   }
 
   routeToChangePassword(): void {
-    this.router.navigateByUrl('users/change-password');
+    this.router.navigateByUrl('students/change-password');
   }
 
   routeToHome(): void {

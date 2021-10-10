@@ -1,11 +1,11 @@
 import {Submission, VerdictIssuedEvent} from '../models';
 import {Observable} from 'rxjs';
-import {ResettableReplaySubject} from '../../utils/rx/my.subjects';
-import {BrokerMessage, BrokerService, SubmissionService, Unsubscribe} from '../../services/Services';
+import {ResettableReplaySubject} from '../commons/utils/rx/my.subjects';
+import {BrokerMessage, BrokerService, SubmissionService, Unsubscribe} from '../services/Services';
 import {ProblemContext} from './ProblemContext';
 import {switchMap} from 'rxjs/operators';
 import {Injectable} from '@angular/core';
-import {EventBus} from '../../services/EventBus';
+import {EventBus} from '../services/EventBus';
 import {StudentContext} from './StudentContext';
 
 const SUBSCRIBER_NAME = 'SubmissionContext';
