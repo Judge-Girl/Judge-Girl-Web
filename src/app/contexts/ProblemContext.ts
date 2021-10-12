@@ -2,7 +2,6 @@ import {Problem} from '../models';
 import {Injectable} from '@angular/core';
 import {ResettableReplaySubject} from '../commons/utils/rx/my.subjects';
 import {Observable} from 'rxjs';
-import {ProblemService} from '../services/Services';
 
 
 @Injectable({
@@ -11,9 +10,6 @@ import {ProblemService} from '../services/Services';
 )
 export class ProblemContext {
   private problemSubject = new ResettableReplaySubject<Problem>(1);
-
-  constructor(private problemService: ProblemService) {
-  }
 
   get problem$(): Observable<Problem> {
     return this.problemSubject;

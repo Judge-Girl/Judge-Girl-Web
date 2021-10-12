@@ -46,7 +46,6 @@ import {ExamRootComponent} from './pages/exam/root/exam-root.component';
 import {DescribeMemoryPipe} from './commons/pipes/describe-memory.pipe';
 import {InSecondsPipe} from './commons/pipes/in-seconds.pipe';
 import {FromNowPipe} from './commons/pipes/from-now.pipe';
-import {LoginOnlyGuard} from './commons/guard/login-only.guard';
 
 @NgModule({
   declarations: [
@@ -78,7 +77,7 @@ import {LoginOnlyGuard} from './commons/guard/login-only.guard';
 
     /*widgets*/
     LdCircleComponent,
-    LdSpinnerComponent
+    LdSpinnerComponent,
   ],
   imports: [
     CookieModule.forRoot(),

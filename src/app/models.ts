@@ -87,7 +87,7 @@ export interface Verdict {
   totalGrade: number;
   maximumRuntime: number;
   maximumMemoryUsage: number;
-  compileErrorMessage: string;
+  errorMessage: string;
   issueTime: number;
   report: Map<string, any>;
 }
