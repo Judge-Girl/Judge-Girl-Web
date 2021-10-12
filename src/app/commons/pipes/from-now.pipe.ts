@@ -1,4 +1,4 @@
-import { Pipe, PipeTransform } from '@angular/core';
+import {Pipe, PipeTransform} from '@angular/core';
 import * as moment from 'moment';
 
 @Pipe({
@@ -6,7 +6,7 @@ import * as moment from 'moment';
 })
 export class FromNowPipe implements PipeTransform {
 
-  transform(time: number): unknown {
+  transform(time: number): string {
     return moment(time).fromNow();
   }
 

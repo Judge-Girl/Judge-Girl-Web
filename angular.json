@@ -3,7 +3,7 @@
       "version": 1,
       "newProjectRoot": "projects",
       "projects": {
-        "judge-k8s-web": {
+        "judge-girl-web": {
           "projectType": "application",
           "schematics": {},
           "root": "",
@@ -101,18 +101,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "judge-k8s-web:build"
+            "browserTarget": "judge-girl-web:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "judge-k8s-web:build:production"
+              "browserTarget": "judge-girl-web:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "judge-k8s-web:build"
+            "browserTarget": "judge-girl-web:build"
           }
         },
         "test": {
@@ -150,11 +150,11 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "judge-k8s-web:serve"
+            "devServerTarget": "judge-girl-web:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "judge-k8s-web:serve:production"
+              "devServerTarget": "judge-girl-web:serve:production"
             }
           }
         }

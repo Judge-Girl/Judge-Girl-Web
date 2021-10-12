@@ -78,7 +78,12 @@ export class SubmissionsComponent implements OnInit, OnDestroy, AfterViewInit {
     this.onDestroy$.next();
   }
 
-  isJudgeStatus(submission: Submission, status: JudgeStatus) {
+  isErrorStatus(submission: Submission): boolean {
+    return submission?.verdict?.summaryStatus === JudgeStatus.CE ||
+      submission?.verdict?.summaryStatus === JudgeStatus.SYSTEM_ERR;
+  }
+
+  isJudgeStatus(submission: Submission, status: JudgeStatus): boolean {
     return submission?.verdict?.summaryStatus === status;
   }
 
