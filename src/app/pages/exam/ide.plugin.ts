@@ -34,7 +34,7 @@ export class ExamIdePlugin extends IdePlugin {
     return combineLatest([this.examContext.exam$, this.problemContext.problem$])
       .pipe(map(combine => {
         const [exam, problem] = combine;
-        const hideCodeUploadPanel = isExamClosed(exam) ?
+        const disableCodeUploadPanel = isExamClosed(exam) ?
           {hide: true, message: 'This exam has been closed, you can’t answer this question.'} : undefined;
         return {
           banner: {
@@ -45,7 +45,7 @@ export class ExamIdePlugin extends IdePlugin {
               this.location.back();
             }
           }, codeUploadPanelDecorator: {
-            hideCodeUploadPanel,
+            disableCodeUploadPanel,
             submitCodeButtonDecoration: {belowMessage: `Submission Quota: ${findQuestion(exam, problem.id)?.remainingQuota || 0}`}
           }
         };
