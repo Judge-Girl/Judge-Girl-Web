@@ -46,6 +46,7 @@ import {ExamRootComponent} from './pages/exam/root/exam-root.component';
 import {DescribeMemoryPipe} from './commons/pipes/describe-memory.pipe';
 import {InSecondsPipe} from './commons/pipes/in-seconds.pipe';
 import {FromNowPipe} from './commons/pipes/from-now.pipe';
+import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -89,7 +90,7 @@ import {FromNowPipe} from './commons/pipes/from-now.pipe';
     FormsModule,
 
     /*primeNG*/
-    BlockUIModule, ToastModule, FileUploadModule, MessagesModule
+    BlockUIModule, ToastModule, FileUploadModule, MessagesModule, NgbPaginationModule
   ],
   providers: [
     /* external services */

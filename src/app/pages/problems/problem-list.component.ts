@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ProblemService} from '../../services/Services';
-import {ProblemItem} from '../../models';
+import {PageProps, ProblemItem} from '../../models';
 import {Router} from '@angular/router';
 
 
@@ -11,6 +11,7 @@ import {Router} from '@angular/router';
 })
 export class ProblemListComponent implements OnInit {
   problemItems: ProblemItem[];
+  pageProps: PageProps;
   loadingProblems = false;
 
   constructor(private problemService: ProblemService,
@@ -20,16 +21,33 @@ export class ProblemListComponent implements OnInit {
   ngOnInit(): void {
     this.problemItems = [];
     this.loadingProblems = true;
+    this.pageProps = new PageProps();
     // Currently we do not support 'Pagination', therefore use the 0th page as default.
-    this.problemService.getProblemItemsInPage(0)
-      .subscribe(items => {
-        this.loadingProblems = false;
-        this.problemItems = items;
-      });
+    this.getPageTestData(1);
   }
 
   routeToProblem(problemId: number) {
     this.router.navigateByUrl(`problems/${problemId}`);
   }
 
+  // 暫時測試用(需等後端 API完成)
+  getPageTestData(pageNumber: number) {
+    this.loadingProblems = true;
+    this.problemService.getProblemItemsInPage(pageNumber)
+      .subscribe(items => {
+        this.loadingProblems = false;
+        this.problemItems = items;
+        this.pageProps.totalRecords = 500;
+      });
+  }
+  // 後端 API完成後，使用此function
+  getPageData(pageNumber: number) {
+    this.loadingProblems = true;
+    this.problemService.getProblemItemsInPages(pageNumber)
+      .subscribe(result => {
+        this.loadingProblems = false;
+        this.problemItems = result.data;
+        this.pageProps.totalRecords = result.totalCount;
+      });
+  }
 }

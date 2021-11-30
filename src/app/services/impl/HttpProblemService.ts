@@ -1,6 +1,6 @@
 import {ProblemService} from '../Services';
 import {Observable} from 'rxjs';
-import {Problem, ProblemItem} from '../../models';
+import {Problem, ProblemItem, ProblemPageResult} from '../../models';
 import {HttpClient} from '@angular/common/http';
 import {Inject, Injectable} from '@angular/core';
 import {map} from 'rxjs/operators';
@@ -31,6 +31,10 @@ export class HttpProblemService extends ProblemService {
 
   getProblemItemsInPage(page: number): Observable<ProblemItem[]> {
     return this.httpRequestCache.get(`${this.baseUrl}/api/problems`);
+  }
+
+  getProblemItemsInPages(page: number): Observable<ProblemPageResult> {
+    return this.httpRequestCache.get(`${this.baseUrl}/api/problems?page=${page}`);
   }
 
   getProblemTags(): Observable<string[]> {

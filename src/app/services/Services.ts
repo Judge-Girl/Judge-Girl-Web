@@ -5,7 +5,7 @@ import {
   ExamItem,
   ExamOverview,
   Problem,
-  ProblemItem,
+  ProblemItem, ProblemPageResult,
   Student,
   Submission,
   SubmittedCodeSpec,
@@ -61,6 +61,8 @@ export abstract class ProblemService {
   abstract getProblemItemsByTag(problemTag: string): Observable<ProblemItem[]>;
 
   abstract getProblemItemsInPage(page: number): Observable<ProblemItem[]>;
+
+  abstract getProblemItemsInPages(page: number): Observable<ProblemPageResult>;
 
   abstract getProblem(problemId: number): Observable<Problem>;
 }

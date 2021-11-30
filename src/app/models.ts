@@ -70,6 +70,11 @@ export interface ProblemItem {
   tags: string[];
 }
 
+export class ProblemPageResult {
+  data: ProblemItem[];
+  totalCount: number;
+}
+
 /* Submission */
 
 export interface Submission {
@@ -293,4 +298,16 @@ export function toRecord(verdict: Verdict): Record {
     maximumRuntime: verdict.maximumRuntime,
     maximumMemoryUsage: verdict.maximumMemoryUsage,
   };
+}
+
+export class PageProps {
+  page: number;
+  totalRecords: number;
+  pageSize: number;
+
+  constructor() {
+    this.page = 1;
+    this.totalRecords = 0;
+    this.pageSize = 50;
+  }
 }
