@@ -1,6 +1,6 @@
- import {Component, OnChanges, OnInit} from '@angular/core';
+import {Component, OnChanges, OnInit} from '@angular/core';
 import {ProblemService} from '../../services/Services';
-import {PageResult, ProblemItem} from '../../models';
+import {Pagination, ProblemItem} from '../../models';
 import {Router} from '@angular/router';
 
 
@@ -11,7 +11,7 @@ import {Router} from '@angular/router';
 })
 export class ProblemListComponent implements OnInit {
 
-    pageResult: PageResult<ProblemItem> = new PageResult();
+    problemPagination: Pagination<ProblemItem>;
     loadingProblems = false;
 
     constructor(private problemService: ProblemService,
@@ -21,7 +21,7 @@ export class ProblemListComponent implements OnInit {
     ngOnInit(): void {
         this.loadingProblems = true;
         // Currently we do not support 'Pagination', therefore use the 0th page as default.
-        this.getPageTestData(1);
+        this.getPagination(1);
     }
 
 
@@ -32,12 +32,14 @@ export class ProblemListComponent implements OnInit {
     /**
      * 暫時測試用(需等後端 API完成)
      */
-    getPageTestData(page: number) {
+    getPagination(page: number) {
         this.loadingProblems = true;
         this.problemService.getProblemItemsInPage(page)
             .subscribe(items => {
                 this.loadingProblems = false;
-                this.pageResult = this.getTestData(items, page);
+                this.problemPagination = items;
+                // 暫時產生測試資料用，屆時會移除
+                this.problemPagination = this.getTestData(items, page);
             });
     }
 
@@ -45,32 +47,19 @@ export class ProblemListComponent implements OnInit {
     /**
      * 暫時產生測試資料用，屆時會移除
      */
-    private getTestData(items: ProblemItem[], pageNumber: number): PageResult<ProblemItem> {
-        if (pageNumber !== 1) {
-            items = [{id: Math.floor(Math.random() * 10000), title: 'test', tags: ['test', 'testB']}];
-            items.push({id: Math.floor(Math.random() * 10000), title: 'test', tags: ['test', 'testA']});
-            items.push({id: Math.floor(Math.random() * 10000), title: 'test', tags: ['test', 'testA']});
-            items.push({id: Math.floor(Math.random() * 10000), title: 'test', tags: ['test', 'testA']});
-            items.push({id: Math.floor(Math.random() * 10000), title: 'test', tags: ['test', 'testA']});
-            items.push({id: Math.floor(Math.random() * 10000), title: 'test', tags: ['test', 'testA']});
-            items.push({id: Math.floor(Math.random() * 10000), title: 'test', tags: ['test', 'testA']});
-            items.push({id: Math.floor(Math.random() * 10000), title: 'test', tags: ['test', 'testA']});
-            items.push({id: Math.floor(Math.random() * 10000), title: 'test', tags: ['test', 'testA']});
-            items.push({id: Math.floor(Math.random() * 10000), title: 'test', tags: ['test', 'testA']});
-        }
-        return {data: items, currentPage: pageNumber, totalRecords: 500, pageSize: 5};
+    private getTestData(items1: Pagination<ProblemItem>, pageNumber: number): Pagination<ProblemItem> {
+        items1.items = [{id: Math.floor(Math.random() * 10000), title: 'test', tags: ['test', 'testB']}];
+        items1.items.push({id: Math.floor(Math.random() * 10000), title: 'test', tags: ['test', 'testA']});
+        items1.items.push({id: Math.floor(Math.random() * 10000), title: 'test', tags: ['test', 'testA']});
+        items1.items.push({id: Math.floor(Math.random() * 10000), title: 'test', tags: ['test', 'testA']});
+        items1.items.push({id: Math.floor(Math.random() * 10000), title: 'test', tags: ['test', 'testA']});
+        items1.items.push({id: Math.floor(Math.random() * 10000), title: 'test', tags: ['test', 'testA']});
+        items1.items.push({id: Math.floor(Math.random() * 10000), title: 'test', tags: ['test', 'testA']});
+        items1.items.push({id: Math.floor(Math.random() * 10000), title: 'test', tags: ['test', 'testA']});
+        items1.items.push({id: Math.floor(Math.random() * 10000), title: 'test', tags: ['test', 'testA']});
+        items1.items.push({id: Math.floor(Math.random() * 10000), title: 'test', tags: ['test', 'testA']});
+        return {items: items1.items, page: pageNumber, totalCount: 500, pageSize: 5};
     }
 
-    /**
-     * 後端API完成後使用此function
-     */
-    getPageData(pageNumber: number) {
-        this.loadingProblems = true;
-        this.problemService.getProblemItemsInPages(pageNumber)
-            .subscribe(result => {
-                this.loadingProblems = false;
-                this.pageResult = result;
-            });
-    }
 
 }

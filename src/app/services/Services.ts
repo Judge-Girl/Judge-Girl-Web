@@ -3,7 +3,7 @@ import {Observable} from 'rxjs';
 import {
   CodeFile,
   ExamItem,
-  ExamOverview, PageResult,
+  ExamOverview, Pagination,
   Problem,
   ProblemItem,
   Student,
@@ -60,9 +60,7 @@ export abstract class ProblemService {
 
   abstract getProblemItemsByTag(problemTag: string): Observable<ProblemItem[]>;
 
-  abstract getProblemItemsInPage(page: number): Observable<ProblemItem[]>;
-
-  abstract getProblemItemsInPages(page: number): Observable<PageResult<any>>;
+  abstract getProblemItemsInPage(page: number): Observable<Pagination<ProblemItem>>;
 
   abstract getProblem(problemId: number): Observable<Problem>;
 }

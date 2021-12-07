@@ -1,6 +1,6 @@
 <div class="justify-content-center">
-    <ngb-pagination (pageChange)="changeToPage($event)" [collectionSize]="pageProps.totalRecords"
-                    [pageSize]="pageProps.pageSize" [(page)]="pageProps.currentPage"
+    <ngb-pagination (pageChange)="changeToPage($event)" [collectionSize]="pageProps.totalCount"
+                    [pageSize]="pageProps.pageSize" [(page)]="pageProps.page"
                     [maxSize]="5"
                     [rotate]="true" [boundaryLinks]="false"></ngb-pagination>
 </div>

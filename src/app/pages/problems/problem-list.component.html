@@ -19,7 +19,7 @@
         </thead>
         <tbody>
         <tr></tr>
-        <tr *ngFor="let problemItem of pageResult.data">
+        <tr *ngFor="let problemItem of problemPagination.items">
             <td scope="row"> {{ problemItem.id }} </td>
             <td class="text-left fake-link" (click)="routeToProblem(problemItem.id)"> {{ problemItem.title }}</td>
             <td class="text-left">
@@ -31,7 +31,7 @@
         </tbody>
     </table>
     <div class="d-flex justify-content-center">
-        <pagination (changePage)="getPageTestData($event)" [pageProps]="pageResult" ></pagination>
+        <pagination (changePage)="getPagination($event)" [pageProps]="problemPagination" ></pagination>
     </div>
 </div>
 

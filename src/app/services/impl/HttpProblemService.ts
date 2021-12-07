@@ -1,8 +1,8 @@
 import {ProblemService} from '../Services';
 import {Observable} from 'rxjs';
-import {PageResult, Problem, ProblemItem} from '../../models';
+import {Pagination, Problem, ProblemItem} from '../../models';
 import {HttpClient} from '@angular/common/http';
-import {Inject, Injectable} from '@angular/core';
+import { Injectable} from '@angular/core';
 import {map} from 'rxjs/operators';
 import {HttpRequestCache} from './HttpRequestCache';
 import {environment} from '../../../environments/environment';
@@ -29,11 +29,7 @@ export class HttpProblemService extends ProblemService {
     return this.httpRequestCache.get(`${this.baseUrl}/api/problems?tags=${problemTag}`);
   }
 
-  getProblemItemsInPage(page: number): Observable<ProblemItem[]> {
-    return this.httpRequestCache.get(`${this.baseUrl}/api/problems`);
-  }
-
-  getProblemItemsInPages(page: number): Observable<PageResult<any>> {
+  getProblemItemsInPage(page: number): Observable<Pagination<ProblemItem>> {
     return this.httpRequestCache.get(`${this.baseUrl}/api/problems?page=${page}`);
   }
 
