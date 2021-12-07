@@ -70,11 +70,6 @@ export interface ProblemItem {
   tags: string[];
 }
 
-export class ProblemPageResult {
-  data: ProblemItem[];
-  totalCount: number;
-}
-
 /* Submission */
 
 export interface Submission {
@@ -300,14 +295,22 @@ export function toRecord(verdict: Verdict): Record {
   };
 }
 
-export class PageProps {
-  page: number;
-  totalRecords: number;
-  pageSize: number;
+export class PageResult<T> implements PageProps {
+    data: T[];
+    currentPage: number;
+    pageSize: number;
+    totalRecords: number;
 
-  constructor() {
-    this.page = 1;
-    this.totalRecords = 0;
-    this.pageSize = 50;
-  }
+    constructor() {
+        this.data = [];
+        this.currentPage = 1;
+        this.totalRecords = 0;
+        this.pageSize = 50;
+    }
+}
+
+export interface PageProps {
+    currentPage: number;
+    totalRecords: number;
+    pageSize: number;
 }

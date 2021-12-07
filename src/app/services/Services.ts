@@ -3,9 +3,9 @@ import {Observable} from 'rxjs';
 import {
   CodeFile,
   ExamItem,
-  ExamOverview,
+  ExamOverview, PageResult,
   Problem,
-  ProblemItem, ProblemPageResult,
+  ProblemItem,
   Student,
   Submission,
   SubmittedCodeSpec,
@@ -62,7 +62,7 @@ export abstract class ProblemService {
 
   abstract getProblemItemsInPage(page: number): Observable<ProblemItem[]>;
 
-  abstract getProblemItemsInPages(page: number): Observable<ProblemPageResult>;
+  abstract getProblemItemsInPages(page: number): Observable<PageResult<any>>;
 
   abstract getProblem(problemId: number): Observable<Problem>;
 }

@@ -47,6 +47,7 @@ import {DescribeMemoryPipe} from './commons/pipes/describe-memory.pipe';
 import {InSecondsPipe} from './commons/pipes/in-seconds.pipe';
 import {FromNowPipe} from './commons/pipes/from-now.pipe';
 import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
+import {PaginationComponent} from './commons/widgets/pagination/pagination.component';
 
 @NgModule({
   declarations: [
@@ -79,6 +80,7 @@ import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
     /*widgets*/
     LdCircleComponent,
     LdSpinnerComponent,
+    PaginationComponent
   ],
   imports: [
     CookieModule.forRoot(),
