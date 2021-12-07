@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {PageProps} from '../../../models';
+import {Pagination} from '../../../models';
 
 @Component({
     // tslint:disable-next-line:component-selector
@@ -9,7 +9,8 @@ import {PageProps} from '../../../models';
 })
 export class PaginationComponent implements OnInit {
     @Input()
-    pageProps: PageProps;
+    pagination: Pagination<any>;
+
     @Output()
     changePage: EventEmitter<number> = new EventEmitter();
 

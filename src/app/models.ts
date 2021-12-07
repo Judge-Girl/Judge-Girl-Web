@@ -295,16 +295,10 @@ export function toRecord(verdict: Verdict): Record {
     };
 }
 
-export class Pagination<E> implements PageProps {
+export class Pagination<E> {
     constructor(public page: number,
                 public pageSize: number,
                 public totalCount: number,
                 public items: Array<E>) {
     }
-}
-
-export interface PageProps {
-    page: number;
-    totalCount: number;
-    pageSize: number;
 }
