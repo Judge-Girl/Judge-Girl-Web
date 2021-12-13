@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {Pagination} from '../../../models';
 
 @Component({
@@ -18,6 +18,9 @@ export class PaginationComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        if (this.pagination === undefined) {
+            this.pagination = new Pagination(1, 0, 0, []);
+        }
     }
 
     changeToPage(page: number) {

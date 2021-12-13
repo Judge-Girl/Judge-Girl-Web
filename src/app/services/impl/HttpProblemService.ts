@@ -2,7 +2,7 @@ import {ProblemService} from '../Services';
 import {Observable} from 'rxjs';
 import {Pagination, Problem, ProblemItem} from '../../models';
 import {HttpClient} from '@angular/common/http';
-import { Injectable} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {map} from 'rxjs/operators';
 import {HttpRequestCache} from './HttpRequestCache';
 import {environment} from '../../../environments/environment';
@@ -29,9 +29,10 @@ export class HttpProblemService extends ProblemService {
     return this.httpRequestCache.get(`${this.baseUrl}/api/problems?tags=${problemTag}`);
   }
 
-  getProblemItemsInPage(page: number): Observable<Pagination<ProblemItem>> {
-    return this.httpRequestCache.get(`${this.baseUrl}/api/problems?page=${page}`);
-  }
+    getProblemItemsInPage(page: number): Observable<Pagination<ProblemItem>> {
+        return this.httpRequestCache.get(`${this.baseUrl}/api/problems?page=0`)
+            .pipe(map(body => this.transferToPagination(page, body)));
+    }
 
   getProblemTags(): Observable<string[]> {
     return this.httpRequestCache.get(`${this.baseUrl}/api/problems/tags`);
@@ -42,4 +43,13 @@ export class HttpProblemService extends ProblemService {
       body.testcases);
   }
 
+    transferToPagination(page, body): Pagination<ProblemItem> {
+        const pageSize = 3;
+        const list = body.filter((element, index) => {
+            if (index >= (page - 1) * pageSize && index < (page * pageSize)) {
+                return element;
+            }
+        });
+        return new Pagination(page, pageSize, body.length, list);
+    }
 }
