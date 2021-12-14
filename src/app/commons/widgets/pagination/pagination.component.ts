@@ -18,7 +18,7 @@ export class PaginationComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        if (this.pagination === undefined) {
+        if (!this.pagination) {
             this.pagination = new Pagination(1, 0, 0, []);
         }
     }

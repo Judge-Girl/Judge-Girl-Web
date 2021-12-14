@@ -23,7 +23,6 @@ export class ProblemListComponent implements OnInit {
         this.getPagination(1);
     }
 
-
     routeToProblem(problemId: number) {
         this.router.navigateByUrl(`problems/${problemId}`);
     }
