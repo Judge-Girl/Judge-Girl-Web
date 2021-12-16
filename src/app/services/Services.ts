@@ -74,6 +74,8 @@ export abstract class ExamService {
 
   abstract getExamsByStudentId(studentId: number, examStatus?: ExamStatus,
                                skip?: number, size?: number): Observable<ExamItem[]>;
+
+  abstract getProblem(problemId: number, examId: number): Observable<Problem>;
 }
 
 @Injectable({
