@@ -2,20 +2,25 @@ import {IdeCommands, IdePlugin, IdeViewModel} from '../ide/ide.plugin';
 import {ExamContext} from '../../contexts/ExamContext';
 import {Injectable} from '@angular/core';
 import {Location} from '@angular/common';
-import {findQuestion, isExamClosed} from '../../models';
+import {findQuestion, isExamClosed, Problem} from '../../models';
 import {ProblemContext} from '../../contexts/ProblemContext';
-import {ActivatedRoute, Params, Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {combineLatest, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
+import {ExamService} from '../../services/Services';
 
 
 @Injectable({providedIn: 'root'})
 export class ExamIdePlugin extends IdePlugin {
+  private examId: number;
+
   constructor(private examContext: ExamContext,
               private problemContext: ProblemContext,
+              private examService: ExamService,
               private location: Location,
               private router: Router) {
     super();
+    this.examContext.exam$.subscribe(exam => this.examId = exam.id);
   }
 
   commands(route: ActivatedRoute): IdeCommands {
@@ -50,5 +55,9 @@ export class ExamIdePlugin extends IdePlugin {
           }
         };
       }));
+  }
+
+  getProblem(problemId: number): Observable<Problem> {
+    return this.examService.getProblem(problemId, this.examId);
   }
 }

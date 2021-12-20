@@ -57,14 +57,11 @@ export class HttpSubmissionService extends SubmissionService {
   }
 
   getSubmittedCodes(problemId: number, submissionId: string, submittedCodesFileId: string): Observable<CodeFile[]> {
-    return this.problemService.getProblem(problemId)
-      .pipe(switchMap(() => {
-        return this.http.get(`${this.baseUrl}/api/problems/${problemId}/${DEFAULT_LANG_ENV}` +
+    return this.http.get(`${this.baseUrl}/api/problems/${problemId}/${DEFAULT_LANG_ENV}` +
           `/students/${this.studentId}/submissions/${submissionId}/submittedCodes/${submittedCodesFileId}`, {
           responseType: 'arraybuffer'
-        });
-      }))
-      .pipe(switchMap(unzipCodesArrayBuffer));
+        })
+    .pipe(switchMap(unzipCodesArrayBuffer));
   }
 
   private get studentId() {

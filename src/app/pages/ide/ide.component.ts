@@ -45,6 +45,7 @@ export class IdeComponent implements OnInit, OnDestroy, AfterViewInit {
   problem$: Observable<Problem>;
   private ideCommands: IdeCommands;
   private ideViewModel$: Observable<IdeViewModel>;
+  private getProblem$: Observable<Problem>;
 
   constructor(private problemService: ProblemService,
               private problemContext: ProblemContext,
@@ -57,12 +58,13 @@ export class IdeComponent implements OnInit, OnDestroy, AfterViewInit {
     const idePlugin = injector.get<IdePlugin>(route.snapshot.data.idePluginProvider);
     this.ideCommands = idePlugin.commands(route);
     this.ideViewModel$ = idePlugin.viewModel$;
+    this.getProblem$ = idePlugin.getProblem(this.problemId);
     this.banner$ = this.ideViewModel$.pipe(map(vm => vm.banner));
   }
 
   ngOnInit(): void {
-    this.problemService.getProblem(this.problemId)
-      .toPromise().then(problem => this.problemContext.initializeProblem(problem))
+    this.getProblem$.toPromise()
+      .then(problem => this.problemContext.initializeProblem(problem))
       .catch(err => this.problemContext.problemNotFound(err));
   }
 
