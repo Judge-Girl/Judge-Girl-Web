@@ -32,7 +32,7 @@ export class HttpExamService extends ExamService {
       .pipe(map(body => this.toProblem(body)));
   }
 
-  toProblem(body): Problem {
+  private toProblem(body): Problem {
     return new Problem(body.id, body.title, body.description, body.tags, body.languageEnvs,
       body.testcases);
   }
