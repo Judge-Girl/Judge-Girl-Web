@@ -1,23 +1,21 @@
 .my-problem-table td:nth-child(1) {
-  width: 10%;
+    width: 10%;
 }
 
 .my-problem-table td:nth-child(2) {
-  width: 40%;
+    width: 40%;
 }
 
 .my-problem-table td:nth-child(3) {
-  display: flex;
-  flex-flow: row wrap;
+    display: flex;
+    flex-flow: row wrap;
 }
 
 .problem-tag {
-  font-size: 13px;
-  font-weight: 600 !important;
-  background-color: #0F7ED0;
-  padding-top: 4px;
-  padding-bottom: 4px;
+    font-size: 13px;
+    font-weight: 600 !important;
+    background-color: #0F7ED0;
+    padding-top: 4px;
+    padding-bottom: 4px;
 }
-
-
 

@@ -1,0 +1,7 @@
+<div class="d-flex justify-content-center mt-4">
+    <ngb-pagination (pageChange)="changeToPage($event)" [collectionSize]="pagination.totalCount"
+                    [pageSize]="pagination.pageSize" [(page)]="pagination.page"
+                    [maxSize]="5"
+                    [rotate]="true" [boundaryLinks]="false"></ngb-pagination>
+</div>
+
