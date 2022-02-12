@@ -44,7 +44,7 @@ export class HttpProblemService extends ProblemService {
     }
 
     private transferToPagination(page, body): Pagination<ProblemItem> {
-        const pageSize = 3;
+        const pageSize = 10;
         const list = body.filter((element, index) => {
             if (index >= (page - 1) * pageSize && index < (page * pageSize)) {
                 return element;
